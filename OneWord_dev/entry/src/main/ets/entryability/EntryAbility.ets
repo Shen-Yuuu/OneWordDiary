@@ -1,5 +1,6 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
+import { AppServiceContainer } from '../service/AppServiceContainer';
 import { AppLogger } from '../utils/AppLogger';
 
 export default class EntryAbility extends UIAbility {
@@ -13,6 +14,18 @@ export default class EntryAbility extends UIAbility {
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
     AppLogger.info('ability.window_stage_created');
+
+    this.initializeAndLoad(windowStage);
+  }
+
+  private async initializeAndLoad(windowStage: window.WindowStage): Promise<void> {
+    try {
+      await AppServiceContainer.initialize(this.context);
+      AppLogger.info('app_services.initialized');
+    } catch (error) {
+      AppLogger.error('app_services.initialize_failed');
+      return;
+    }
 
     windowStage.loadContent('pages/Index', (err) => {
       if (err.code) {
