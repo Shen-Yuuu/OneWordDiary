@@ -6,6 +6,7 @@ import diaryTimePolicyTest from './DiaryTimePolicy.test';
 import invisibleTextTest from './InvisibleText.test';
 import localTimeResolverTest from './LocalTimeResolver.test';
 import timeBoundaryTest from './TimeBoundary.test';
+import todayViewModelTest from './TodayViewModel.test';
 
 export default function testsuite(): void {
   baselineTest();
@@ -16,4 +17,5 @@ export default function testsuite(): void {
   timeBoundaryTest();
   diaryConcurrencyTest();
   diaryServiceTest();
+  todayViewModelTest();
 }

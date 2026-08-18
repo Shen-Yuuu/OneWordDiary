@@ -37,6 +37,15 @@ export class RdbDiaryRepository implements DiaryRepository {
     return changedRows === 1;
   }
 
+  async countAll(): Promise<number> {
+    const resultSet = await this.store.querySql('SELECT COUNT(*) AS record_count FROM daily_record');
+    try {
+      return resultSet.goToFirstRow() ? resultSet.getLong(resultSet.getColumnIndex('record_count')) : 0;
+    } finally {
+      resultSet.close();
+    }
+  }
+
   async clearAll(): Promise<void> {
     const predicates = new relationalStore.RdbPredicates(DatabaseConstants.TABLE_DAILY_RECORD);
     await this.store.delete(predicates);

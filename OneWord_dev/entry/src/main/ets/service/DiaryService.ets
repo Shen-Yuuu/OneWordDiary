@@ -39,6 +39,10 @@ export class DiaryService {
     return this.repository.findByDate(localTime.localDate);
   }
 
+  async getRecordCount(): Promise<number> {
+    return this.repository.countAll();
+  }
+
   async submit(input: DiaryEntryInput): Promise<DailyRecord> {
     const normalized = this.textRules.normalizeEntry(input);
     const now = this.clock.now();

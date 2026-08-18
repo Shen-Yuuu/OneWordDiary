@@ -4,6 +4,7 @@ export interface DiaryRepository {
   findByDate(localDate: string): Promise<DailyRecord | null>;
   insert(record: DailyRecord): Promise<void>;
   updateRevision(record: DailyRecord): Promise<boolean>;
+  countAll(): Promise<number>;
   clearAll(): Promise<void>;
   runInTransaction<T>(operation: () => Promise<T>): Promise<T>;
 }
@@ -30,6 +31,10 @@ export class InMemoryDiaryRepository implements DiaryRepository {
     }
     this.records.set(record.localDate, this.cloneRecord(record));
     return true;
+  }
+
+  async countAll(): Promise<number> {
+    return this.records.size;
   }
 
   async clearAll(): Promise<void> {
