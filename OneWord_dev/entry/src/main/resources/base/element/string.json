@@ -1,0 +1,28 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "一天一字，一年成诗。"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "一字日记主窗口"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "一字日记"
+    },
+    {
+      "name": "brand_name",
+      "value": "一字"
+    },
+    {
+      "name": "brand_tagline",
+      "value": "一天一字，一年成诗"
+    },
+    {
+      "name": "baseline_ready",
+      "value": "把今天留给自己"
+    }
+  ]
+}

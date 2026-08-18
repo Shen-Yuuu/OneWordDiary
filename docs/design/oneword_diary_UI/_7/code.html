@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>一字日记 - Detail</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&amp;family=Noto+Serif+SC:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS Setup -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#fdf8f7",
+                        "surface-container-high": "#ebe7e6",
+                        "primary-fixed": "#e7e2db",
+                        "outline-variant": "#ccc6bc",
+                        "surface-tint": "#615e59",
+                        "secondary-fixed": "#eae1d6",
+                        "on-surface": "#1c1b1b",
+                        "on-primary-container": "#918d87",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#c87867",
+                        "on-secondary-container": "#69645b",
+                        "on-tertiary-fixed": "#3b0903",
+                        "secondary": "#635e55",
+                        "on-background": "#1c1b1b",
+                        "on-surface-variant": "#4a463f",
+                        "surface-container-low": "#f7f3f1",
+                        "primary-fixed-dim": "#cbc6bf",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#cbc6bf",
+                        "outline": "#7b776e",
+                        "on-primary-fixed-variant": "#494642",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#282622",
+                        "on-secondary-fixed": "#1f1b14",
+                        "surface-container": "#f1edec",
+                        "inverse-surface": "#31302f",
+                        "primary": "#13110e",
+                        "error": "#ba1a1a",
+                        "background": "#fdf8f7",
+                        "secondary-container": "#eae1d6",
+                        "surface-container-highest": "#e6e2e0",
+                        "on-tertiary-fixed-variant": "#733427",
+                        "inverse-on-surface": "#f4f0ee",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdad3",
+                        "on-secondary-fixed-variant": "#4b463e",
+                        "tertiary-container": "#49140a",
+                        "surface": "#fdf8f7",
+                        "surface-dim": "#ddd9d8",
+                        "tertiary-fixed-dim": "#ffb4a5",
+                        "secondary-fixed-dim": "#cdc5bb",
+                        "tertiary": "#2c0200",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e6e2e0",
+                        "on-primary-fixed": "#1d1b18"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "gutter": "16px",
+                        "section-gap": "40px",
+                        "margin-horizontal": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Noto Sans SC"],
+                        "headline-lg-mobile": ["Noto Serif SC"],
+                        "label-caps": ["Noto Sans SC"],
+                        "date-numeral": ["Noto Sans SC"],
+                        "display-word": ["Noto Serif SC"],
+                        "headline-lg": ["Noto Serif SC"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["22px", {"lineHeight": "30px", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "date-numeral": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "300"}],
+                        "display-word": ["48px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Paper Grain Overlay */
+        .paper-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Hide scrollbar for clean aesthetic */
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface-bright text-on-surface antialiased min-h-screen flex flex-col relative selection:bg-surface-dim">
+<!-- Tactile Grain Overlay -->
+<div class="paper-grain"></div>
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-transparent flex justify-between items-center px-margin-horizontal h-16 max-w-[600px] mx-auto z-40 transition-transform">
+<button aria-label="Back" class="text-on-surface-variant hover:opacity-70 transition-opacity flex items-center justify-center p-2 -ml-2 rounded-full focus:outline-none focus:ring-1 focus:ring-outline-variant">
+<span class="material-symbols-outlined font-light" style="font-variation-settings: 'wght' 300;">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-on-surface absolute left-1/2 transform -translate-x-1/2">一字日记</h1>
+<div class="w-10"></div>
+</header>
+<!-- Main Canvas Frame -->
+<main class="flex-grow w-full max-w-[600px] mx-auto px-margin-horizontal flex flex-col items-center justify-center relative">
+<!-- ========================================== -->
+<!-- DETAIL VIEW MODE                           -->
+<!-- ========================================== -->
+<div class="w-full flex flex-col items-center justify-center flex-grow py-section-gap relative z-10" id="view-state">
+<!-- Content Area (The "Paper") -->
+<div class="flex flex-col items-center justify-center flex-grow w-full relative">
+<!-- Display Word -->
+<div class="font-display-word text-primary leading-none mb-12 text-[120px] font-normal">
+                    静
+                </div>
+<!-- Date -->
+<div class="font-date-numeral text-date-numeral text-outline mb-6 tracking-widest uppercase">
+                    8月17日 星期一
+                </div>
+<!-- Annotation -->
+<div class="font-body-md text-body-md text-on-surface-variant tracking-wider italic opacity-90 mt-2 text-center max-w-[80%]">
+                    风停在窗边
+                </div>
+</div>
+<!-- Share Action (Bottom Right) -->
+<div class="absolute bottom-8 right-0 pr-margin-horizontal">
+<button aria-label="Share" class="text-on-surface-variant hover:opacity-70 transition-opacity flex items-center justify-center p-3 rounded-full focus:outline-none focus:ring-1 focus:ring-outline-variant">
+<span class="material-symbols-outlined font-light text-[24px]" style="font-variation-settings: 'wght' 300;">share</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,32 @@
+{
+  "color": [
+    {
+      "name": "start_window_background",
+      "value": "#FDF8F7"
+    },
+    {
+      "name": "app_background",
+      "value": "#FDF8F7"
+    },
+    {
+      "name": "surface_primary",
+      "value": "#FFFCFB"
+    },
+    {
+      "name": "text_primary",
+      "value": "#282622"
+    },
+    {
+      "name": "text_secondary",
+      "value": "#797672"
+    },
+    {
+      "name": "accent_vermilion",
+      "value": "#A65C4D"
+    },
+    {
+      "name": "divider_subtle",
+      "value": "#E8E1DE"
+    }
+  ]
+}

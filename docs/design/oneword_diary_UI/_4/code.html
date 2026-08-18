@@ -1,0 +1,186 @@
+<!DOCTYPE html><html class="light" lang="zh-CN" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>一字日记 - 输入</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;family=Noto+Serif+SC:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f7f3f1",
+                        "secondary-fixed-dim": "#cdc5bb",
+                        "on-surface-variant": "#4a463f",
+                        "outline-variant": "#ccc6bc",
+                        "surface-dim": "#ddd9d8",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#494642",
+                        "surface-variant": "#e6e2e0",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#31302f",
+                        "surface-container-high": "#ebe7e6",
+                        "secondary": "#635e55",
+                        "on-primary-container": "#918d87",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e6e2e0",
+                        "background": "#fdf8f7",
+                        "outline": "#7b776e",
+                        "on-tertiary-container": "#c87867",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary-fixed-variant": "#733427",
+                        "primary-fixed-dim": "#cbc6bf",
+                        "primary": "#13110e",
+                        "on-secondary-fixed-variant": "#4b463e",
+                        "inverse-on-surface": "#f4f0ee",
+                        "surface": "#fdf8f7",
+                        "on-tertiary-fixed": "#3b0903",
+                        "on-primary-fixed": "#1d1b18",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fdf8f7",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#cbc6bf",
+                        "on-background": "#1c1b1b",
+                        "tertiary-fixed": "#ffdad3",
+                        "primary-fixed": "#e7e2db",
+                        "surface-tint": "#615e59",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#eae1d6",
+                        "tertiary-fixed-dim": "#ffb4a5",
+                        "on-secondary-container": "#69645b",
+                        "secondary-container": "#eae1d6",
+                        "tertiary": "#2c0200",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#1f1b14",
+                        "surface-container": "#f1edec",
+                        "tertiary-container": "#49140a",
+                        "primary-container": "#282622"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-horizontal": "24px",
+                        "section-gap": "40px",
+                        "base": "8px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Noto Sans SC"],
+                        "headline-lg-mobile": ["Noto Serif SC"],
+                        "display-word": ["Noto Serif SC"],
+                        "headline-lg": ["Noto Serif SC"],
+                        "body-md": ["Noto Sans SC"],
+                        "date-numeral": ["Noto Sans SC"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "500" }],
+                        "display-word": ["48px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "date-numeral": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "300" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            background-color: #fdf8f7; /* fallback to config background */
+        }
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Focus styles for invisible inputs */
+        .ghost-input:focus {
+            outline: none;
+            border-color: #ccc6bc; /* outline-variant */
+        }
+
+        /* WebKit hide scrollbar */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col relative overflow-hidden">
+<!-- Top Navigation (Transactional/Focused page - Minimal Header) -->
+<header class="w-full top-0 sticky bg-transparent flex justify-between items-center px-margin-horizontal h-16 max-w-[600px] mx-auto z-10">
+<button aria-label="Close" class="text-primary hover:opacity-70 transition-opacity p-2 -ml-2 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0, &quot;wght&quot; 200;">close</span>
+</button>
+<div class="font-date-numeral text-date-numeral text-on-surface-variant flex items-center gap-2">
+<span class="">2026.08.17</span>
+<span class="text-outline">星期一</span>
+</div>
+<div class="w-10"></div> <!-- Placeholder for balance -->
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-horizontal max-w-[600px] mx-auto w-full relative -mt-16">
+<!-- Large Word Input Area -->
+<div class="flex flex-col items-center justify-center w-full min-h-[300px] relative">
+<div class="relative flex items-center justify-center">
+<input class="ghost-input bg-transparent border-none text-center font-display-word text-display-word text-primary w-32 h-32 p-0 focus:ring-0 selection:bg-surface-container-high" maxlength="1" style="font-size: 120px; line-height: 1.2; height: 160px; width: 160px;" type="text" value="静">
+<div class="absolute right-0 h-24 w-0.5 bg-primary cursor-blink ml-2 pointer-events-none" style="right: 12px; top: 24px; display: none;"></div>
+</div>
+<div class="mt-4 font-date-numeral text-date-numeral text-outline opacity-60">
+                1 / 1
+            </div><div class="mt-2 font-display-word text-[14px] text-on-surface-variant italic opacity-80 tracking-widest">「 见字如面 」</div>
+</div>
+<!-- Annotation Input Area -->
+<div class="w-full mt-section-gap flex flex-col relative group mt-12">
+<label class="sr-only" for="annotation">注解输入</label>
+<textarea class="ghost-input w-full bg-transparent border-b border-outline-variant text-center font-body-md text-body-md text-on-surface-variant p-2 resize-none focus:border-outline focus:ring-0 transition-colors placeholder:text-outline/50" id="annotation" placeholder="留下今日注脚..." rows="2">风停在窗边</textarea>
+<div class="absolute bottom-3 right-0 font-date-numeral text-[10px] text-outline opacity-0 group-focus-within:opacity-100 transition-opacity">
+                6 / 40
+            </div>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<footer class="w-full fixed bottom-0 left-0 bg-gradient-to-t from-background via-background to-transparent pt-8 pb-8 z-20">
+<div class="max-w-[600px] mx-auto px-margin-horizontal flex justify-between"><div class="w-12 h-12 ml-4 opacity-0 pointer-events-none"></div><button class="bg-primary-container text-on-tertiary font-label-caps text-label-caps py-4 px-12 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-[0_8px_30px_rgba(40,38,34,0.12)]">
+                落字
+            </button><button aria-label="备注" class="w-12 h-12 rounded-full bg-surface border border-outline-variant text-on-surface-variant flex items-center justify-center hover:opacity-70 active:scale-95 transition-all shadow-sm ml-2"><span class="material-symbols-outlined text-[20px]">edit_note</span></button></div>
+</footer>
+<script>
+        // Simple auto-resize for textarea if needed, and cursor positioning logic
+        const input = document.querySelector('input[type="text"]');
+        const cursor = document.querySelector('.cursor-blink');
+
+        input.addEventListener('focus', () => {
+            cursor.style.display = 'block';
+        });
+
+        input.addEventListener('blur', () => {
+            cursor.style.display = 'none';
+        });
+
+        // Ensure cursor is visible on load since it's an input screen
+        input.focus();
+
+        // Move cursor based on text length (very simple simulation for a 1-char input)
+        input.addEventListener('input', (e) => {
+            if(e.target.value.length > 0) {
+                 cursor.style.right = '-20px';
+            } else {
+                 cursor.style.right = '50%';
+                 cursor.style.transform = 'translateX(50%)';
+            }
+        });
+    </script>
+
+
+</body></html>

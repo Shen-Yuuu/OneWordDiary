@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>分享预览 - 一字日记</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&amp;family=Noto+Serif+SC:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f7f3f1",
+                        "secondary-fixed-dim": "#cdc5bb",
+                        "on-surface-variant": "#4a463f",
+                        "outline-variant": "#ccc6bc",
+                        "surface-dim": "#ddd9d8",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#494642",
+                        "surface-variant": "#e6e2e0",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#31302f",
+                        "surface-container-high": "#ebe7e6",
+                        "secondary": "#635e55",
+                        "on-primary-container": "#918d87",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e6e2e0",
+                        "background": "#fdf8f7",
+                        "outline": "#7b776e",
+                        "on-tertiary-container": "#c87867",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary-fixed-variant": "#733427",
+                        "primary-fixed-dim": "#cbc6bf",
+                        "primary": "#13110e",
+                        "on-secondary-fixed-variant": "#4b463e",
+                        "inverse-on-surface": "#f4f0ee",
+                        "surface": "#fdf8f7",
+                        "on-tertiary-fixed": "#3b0903",
+                        "on-primary-fixed": "#1d1b18",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fdf8f7",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#cbc6bf",
+                        "on-background": "#1c1b1b",
+                        "tertiary-fixed": "#ffdad3",
+                        "primary-fixed": "#e7e2db",
+                        "surface-tint": "#615e59",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#eae1d6",
+                        "tertiary-fixed-dim": "#ffb4a5",
+                        "on-secondary-container": "#69645b",
+                        "secondary-container": "#eae1d6",
+                        "tertiary": "#2c0200",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#1f1b14",
+                        "surface-container": "#f1edec",
+                        "tertiary-container": "#49140a",
+                        "primary-container": "#282622"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-horizontal": "24px",
+                        "section-gap": "40px",
+                        "base": "8px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Noto Sans SC"],
+                        "headline-lg-mobile": ["Noto Serif SC"],
+                        "display-word": ["Noto Serif SC"],
+                        "headline-lg": ["Noto Serif SC"],
+                        "body-md": ["Noto Sans SC"],
+                        "date-numeral": ["Noto Sans SC"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "500" }],
+                        "display-word": ["48px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "date-numeral": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "300" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .paper-shadow {
+            box-shadow: 0 24px 48px -12px rgba(40, 38, 34, 0.05);
+        }
+        /* Custom scrollbar for webkit to keep it clean */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-high text-on-surface antialiased selection:bg-surface-dim selection:text-primary min-h-screen flex justify-center">
+<!-- Modal App Container -->
+<main class="w-full max-w-[600px] h-screen flex flex-col relative overflow-hidden bg-surface-container-high">
+<!-- Header Actions (Close) -->
+<header class="flex justify-between items-center px-margin-horizontal h-16 shrink-0 z-10">
+<button aria-label="关闭预览" class="w-10 h-10 flex items-center justify-center text-primary rounded-full hover:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">close</span>
+</button>
+<div class="font-label-caps text-label-caps text-on-surface-variant">
+                预览
+            </div>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Scrollable Canvas -->
+<div class="flex-1 overflow-y-auto px-margin-horizontal pb-[140px] pt-4 flex flex-col items-center">
+<!-- The Paper Card -->
+<div class="bg-surface w-full max-w-[400px] rounded-lg paper-shadow py-12 px-8 flex flex-col items-center relative">
+<!-- Card Header -->
+<div class="mb-16 text-center">
+<h2 class="font-date-numeral text-date-numeral text-outline tracking-[0.2em] uppercase">
+                        Recent 7 Days
+                    </h2>
+<div class="w-4 h-[1px] bg-outline-variant mx-auto mt-4"></div>
+</div>
+<!-- Poetry Layout Content -->
+<div class="flex flex-col w-full gap-section-gap relative"><!-- Central Axis -->
+<div class="absolute left-1/2 top-4 bottom-4 w-[1px] bg-outline-variant/30 -translate-x-1/2 -z-0"></div>
+<!-- Day 17 (Right Side) -->
+<div class="flex items-center relative z-10 w-full">
+<div class="w-1/2 pr-gutter text-right">
+<div class="font-date-numeral text-[10px] text-outline uppercase">17日 星期一</div>
+</div>
+<div class="w-0 flex justify-center items-center">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+</div>
+<div class="w-1/2 pl-gutter">
+<div class="font-display-word text-display-word text-primary leading-none">静</div>
+</div>
+</div>
+<!-- Day 16 (Empty - Centered) -->
+<div class="flex items-center relative z-10 w-full h-12">
+<div class="w-1/2 pr-gutter text-right">
+<div class="font-date-numeral text-[10px] text-outline-variant uppercase">16日 星期日</div>
+</div>
+<div class="w-0 flex justify-center items-center">
+<div class="w-4 h-4 rounded-full border border-outline-variant bg-surface shrink-0"></div>
+</div>
+<div class="w-1/2"></div>
+</div>
+<!-- Day 15 (Left Side) -->
+<div class="flex items-center relative z-10 w-full">
+<div class="w-1/2 pr-gutter text-right">
+<div class="font-display-word text-display-word text-primary leading-none">雨</div>
+</div>
+<div class="w-0 flex justify-center items-center">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+</div>
+<div class="w-1/2 pl-gutter">
+<div class="font-date-numeral text-[10px] text-outline uppercase">15日 星期六</div>
+</div>
+</div>
+<!-- Day 14 (Empty - Centered) -->
+<div class="flex items-center relative z-10 w-full h-12">
+<div class="w-1/2 pr-gutter text-right">
+<div class="font-date-numeral text-[10px] text-outline-variant uppercase">14日 星期五</div>
+</div>
+<div class="w-0 flex justify-center items-center">
+<div class="w-4 h-4 rounded-full border border-outline-variant bg-surface shrink-0"></div>
+</div>
+<div class="w-1/2"></div>
+</div>
+<!-- Day 13 (Right Side) -->
+<div class="flex items-center relative z-10 w-full">
+<div class="w-1/2 pr-gutter text-right">
+<div class="font-date-numeral text-[10px] text-outline uppercase">13日 星期四</div>
+</div>
+<div class="w-0 flex justify-center items-center">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+</div>
+<div class="w-1/2 pl-gutter">
+<div class="font-display-word text-display-word text-primary leading-none">远</div>
+</div>
+</div>
+<!-- Day 12 (Empty - Centered) -->
+<div class="flex items-center relative z-10 w-full h-12">
+<div class="w-1/2 pr-gutter text-right">
+<div class="font-date-numeral text-[10px] text-outline-variant uppercase">12日 星期三</div>
+</div>
+<div class="w-0 flex justify-center items-center">
+<div class="w-4 h-4 rounded-full border border-outline-variant bg-surface shrink-0"></div>
+</div>
+<div class="w-1/2"></div>
+</div>
+<!-- Day 11 (Left Side) -->
+<div class="flex items-center relative z-10 w-full">
+<div class="w-1/2 pr-gutter text-right">
+<div class="font-display-word text-display-word text-primary leading-none">灯</div>
+</div>
+<div class="w-0 flex justify-center items-center">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+</div>
+<div class="w-1/2 pl-gutter">
+<div class="font-date-numeral text-[10px] text-outline uppercase">11日 星期二</div>
+</div>
+</div></div>
+<!-- Card Footer / Branding -->
+<div class="mt-20 flex flex-col items-center opacity-40">
+<div class="w-6 h-6 bg-on-tertiary-container flex items-center justify-center rounded-[2px] mb-4">
+<span class="font-label-caps text-[10px] text-surface">印</span>
+</div>
+<div class="font-label-caps text-label-caps text-primary tracking-widest">一字日记</div>
+</div>
+</div>
+</div>
+<!-- Fixed Bottom Actions -->
+<div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-surface-container-high via-surface-container-high/90 to-transparent pt-12 pb-8 px-margin-horizontal z-20">
+<div class="max-w-[400px] mx-auto flex flex-col items-center">
+<p class="font-body-md text-date-numeral text-on-surface-variant mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">info</span>
+                    分享图不包含注解
+                </p>
+<button class="w-full bg-primary text-on-primary py-4 rounded-full font-label-caps text-label-caps tracking-widest hover:bg-primary-container transition-colors shadow-lg shadow-primary/10 active:scale-[0.98]">
+                    系统分享
+                </button>
+</div>
+</div>
+</main>
+</body></html>

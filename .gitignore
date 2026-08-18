@@ -1,0 +1,10 @@
+# Local HarmonyOS signing material and private keys
+**/signing/
+*.p12
+*.p7b
+*.cer
+*.csr
+*.jks
+*.keystore
+*.pem
+*.key

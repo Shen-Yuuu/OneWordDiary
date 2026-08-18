@@ -1,0 +1,297 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>一字 - 分享预览与设置</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&amp;family=Noto+Serif+SC:wght@500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#fdf8f7",
+                        "surface-container-high": "#ebe7e6",
+                        "primary-fixed": "#e7e2db",
+                        "outline-variant": "#ccc6bc",
+                        "surface-tint": "#615e59",
+                        "secondary-fixed": "#eae1d6",
+                        "on-surface": "#1c1b1b",
+                        "on-primary-container": "#918d87",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#c87867",
+                        "on-secondary-container": "#69645b",
+                        "on-tertiary-fixed": "#3b0903",
+                        "secondary": "#635e55",
+                        "on-background": "#1c1b1b",
+                        "on-surface-variant": "#4a463f",
+                        "surface-container-low": "#f7f3f1",
+                        "primary-fixed-dim": "#cbc6bf",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#cbc6bf",
+                        "outline": "#7b776e",
+                        "on-primary-fixed-variant": "#494642",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#282622",
+                        "on-secondary-fixed": "#1f1b14",
+                        "surface-container": "#f1edec",
+                        "inverse-surface": "#31302f",
+                        "primary": "#13110e",
+                        "error": "#ba1a1a",
+                        "background": "#fdf8f7",
+                        "secondary-container": "#eae1d6",
+                        "surface-container-highest": "#e6e2e0",
+                        "on-tertiary-fixed-variant": "#733427",
+                        "inverse-on-surface": "#f4f0ee",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdad3",
+                        "on-secondary-fixed-variant": "#4b463e",
+                        "tertiary-container": "#49140a",
+                        "surface": "#fdf8f7",
+                        "surface-dim": "#ddd9d8",
+                        "tertiary-fixed-dim": "#ffb4a5",
+                        "secondary-fixed-dim": "#cdc5bb",
+                        "tertiary": "#2c0200",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e6e2e0",
+                        "on-primary-fixed": "#1d1b18"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "gutter": "16px",
+                        "section-gap": "40px",
+                        "margin-horizontal": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Noto Sans SC"],
+                        "headline-lg-mobile": ["Noto Serif SC"],
+                        "label-caps": ["Noto Sans SC"],
+                        "date-numeral": ["Noto Sans SC"],
+                        "display-word": ["Noto Serif SC"],
+                        "headline-lg": ["Noto Serif SC"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "date-numeral": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "300" }],
+                        "display-word": ["48px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .paper-grain {
+            position: relative;
+        }
+        .paper-grain::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 50;
+        }
+        .paper-shadow {
+            box-shadow: 0 20px 40px -10px rgba(40, 38, 34, 0.05);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Custom Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #A65C4D;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #A65C4D;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface-container-highest min-h-screen text-on-surface flex flex-col md:flex-row justify-center items-start gap-section-gap p-section-gap font-body-md overflow-x-hidden">
+<!-- Screen 7: Share Preview -->
+<div class="w-[375px] h-[812px] bg-surface-bright paper-grain paper-shadow rounded-xl flex flex-col relative overflow-hidden shrink-0 border border-surface-dim">
+<!-- TopAppBar (Customized for intent, drawing styles from JSON) -->
+<header class="w-full top-0 sticky bg-transparent flex justify-between items-center px-margin-horizontal h-16 max-w-[600px] mx-auto z-10">
+<button class="w-11 h-11 text-on-surface-variant hover:opacity-70 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">close</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">分享预览</h1>
+<div class="w-11"></div> <!-- Spacer for center alignment -->
+</header>
+<main class="flex-1 flex flex-col px-margin-horizontal pb-8 no-scrollbar overflow-y-auto">
+<!-- Segmented Control -->
+<div class="flex items-center justify-center mb-8 mt-2">
+<div class="flex p-1 bg-surface-container rounded-full w-full max-w-[240px]">
+<button class="flex-1 py-2 text-center font-label-caps text-label-caps bg-surface-bright text-primary rounded-full shadow-[0_2px_8px_rgba(40,38,34,0.04)] transition-all min-h-[36px]">单日</button>
+<button class="flex-1 py-2 text-center font-label-caps text-label-caps text-on-surface-variant rounded-full transition-all hover:bg-surface-container-highest min-h-[36px]">最近七日</button>
+</div>
+</div>
+<!-- Preview Card -->
+<div class="flex-1 flex items-center justify-center min-h-[400px]">
+<div class="w-[260px] aspect-[39/60] bg-surface-container-lowest paper-shadow rounded-sm flex flex-col justify-between p-8 relative isolate transform scale-95 hover:scale-100 transition-transform duration-500 ease-out border border-surface-dim/50">
+<!-- Date -->
+<div class="text-center font-date-numeral text-date-numeral text-outline tracking-widest mt-4">
+                        2026.08.17
+                    </div>
+<!-- Main Character -->
+<div class="flex-1 flex items-center justify-center">
+<span class="font-display-word text-[120px] leading-none text-primary opacity-90 select-none" style="text-shadow: 0 4px 12px rgba(40,38,34,0.03);">静</span>
+</div>
+<!-- Footer Brand -->
+<div class="flex items-center justify-center gap-2 mb-4">
+<!-- Seal Indicator Placeholder -->
+<div class="w-6 h-6 bg-[#C85A48] flex items-center justify-center rounded-[2px] opacity-90">
+<span class="font-headline-lg-mobile text-[12px] text-white">字</span>
+</div>
+<span class="font-headline-lg-mobile text-[16px] text-primary tracking-widest">一字</span>
+</div>
+</div>
+</div>
+<!-- Notice & Action -->
+<div class="mt-8 flex flex-col items-center gap-6">
+<p class="font-label-caps text-label-caps text-outline">分享图不包含注解</p>
+<button class="w-full h-14 bg-primary text-on-primary font-body-md rounded-full flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">ios_share</span>
+                    系统分享
+                </button>
+</div>
+</main>
+</div>
+<!-- Screen 8: Settings -->
+<div class="w-[375px] h-[812px] bg-surface-bright paper-grain paper-shadow rounded-xl flex flex-col relative overflow-hidden shrink-0 border border-surface-dim">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-surface-bright/80 backdrop-blur-md flex justify-between items-center px-margin-horizontal h-16 max-w-[600px] mx-auto z-10">
+<button class="w-11 h-11 text-on-surface-variant hover:opacity-70 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">设置</h1>
+<div class="w-11"></div>
+</header>
+<main class="flex-1 flex flex-col no-scrollbar overflow-y-auto pb-24">
+<!-- Group: Style -->
+<section class="mt-4">
+<div class="px-margin-horizontal py-2">
+<h2 class="font-label-caps text-label-caps text-outline">风格</h2>
+</div>
+<div class="px-margin-horizontal py-4 flex gap-4">
+<!-- Style Option 1 -->
+<div class="flex flex-col items-center gap-2 cursor-pointer group min-h-[44px]">
+<div class="w-16 h-24 bg-surface-container-lowest border border-surface-tint/20 rounded-sm paper-shadow flex items-center justify-center ring-1 ring-primary ring-offset-2 ring-offset-surface-bright transition-all">
+<span class="font-display-word text-xl text-primary">墨</span>
+</div>
+<span class="font-body-md text-[14px] text-primary">纸墨</span>
+</div>
+<!-- Style Option 2 -->
+<div class="flex flex-col items-center gap-2 cursor-pointer group hover:opacity-80 transition-opacity min-h-[44px]">
+<div class="w-16 h-24 bg-surface-container border border-surface-dim rounded-sm flex items-center justify-center transition-all">
+<span class="font-display-word text-xl text-on-surface-variant">灰</span>
+</div>
+<span class="font-body-md text-[14px] text-on-surface-variant">素灰</span>
+</div>
+</div>
+</section>
+<div class="w-full h-px bg-surface-variant my-2"></div>
+<!-- Group: Reminder -->
+<section>
+<div class="px-margin-horizontal py-2">
+<h2 class="font-label-caps text-label-caps text-outline">提醒</h2>
+</div>
+<div class="px-margin-horizontal py-4 min-h-[44px] flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<span class="font-body-md text-primary">每日记录提醒</span>
+<!-- Toggle -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10" id="toggle" name="toggle" type="checkbox">
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300" for="toggle"></label>
+</div>
+</div>
+<div class="px-margin-horizontal py-4 min-h-[44px] flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<span class="font-body-md text-primary">提醒时间</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="font-date-numeral text-date-numeral">21:00</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</div>
+</div>
+</section>
+<div class="w-full h-px bg-surface-variant my-2"></div>
+<!-- Group: Data -->
+<section>
+<div class="px-margin-horizontal py-2">
+<h2 class="font-label-caps text-label-caps text-outline">数据</h2>
+</div>
+<div class="px-margin-horizontal py-4 min-h-[44px] flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<span class="font-body-md text-primary">导入备份</span>
+<span class="material-symbols-outlined text-[16px] text-outline">upload_file</span>
+</div>
+<div class="px-margin-horizontal py-4 min-h-[44px] flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<span class="font-body-md text-primary">导出备份</span>
+<span class="material-symbols-outlined text-[16px] text-outline">download</span>
+</div>
+</section>
+<div class="w-full h-px bg-surface-variant my-2"></div>
+<!-- Group: Danger -->
+<section class="mb-8">
+<div class="px-margin-horizontal py-2">
+<h2 class="font-label-caps text-label-caps text-outline">危险操作</h2>
+</div>
+<div class="px-margin-horizontal py-4 min-h-[44px] hover:bg-error-container/30 transition-colors cursor-pointer group">
+<span class="font-body-md text-on-tertiary-container group-hover:text-error transition-colors">清空全部数据</span>
+</div>
+</section>
+</main>
+</div>
+<!-- Dialog Overlays Showcase (Displayed side-by-side outside the main app frames for visibility) -->
+<div class="flex flex-col gap-6 w-[375px] shrink-0">
+<!-- Dialog 1: Import Conflict Result -->
+<div class="bg-surface-bright paper-grain paper-shadow rounded-lg p-6 border border-surface-dim flex flex-col gap-4">
+<h3 class="font-headline-lg-mobile text-[18px] text-primary">导入结果</h3>
+<p class="font-body-md text-on-surface-variant text-[14px]">
+                发现 3 篇日期冲突的日记。系统已保留本地最新版本，跳过冲突文件。
+            </p>
+<div class="flex justify-end gap-3 mt-2">
+<button class="px-4 py-2 min-h-[44px] font-label-caps text-label-caps text-primary hover:bg-surface-container rounded-sm transition-colors">
+                    查看详情
+                </button>
+<button class="px-4 py-2 min-h-[44px] font-label-caps text-label-caps bg-primary text-on-primary rounded-sm hover:opacity-90 transition-opacity">
+                    确认
+                </button>
+</div>
+</div>
+<!-- Dialog 2: Double Confirmation for clearing data -->
+<div class="bg-surface-bright paper-grain paper-shadow rounded-lg p-6 border border-surface-dim flex flex-col gap-4">
+<h3 class="font-headline-lg-mobile text-[18px] text-primary">确认清空？</h3>
+<p class="font-body-md text-on-surface-variant text-[14px]">
+                此操作将永久删除设备上的所有记录，且无法恢复。请确认您已做好备份。
+            </p>
+<div class="flex justify-end gap-3 mt-4">
+<button class="px-4 py-2 min-h-[44px] font-label-caps text-label-caps text-primary hover:bg-surface-container rounded-sm transition-colors">
+                    取消
+                </button>
+<button class="px-4 py-2 min-h-[44px] font-label-caps text-label-caps bg-error text-on-error rounded-sm hover:opacity-90 transition-opacity">
+                    确认清空
+                </button>
+</div>
+</div>
+</div>
+</body></html>

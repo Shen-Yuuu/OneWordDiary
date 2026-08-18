@@ -1,0 +1,239 @@
+<!DOCTYPE html><html class="light" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>状态组件库 - 一字日记</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@200,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&amp;family=Noto+Serif+SC:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 200,
+            'GRAD' 0,
+            'opsz' 24;
+        }
+
+        /* Subtle pulsing for ink wash loading effect */
+        @keyframes ink-breathe {
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        .animate-ink-breathe {
+            animation: ink-breathe 2.5s ease-in-out infinite;
+        }
+
+        /* Subtle spin */
+        @keyframes slow-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-slow-spin {
+            animation: slow-spin 8s linear infinite;
+        }
+    </style>
+<!-- Tailwind CSS with specific configuration -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f7f3f1",
+                    "secondary-fixed-dim": "#cdc5bb",
+                    "on-surface-variant": "#4a463f",
+                    "outline-variant": "#ccc6bc",
+                    "surface-dim": "#ddd9d8",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#494642",
+                    "surface-variant": "#e6e2e0",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#31302f",
+                    "surface-container-high": "#ebe7e6",
+                    "secondary": "#635e55",
+                    "on-primary-container": "#918d87",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#e6e2e0",
+                    "background": "#fdf8f7",
+                    "outline": "#7b776e",
+                    "on-tertiary-container": "#c87867",
+                    "on-surface": "#1c1b1b",
+                    "on-tertiary-fixed-variant": "#733427",
+                    "primary-fixed-dim": "#cbc6bf",
+                    "primary": "#13110e",
+                    "on-secondary-fixed-variant": "#4b463e",
+                    "inverse-on-surface": "#f4f0ee",
+                    "surface": "#fdf8f7",
+                    "on-tertiary-fixed": "#3b0903",
+                    "on-primary-fixed": "#1d1b18",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#fdf8f7",
+                    "error-container": "#ffdad6",
+                    "inverse-primary": "#cbc6bf",
+                    "on-background": "#1c1b1b",
+                    "tertiary-fixed": "#ffdad3",
+                    "primary-fixed": "#e7e2db",
+                    "surface-tint": "#615e59",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed": "#eae1d6",
+                    "tertiary-fixed-dim": "#ffb4a5",
+                    "on-secondary-container": "#69645b",
+                    "secondary-container": "#eae1d6",
+                    "tertiary": "#2c0200",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#1f1b14",
+                    "surface-container": "#f1edec",
+                    "tertiary-container": "#49140a",
+                    "primary-container": "#282622"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-horizontal": "24px",
+                    "section-gap": "40px",
+                    "base": "8px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Noto Sans SC"],
+                    "headline-lg-mobile": ["Noto Serif SC"],
+                    "display-word": ["Noto Serif SC"],
+                    "headline-lg": ["Noto Serif SC"],
+                    "body-md": ["Noto Sans SC"],
+                    "date-numeral": ["Noto Sans SC"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                    "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "500" }],
+                    "display-word": ["48px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                    "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "500" }],
+                    "body-md": ["16px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                    "date-numeral": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "300" }]
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- CSS Grain Overlay (No base64, using CSS noise hack via radial gradients for subtle texture) -->
+<div class="pointer-events-none fixed inset-0 z-[100] opacity-[0.03] mix-blend-multiply" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 4px 4px;"></div>
+<!-- TopAppBar (Shared Component implementation) -->
+<header class="w-full top-0 sticky bg-transparent z-40">
+<div class="flex justify-between items-center px-margin-horizontal h-16 max-w-[600px] mx-auto">
+<!-- Leading Icon -->
+<button class="text-on-surface-variant hover:opacity-70 transition-opacity Active:scale-95 flex items-center justify-center p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-outline-variant">
+<span class="material-symbols-outlined text-2xl" data-icon="calendar_today">calendar_today</span>
+</button>
+<!-- Headline / Brand -->
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-widest">
+                一字日记
+            </h1>
+<!-- Trailing Icon -->
+<button class="text-on-surface-variant hover:opacity-70 transition-opacity Active:scale-95 flex items-center justify-center p-2 -mr-2 rounded-full focus:outline-none focus:ring-2 focus:ring-outline-variant">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="max-w-[600px] mx-auto px-margin-horizontal pt-section-gap pb-32 flex flex-col gap-12">
+<!-- Intro -->
+<div class="flex flex-col gap-2 mb-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">状态组件库</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">现代东方留白风格，基于色阶叠加与极简线性图标设计的反馈状态汇总。</p>
+</div>
+<!-- 1. 分享图生成中 (Loading) -->
+<section class="flex flex-col gap-4">
+<h3 class="font-label-caps text-label-caps text-outline uppercase tracking-widest">01. Loading State</h3>
+<div class="bg-surface-container-low rounded-xl p-12 flex flex-col items-center justify-center gap-6 min-h-[240px] transition-colors duration-300 hover:bg-surface-container">
+<div class="relative w-16 h-16 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-5xl absolute animate-slow-spin opacity-20">motion_photos_on</span>
+<span class="material-symbols-outlined text-3xl animate-ink-breathe">blur_on</span>
+</div>
+<p class="font-body-md text-body-md text-primary tracking-widest">分享图生成中...</p>
+</div>
+</section>
+<!-- 2. 分享失败 (Error) -->
+<section class="flex flex-col gap-4">
+<h3 class="font-label-caps text-label-caps text-outline uppercase tracking-widest">02. Error State</h3>
+<div class="bg-surface-container-low rounded-xl p-12 flex flex-col items-center justify-center gap-6 min-h-[240px] transition-colors duration-300 hover:bg-surface-container">
+<span class="material-symbols-outlined text-4xl text-outline">sync_problem</span>
+<p class="font-body-md text-body-md text-on-surface-variant">生成失败，请重试</p>
+<button class="px-6 py-2 rounded-full border border-outline-variant text-on-surface font-body-md text-body-md hover:bg-surface-variant hover:text-primary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-outline">
+                    重试
+                </button>
+</div>
+</section>
+<!-- 3. 导出确认 (Warning/Confirmation) -->
+<section class="flex flex-col gap-4">
+<h3 class="font-label-caps text-label-caps text-outline uppercase tracking-widest">03. Critical Confirmation</h3>
+<div class="bg-surface-container-low rounded-xl p-8 flex flex-col gap-6 relative overflow-hidden transition-colors duration-300 hover:bg-surface-container">
+<!-- Decorative subtle icon in background -->
+<span class="material-symbols-outlined text-9xl text-surface-variant absolute -right-6 -top-6 opacity-30 select-none">lock_open_right</span>
+<div class="flex items-start gap-4 relative z-10">
+<div class="mt-1 w-8 h-8 rounded-full bg-error-container/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-lg text-on-surface-variant">lock_open</span>
+</div>
+<div class="flex flex-col gap-2">
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">导出未加密备份确认</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            未加密的备份文件包含您的所有日记原始内容，请确保将其保存在安全的设备或存储介质中。泄露可能导致隐私风险。
+                        </p>
+</div>
+</div>
+<div class="flex justify-end gap-4 mt-2 relative z-10">
+<button class="px-6 py-2 rounded-full text-on-surface-variant font-body-md text-body-md hover:bg-surface-variant transition-colors duration-300 focus:outline-none">
+                        取消
+                    </button>
+<button class="px-6 py-2 rounded-full bg-primary text-on-primary font-body-md text-body-md hover:opacity-90 transition-opacity duration-300 shadow-[0_8px_24px_-8px_rgba(40,38,34,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-background">
+                        确认导出
+                    </button>
+</div>
+</div>
+</section>
+<!-- 4. 导入预检 (Conflict Resolution) -->
+<section class="flex flex-col gap-4">
+<h3 class="font-label-caps text-label-caps text-outline uppercase tracking-widest">04. Conflict Resolution</h3>
+<div class="bg-surface-container-low rounded-xl p-8 flex flex-col gap-8 transition-colors duration-300 hover:bg-surface-container">
+<div class="flex items-center gap-4 border-b border-surface-variant pb-6">
+<span class="material-symbols-outlined text-2xl text-primary">merge_type</span>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">预检发现冲突记录</h4>
+<span class="ml-auto font-date-numeral text-date-numeral text-on-surface-variant bg-surface-variant px-3 py-1 rounded-full">12 条</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    导入的文件中包含与当前设备日期重合的日记。请选择处理方式：
+                </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="flex-1 flex flex-col items-center justify-center gap-3 p-6 rounded-lg border border-outline-variant text-on-surface hover:border-primary hover:bg-surface transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary group">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">find_replace</span>
+<span class="font-body-md text-body-md">覆盖本地记录</span>
+</button>
+<button class="flex-1 flex flex-col items-center justify-center gap-3 p-6 rounded-lg border border-outline-variant text-on-surface hover:border-primary hover:bg-surface transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary group">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">next_plan</span>
+<span class="font-body-md text-body-md">跳过冲突条目</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 5. 异常状态 (Exception) -->
+<section class="flex flex-col gap-4">
+<h3 class="font-label-caps text-label-caps text-outline uppercase tracking-widest">05. Exception State</h3>
+<div class="bg-surface-container-low rounded-xl p-8 flex items-center gap-6 border-l-4 border-outline-variant transition-colors duration-300 hover:bg-surface-container">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl text-on-surface-variant">sim_card_alert</span>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="font-body-md text-body-md font-medium text-primary">文件损坏或版本不支持</h4>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-80 text-sm">无法读取该备份文件，请检查文件完整性或更新应用版本。</p>
+</div>
+</div>
+</section>
+</main>
+</body></html>

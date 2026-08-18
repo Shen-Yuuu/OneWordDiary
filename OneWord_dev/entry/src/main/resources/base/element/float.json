@@ -1,0 +1,28 @@
+{
+  "float": [
+    {
+      "name": "page_horizontal_margin",
+      "value": "24vp"
+    },
+    {
+      "name": "touch_target_min",
+      "value": "48vp"
+    },
+    {
+      "name": "brand_word_size",
+      "value": "64fp"
+    },
+    {
+      "name": "headline_size",
+      "value": "22fp"
+    },
+    {
+      "name": "body_size",
+      "value": "16fp"
+    },
+    {
+      "name": "label_size",
+      "value": "12fp"
+    }
+  ]
+}
