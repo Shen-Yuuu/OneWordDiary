@@ -3,8 +3,11 @@ import { TodayConfirmation } from '../components/diary/TodayConfirmation';
 import { TodayEditor } from '../components/diary/TodayEditor';
 import { TodayHeader } from '../components/diary/TodayHeader';
 import { TodayRecordCard } from '../components/diary/TodayRecordCard';
+import { AppRouteName, DetailRouteParam, ScrollRouteParam } from '../model/AppRoute';
 import { RecordType } from '../model/DailyRecord';
 import { TodayUiState } from '../model/TodayUiState';
+import { DetailPage } from './DetailPage';
+import { ScrollPage } from './ScrollPage';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SystemCompletionFeedback } from '../service/CompletionFeedback';
 import { DiaryTextRules } from '../service/DiaryTextRules';
@@ -70,6 +73,41 @@ struct Index {
     return false;
   }
 
+  private openScroll(): void {
+    this.navPathStack.pushPath({
+      name: AppRouteName.SCROLL,
+      param: new ScrollRouteParam()
+    });
+  }
+
+  private openDetail(localDate: string): void {
+    this.navPathStack.pushPath({
+      name: AppRouteName.DETAIL,
+      param: new DetailRouteParam(localDate)
+    });
+  }
+
+  private closeDestination(): void {
+    this.navPathStack.pop();
+  }
+
+  @Builder
+  private routeBuilder(name: string, param: Object) {
+    if (name === AppRouteName.SCROLL) {
+      ScrollPage({
+        onBack: () => this.closeDestination(),
+        onOpenDetail: (localDate: string) => this.openDetail(localDate),
+        onShareSevenDays: () => this.showComingSoon('最近七日分享将在节点 5 开放')
+      })
+    } else if (name === AppRouteName.DETAIL && param instanceof DetailRouteParam) {
+      DetailPage({
+        localDate: param.localDate,
+        onBack: () => this.closeDestination(),
+        onShare: () => this.showComingSoon('单日分享将在节点 5 开放')
+      })
+    }
+  }
+
   private showComingSoon(message: string): void {
     this.getUIContext().getPromptAction().showToast({
       message: message,
@@ -92,7 +130,7 @@ struct Index {
             TodayHeader({
               dateText: this.viewModel.displayDate,
               weekdayText: this.viewModel.weekday,
-              onScroll: () => this.showComingSoon('文字长卷将在节点 3 开放'),
+              onScroll: () => this.openScroll(),
               onSettings: () => this.showComingSoon('设置将在节点 4 开放')
             })
 
@@ -170,6 +208,7 @@ struct Index {
     }
     .width('100%')
     .height('100%')
+    .navDestination(this.routeBuilder)
     .hideTitleBar(true)
     .mode(NavigationMode.Stack)
     .backgroundColor($r('app.color.app_background'))

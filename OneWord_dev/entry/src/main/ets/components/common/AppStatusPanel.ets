@@ -20,13 +20,14 @@ export struct AppLoadingPanel {
 
 @Component
 export struct AppErrorPanel {
+  @Prop title: string = '暂时未能展开今天';
   @Prop message: string = '';
   onRetry: () => void = () => {
   };
 
   build() {
     Column({ space: 18 }) {
-      Text('暂时未能展开今天')
+      Text(this.title)
         .fontSize(22)
         .fontFamily('serif')
         .fontColor($r('app.color.text_primary'))

@@ -2,6 +2,7 @@ import { DailyRecord } from '../model/DailyRecord';
 
 export interface DiaryRepository {
   findByDate(localDate: string): Promise<DailyRecord | null>;
+  findPageBefore(exclusiveDate: string | null, limit: number): Promise<DailyRecord[]>;
   insert(record: DailyRecord): Promise<void>;
   updateRevision(record: DailyRecord): Promise<boolean>;
   countAll(): Promise<number>;
@@ -15,6 +16,19 @@ export class InMemoryDiaryRepository implements DiaryRepository {
   async findByDate(localDate: string): Promise<DailyRecord | null> {
     const record = this.records.get(localDate);
     return record === undefined ? null : this.cloneRecord(record);
+  }
+
+  async findPageBefore(exclusiveDate: string | null, limit: number): Promise<DailyRecord[]> {
+    const records: DailyRecord[] = [];
+    this.records.forEach((value: DailyRecord, key: string) => {
+      if (exclusiveDate === null || key < exclusiveDate) {
+        records.push(this.cloneRecord(value));
+      }
+    });
+    records.sort((left: DailyRecord, right: DailyRecord): number => {
+      return right.localDate.localeCompare(left.localDate);
+    });
+    return records.slice(0, limit);
   }
 
   async insert(record: DailyRecord): Promise<void> {

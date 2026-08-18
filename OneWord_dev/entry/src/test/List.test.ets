@@ -5,6 +5,7 @@ import diaryTextRulesTest from './DiaryTextRules.test';
 import diaryTimePolicyTest from './DiaryTimePolicy.test';
 import invisibleTextTest from './InvisibleText.test';
 import localTimeResolverTest from './LocalTimeResolver.test';
+import scrollDetailTest from './ScrollDetail.test';
 import timeBoundaryTest from './TimeBoundary.test';
 import todayViewModelTest from './TodayViewModel.test';
 
@@ -15,6 +16,7 @@ export default function testsuite(): void {
   invisibleTextTest();
   localTimeResolverTest();
   timeBoundaryTest();
+  scrollDetailTest();
   diaryConcurrencyTest();
   diaryServiceTest();
   todayViewModelTest();

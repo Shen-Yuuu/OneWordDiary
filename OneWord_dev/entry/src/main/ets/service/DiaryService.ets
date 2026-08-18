@@ -39,6 +39,14 @@ export class DiaryService {
     return this.repository.findByDate(localTime.localDate);
   }
 
+  async getRecord(localDate: string): Promise<DailyRecord | null> {
+    return this.repository.findByDate(localDate);
+  }
+
+  async getRecordsPage(exclusiveDate: string | null, limit: number): Promise<DailyRecord[]> {
+    return this.repository.findPageBefore(exclusiveDate, limit);
+  }
+
   async getRecordCount(): Promise<number> {
     return this.repository.countAll();
   }

@@ -24,6 +24,26 @@ export class RdbDiaryRepository implements DiaryRepository {
     }
   }
 
+  async findPageBefore(exclusiveDate: string | null, limit: number): Promise<DailyRecord[]> {
+    const predicates = new relationalStore.RdbPredicates(DatabaseConstants.TABLE_DAILY_RECORD);
+    if (exclusiveDate !== null) {
+      predicates.lessThan(DatabaseConstants.COLUMN_LOCAL_DATE, exclusiveDate);
+    }
+    predicates.orderByDesc(DatabaseConstants.COLUMN_LOCAL_DATE).limitAs(limit);
+    const resultSet = await this.store.query(predicates);
+    const records: DailyRecord[] = [];
+    try {
+      if (resultSet.goToFirstRow()) {
+        do {
+          records.push(this.readRecord(resultSet));
+        } while (resultSet.goToNextRow());
+      }
+      return records;
+    } finally {
+      resultSet.close();
+    }
+  }
+
   async insert(record: DailyRecord): Promise<void> {
     await this.store.insert(DatabaseConstants.TABLE_DAILY_RECORD, this.toValuesBucket(record));
   }

@@ -1,0 +1,6 @@
+export enum ScrollUiState {
+  INITIAL_LOADING = 'INITIAL_LOADING',
+  EMPTY = 'EMPTY',
+  READY = 'READY',
+  INITIAL_ERROR = 'INITIAL_ERROR'
+}
