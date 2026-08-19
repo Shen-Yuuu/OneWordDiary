@@ -1,4 +1,6 @@
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
+import { DiaryIconButton } from '../components/common/DiaryIconButton';
+import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { DetailRecordContent } from '../components/detail/DetailRecordContent';
 import { DailyRecord, RecordType } from '../model/DailyRecord';
 import { DetailUiState } from '../model/DetailUiState';
@@ -48,88 +50,107 @@ export struct DetailPage {
 
   build() {
     NavDestination() {
-      Column() {
-        Row() {
-          Button('返回')
-            .height($r('app.float.touch_target_min'))
-            .fontSize(12)
-            .fontColor($r('app.color.text_secondary'))
-            .backgroundColor(Color.Transparent)
-            .accessibilityText('返回文字长卷')
-            .onClick(() => this.onBack())
+      Stack() {
+        PaperBackdrop({ paperId: this.paperId })
 
-          Text('一字日记')
-            .fontSize(22)
-            .fontFamily('serif')
-            .fontColor($r('app.color.text_primary'))
-            .letterSpacing(2)
+        Column() {
+          Row() {
+            DiaryIconButton({
+              icon: $r('app.media.ic_back'),
+              accessibilityLabel: '返回文字长卷',
+              onTap: () => this.onBack()
+            })
 
-          Row()
-            .width($r('app.float.touch_target_min'))
-            .height($r('app.float.touch_target_min'))
-        }
-        .width('100%')
-        .height(64)
-        .padding({ left: 12, right: 12 })
-        .justifyContent(FlexAlign.SpaceBetween)
-
-        if (this.viewModel.uiState === DetailUiState.LOADING) {
-          AppLoadingPanel()
-            .layoutWeight(1)
-        } else if (this.viewModel.uiState === DetailUiState.LOAD_ERROR) {
-          AppErrorPanel({
-            title: '暂时无法打开这一天',
-            message: this.viewModel.errorMessage,
-            onRetry: () => this.viewModel.load(this.localDate)
-          })
-            .layoutWeight(1)
-        } else if (this.viewModel.uiState === DetailUiState.NOT_FOUND) {
-          Column({ space: 18 }) {
-            Text('这一天没有记录')
-              .fontSize(22)
+            Text('一字日记')
+              .fontSize(20)
               .fontFamily('serif')
               .fontColor($r('app.color.text_primary'))
-              .letterSpacing(3)
+              .letterSpacing(2.6)
 
-            Text('它可能已在恢复或清空数据时离开长卷。')
-              .fontSize(13)
-              .fontColor($r('app.color.text_secondary'))
-              .textAlign(TextAlign.Center)
-
-            Button('返回长卷')
-              .width(160)
-              .height(50)
-              .fontSize(13)
-              .fontColor('#FFFFFF')
-              .backgroundColor($r('app.color.text_primary'))
-              .borderRadius(25)
-              .onClick(() => this.onBack())
+            Row()
+              .width($r('app.float.touch_target_min'))
+              .height($r('app.float.touch_target_min'))
           }
-          .layoutWeight(1)
           .width('100%')
-          .justifyContent(FlexAlign.Center)
-          .alignItems(HorizontalAlign.Center)
-          .padding(32)
-          .accessibilityGroup(true)
-        } else {
-          DetailRecordContent({
-            dateLabel: this.viewModel.dateLabel,
-            recordType: this.recordType,
-            content: this.content,
-            contentCount: this.viewModel.contentCount,
-            note: this.note,
-            fontId: this.fontId,
-            paperId: this.paperId,
-            onShare: () => this.onShare()
-          })
+          .height($r('app.float.top_bar_height'))
+          .padding({ left: 12, right: 12 })
+          .justifyContent(FlexAlign.SpaceBetween)
+          .alignItems(VerticalAlign.Center)
+
+          if (this.viewModel.uiState === DetailUiState.LOADING) {
+            AppLoadingPanel()
+              .layoutWeight(1)
+          } else if (this.viewModel.uiState === DetailUiState.LOAD_ERROR) {
+            AppErrorPanel({
+              title: '暂时无法打开这一天',
+              message: this.viewModel.errorMessage,
+              onRetry: () => this.viewModel.load(this.localDate)
+            })
+              .layoutWeight(1)
+          } else if (this.viewModel.uiState === DetailUiState.NOT_FOUND) {
+            Column({ space: 18 }) {
+              Stack({ alignContent: Alignment.Center }) {
+                Row()
+                  .width(68)
+                  .height(68)
+                  .border({ width: 1, color: $r('app.color.outline_soft') })
+                  .borderRadius(34)
+
+                Row()
+                  .width(6)
+                  .height(6)
+                  .backgroundColor($r('app.color.text_tertiary'))
+                  .borderRadius(3)
+              }
+
+              Text('这一天没有记录')
+                .fontSize(22)
+                .fontFamily('serif')
+                .fontColor($r('app.color.text_primary'))
+                .letterSpacing(3)
+
+              Text('它可能已在恢复或清空数据时离开长卷。')
+                .fontSize(12)
+                .fontColor($r('app.color.text_secondary'))
+                .textAlign(TextAlign.Center)
+
+              Button('返回长卷')
+                .width($r('app.float.primary_button_width'))
+                .height($r('app.float.primary_button_height'))
+                .fontSize(12)
+                .fontColor('#FFFFFF')
+                .backgroundColor($r('app.color.ink_button'))
+                .borderRadius(26)
+                .onClick(() => this.onBack())
+            }
             .layoutWeight(1)
+            .width('100%')
+            .justifyContent(FlexAlign.Center)
+            .alignItems(HorizontalAlign.Center)
+            .padding(32)
+            .accessibilityGroup(true)
+          } else {
+            DetailRecordContent({
+              dateLabel: this.viewModel.dateLabel,
+              recordType: this.recordType,
+              content: this.content,
+              contentCount: this.viewModel.contentCount,
+              note: this.note,
+              fontId: this.fontId,
+              paperId: this.paperId,
+              onShare: () => this.onShare()
+            })
+              .layoutWeight(1)
+          }
         }
+        .width('100%')
+        .height('100%')
+        .backgroundColor(Color.Transparent)
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7')
     }
     .hideTitleBar(true)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7')
+    .backgroundColor(Color.Transparent)
   }
 }

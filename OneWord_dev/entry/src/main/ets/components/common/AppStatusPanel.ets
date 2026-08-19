@@ -2,14 +2,23 @@
 export struct AppLoadingPanel {
   build() {
     Column({ space: 16 }) {
-      LoadingProgress()
-        .width(28)
-        .height(28)
-        .color($r('app.color.accent_vermilion'))
+      Stack({ alignContent: Alignment.Center }) {
+        LoadingProgress()
+          .width(30)
+          .height(30)
+          .color($r('app.color.accent_vermilion'))
+
+        Row()
+          .width(4)
+          .height(4)
+          .backgroundColor($r('app.color.paper_warm'))
+          .borderRadius(2)
+      }
 
       Text('正在展开今天…')
-        .fontSize(13)
+        .fontSize(11)
         .fontColor($r('app.color.text_secondary'))
+        .letterSpacing(1.2)
     }
     .width('100%')
     .height('100%')
@@ -27,23 +36,38 @@ export struct AppErrorPanel {
 
   build() {
     Column({ space: 18 }) {
+      Stack({ alignContent: Alignment.Center }) {
+        Row()
+          .width(56)
+          .height(56)
+          .border({ width: 1, color: $r('app.color.outline_soft') })
+          .borderRadius(28)
+
+        Row()
+          .width(6)
+          .height(6)
+          .backgroundColor($r('app.color.accent_vermilion'))
+          .borderRadius(2)
+      }
+
       Text(this.title)
         .fontSize(22)
         .fontFamily('serif')
         .fontColor($r('app.color.text_primary'))
+        .letterSpacing(2)
 
       Text(this.message)
-        .fontSize(14)
+        .fontSize(13)
         .fontColor($r('app.color.text_secondary'))
         .textAlign(TextAlign.Center)
 
       Button('重试')
-        .width(160)
-        .height(50)
-        .fontSize(13)
+        .width($r('app.float.primary_button_width'))
+        .height($r('app.float.primary_button_height'))
+        .fontSize(12)
         .fontColor('#FFFFFF')
-        .backgroundColor($r('app.color.text_primary'))
-        .borderRadius(25)
+        .backgroundColor($r('app.color.ink_button'))
+        .borderRadius(26)
         .onClick(() => this.onRetry())
     }
     .width('100%')

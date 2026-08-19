@@ -1,9 +1,11 @@
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
+import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { TodayConfirmation } from '../components/diary/TodayConfirmation';
 import { TodayEditor } from '../components/diary/TodayEditor';
 import { TodayHeader } from '../components/diary/TodayHeader';
 import { TodayRecordCard } from '../components/diary/TodayRecordCard';
 import { AppRouteName, DetailRouteParam, ScrollRouteParam } from '../model/AppRoute';
+import { StylePresetId } from '../constants/StyleTokens';
 import { RecordType } from '../model/DailyRecord';
 import { TodayUiState } from '../model/TodayUiState';
 import { DetailPage } from './DetailPage';
@@ -12,6 +14,7 @@ import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SystemCompletionFeedback } from '../service/CompletionFeedback';
 import { DiaryTextRules } from '../service/DiaryTextRules';
 import { SystemClock } from '../utils/Clock';
+import { GraphemeCounter } from '../utils/GraphemeCounter';
 import { SystemLocalTimeResolver } from '../utils/LocalTimeResolver';
 import { TodayViewModel } from '../viewmodel/TodayViewModel';
 
@@ -19,6 +22,7 @@ import { TodayViewModel } from '../viewmodel/TodayViewModel';
 @Component
 struct Index {
   private navPathStack: NavPathStack = new NavPathStack();
+  private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
   @State private viewModel: TodayViewModel = new TodayViewModel(
     AppServiceContainer.getDiaryService(),
     AppServiceContainer.getSettingsRepository(),
@@ -27,6 +31,10 @@ struct Index {
     new DiaryTextRules(),
     new SystemCompletionFeedback()
   );
+
+  get activePaperId(): string {
+    return this.viewModel.stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev';
+  }
 
   get recordType(): RecordType {
     return this.viewModel.record === null ? RecordType.WORD : this.viewModel.record.recordType;
@@ -37,6 +45,10 @@ struct Index {
       this.viewModel.record.content;
   }
 
+
+  get recordContentCount(): number {
+    return this.recordContent.length === 0 ? 0 : this.graphemeCounter.count(this.recordContent);
+  }
 
   get recordCanRevise(): boolean {
     return this.viewModel.uiState === TodayUiState.TODAY_RECORDED_WORD_EDITABLE ||
@@ -118,6 +130,8 @@ struct Index {
   build() {
     Navigation(this.navPathStack) {
       Stack() {
+        PaperBackdrop({ paperId: this.activePaperId })
+
         if (this.viewModel.uiState === TodayUiState.APP_INITIALIZING) {
           AppLoadingPanel()
         } else if (this.viewModel.uiState === TodayUiState.APP_STORAGE_ERROR) {
@@ -135,37 +149,33 @@ struct Index {
             })
 
             if (this.viewModel.isEditingState) {
-              Scroll() {
-                TodayEditor({
-                  content: this.viewModel.draftContent,
-                  note: this.viewModel.draftNote,
-                  contentCount: this.viewModel.contentCount,
-                  noteCount: this.viewModel.noteCount,
-                  recordCount: this.viewModel.recordCount,
-                  contentError: this.viewModel.contentError,
-                  noteError: this.viewModel.noteError,
-                  noteExpanded: this.viewModel.noteExpanded,
-                  canConfirm: this.viewModel.canConfirmWord,
-                  isRevision: this.viewModel.isRevisionDraft,
-                  inspiration: this.viewModel.inspiration,
-                  onContentChange: (value: string) => this.viewModel.setContent(value),
-                  onNoteChange: (value: string) => this.viewModel.setNote(value),
-                  onToggleNote: () => this.viewModel.toggleNote(),
-                  onRefreshInspiration: () => this.viewModel.nextInspiration(),
-                  onConfirmWord: () => this.viewModel.showWordConfirmation(),
-                  onConfirmBlank: () => this.viewModel.showBlankConfirmation(),
-                  onCancelRevision: () => this.viewModel.cancelRevision()
-                })
-                  .padding({ top: 4, bottom: 32 })
-              }
-              .layoutWeight(1)
-              .scrollBar(BarState.Off)
-              .edgeEffect(EdgeEffect.Spring)
+              TodayEditor({
+                content: this.viewModel.draftContent,
+                note: this.viewModel.draftNote,
+                contentCount: this.viewModel.contentCount,
+                noteCount: this.viewModel.noteCount,
+                recordCount: this.viewModel.recordCount,
+                contentError: this.viewModel.contentError,
+                noteError: this.viewModel.noteError,
+                noteExpanded: this.viewModel.noteExpanded,
+                canConfirm: this.viewModel.canConfirmWord,
+                isRevision: this.viewModel.isRevisionDraft,
+                inspiration: this.viewModel.inspiration,
+                onContentChange: (value: string) => this.viewModel.setContent(value),
+                onNoteChange: (value: string) => this.viewModel.setNote(value),
+                onToggleNote: () => this.viewModel.toggleNote(),
+                onRefreshInspiration: () => this.viewModel.nextInspiration(),
+                onConfirmWord: () => this.viewModel.showWordConfirmation(),
+                onConfirmBlank: () => this.viewModel.showBlankConfirmation(),
+                onCancelRevision: () => this.viewModel.cancelRevision()
+              })
+                .layoutWeight(1)
             } else if (this.viewModel.isRecordedState) {
               TodayRecordCard({
                 dateText: this.viewModel.displayDate,
                 recordType: this.recordType,
                 content: this.recordContent,
+                contentCount: this.recordContentCount,
                 canRevise: this.recordCanRevise,
                 revisionDeadline: this.viewModel.revisionDeadlineLabel,
                 finalLabel: this.finalLabel,
@@ -183,14 +193,16 @@ struct Index {
             left: $r('app.float.page_horizontal_margin'),
             right: $r('app.float.page_horizontal_margin')
           })
-          .backgroundColor($r('app.color.app_background'))
+          .backgroundColor(Color.Transparent)
 
           if (this.viewModel.isConfirmationVisible) {
             TodayConfirmation({
               dateText: this.viewModel.displayDate,
               draftType: this.viewModel.draftType,
               content: this.viewModel.draftContent,
+              contentCount: this.viewModel.contentCount,
               note: this.viewModel.draftNote,
+              paperId: this.activePaperId,
               isRevision: this.viewModel.isRevisionDraft,
               isBusy: this.viewModel.isBusy,
               errorMessage: this.viewModel.errorMessage,
@@ -204,13 +216,13 @@ struct Index {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor($r('app.color.app_background'))
+      .backgroundColor(Color.Transparent)
     }
     .width('100%')
     .height('100%')
     .navDestination(this.routeBuilder)
     .hideTitleBar(true)
     .mode(NavigationMode.Stack)
-    .backgroundColor($r('app.color.app_background'))
+    .backgroundColor(Color.Transparent)
   }
 }

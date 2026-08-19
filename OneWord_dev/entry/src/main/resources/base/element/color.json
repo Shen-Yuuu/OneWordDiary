@@ -18,7 +18,7 @@
     },
     {
       "name": "text_secondary",
-      "value": "#797672"
+      "value": "#635E55"
     },
     {
       "name": "accent_vermilion",
@@ -27,6 +27,30 @@
     {
       "name": "divider_subtle",
       "value": "#E8E1DE"
+    },
+    {
+      "name": "surface_low",
+      "value": "#F7F3F1"
+    },
+    {
+      "name": "paper_warm",
+      "value": "#FDF8F7"
+    },
+    {
+      "name": "paper_plain",
+      "value": "#F7F7F5"
+    },
+    {
+      "name": "text_tertiary",
+      "value": "#918D87"
+    },
+    {
+      "name": "outline_soft",
+      "value": "#CCC6BC"
+    },
+    {
+      "name": "ink_button",
+      "value": "#282622"
     }
   ]
 }

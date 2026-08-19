@@ -23,6 +23,18 @@
     {
       "name": "label_size",
       "value": "12fp"
+    },
+    {
+      "name": "top_bar_height",
+      "value": "64vp"
+    },
+    {
+      "name": "primary_button_height",
+      "value": "52vp"
+    },
+    {
+      "name": "primary_button_width",
+      "value": "152vp"
     }
   ]
 }

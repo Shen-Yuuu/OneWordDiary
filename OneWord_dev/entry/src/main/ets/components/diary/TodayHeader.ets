@@ -1,3 +1,5 @@
+import { DiaryIconButton } from '../common/DiaryIconButton';
+
 @Component
 export struct TodayHeader {
   @Prop dateText: string = '';
@@ -9,38 +11,37 @@ export struct TodayHeader {
 
   build() {
     Row() {
-      Button('长卷')
-        .height($r('app.float.touch_target_min'))
-        .fontSize($r('app.float.label_size'))
-        .fontColor($r('app.color.text_secondary'))
-        .backgroundColor(Color.Transparent)
-        .accessibilityText('打开文字长卷')
-        .onClick(() => this.onScroll())
+      DiaryIconButton({
+        icon: $r('app.media.ic_scroll'),
+        accessibilityLabel: '打开文字长卷',
+        onTap: () => this.onScroll()
+      })
 
-      Column({ space: 2 }) {
+      Column({ space: 3 }) {
         Text(this.dateText)
           .fontSize(14)
           .fontWeight(FontWeight.Lighter)
           .fontColor($r('app.color.text_primary'))
-          .letterSpacing(1.2)
+          .letterSpacing(1.5)
 
         Text(this.weekdayText)
-          .fontSize(11)
-          .fontColor($r('app.color.text_secondary'))
-          .letterSpacing(1)
+          .fontSize(10)
+          .fontColor($r('app.color.text_tertiary'))
+          .letterSpacing(1.2)
       }
       .alignItems(HorizontalAlign.Center)
+      .accessibilityGroup(true)
+      .accessibilityText(`${this.dateText}，${this.weekdayText}`)
 
-      Button('设置')
-        .height($r('app.float.touch_target_min'))
-        .fontSize($r('app.float.label_size'))
-        .fontColor($r('app.color.text_secondary'))
-        .backgroundColor(Color.Transparent)
-        .accessibilityText('打开设置')
-        .onClick(() => this.onSettings())
+      DiaryIconButton({
+        icon: $r('app.media.ic_settings'),
+        accessibilityLabel: '打开设置',
+        onTap: () => this.onSettings()
+      })
     }
     .width('100%')
-    .height(64)
+    .height($r('app.float.top_bar_height'))
     .justifyContent(FlexAlign.SpaceBetween)
+    .alignItems(VerticalAlign.Center)
   }
 }

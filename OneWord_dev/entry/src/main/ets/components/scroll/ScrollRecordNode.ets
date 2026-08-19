@@ -13,26 +13,26 @@ export struct ScrollRecordNode {
     return this.item.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
   }
 
-  get recordPaperColor(): string {
-    return this.item.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7';
+  get recordPaperColor(): ResourceColor {
+    return this.item.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm');
   }
 
   get recordFontSize(): number {
     if (this.item.contentCount <= 1) {
-      return 50;
+      return 52;
     }
     if (this.item.contentCount === 2) {
       return 42;
     }
-    return this.item.contentCount === 3 ? 36 : 32;
+    return this.item.contentCount === 3 ? 36 : 31;
   }
 
   @Builder
   private wordContent() {
-    Column({ space: 12 }) {
+    Column({ space: 10 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(12)
-        .fontColor($r('app.color.text_secondary'))
+        .fontSize(10)
+        .fontColor($r('app.color.text_tertiary'))
         .letterSpacing(1.2)
 
       Text(this.item.content)
@@ -41,11 +41,15 @@ export struct ScrollRecordNode {
         .fontWeight(FontWeight.Medium)
         .fontColor($r('app.color.text_primary'))
         .maxLines(1)
+
+      Row()
+        .width(32)
+        .height(1)
+        .backgroundColor(this.recordPaperColor)
+        .border({ width: { bottom: 1 }, color: $r('app.color.outline_soft') })
     }
     .layoutWeight(1)
-    .padding({ left: 22, right: 22, top: 10, bottom: 10 })
-    .backgroundColor(this.recordPaperColor)
-    .borderRadius(12)
+    .padding({ left: 18, right: 18, top: 12, bottom: 12 })
     .alignItems(this.item.side === ScrollItemSide.LEFT ? HorizontalAlign.End : HorizontalAlign.Start)
   }
 
@@ -53,27 +57,26 @@ export struct ScrollRecordNode {
   private blankContent() {
     Column({ space: 12 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(12)
-        .fontColor($r('app.color.text_secondary'))
+        .fontSize(10)
+        .fontColor($r('app.color.text_tertiary'))
         .letterSpacing(1.2)
-        .backgroundColor($r('app.color.app_background'))
+        .backgroundColor($r('app.color.paper_warm'))
         .padding({ left: 8, right: 8 })
 
       Stack({ alignContent: Alignment.Center }) {
         Row()
           .width(42)
           .height(42)
-          .border({ width: 1, color: $r('app.color.divider_subtle') })
-          .borderRadius(22)
+          .backgroundColor($r('app.color.paper_warm'))
+          .border({ width: 1, color: $r('app.color.outline_soft') })
+          .borderRadius(21)
 
         Row()
-          .width(6)
-          .height(6)
-          .backgroundColor($r('app.color.divider_subtle'))
-          .borderRadius(3)
+          .width(5)
+          .height(5)
+          .backgroundColor($r('app.color.accent_vermilion'))
+          .borderRadius(2)
       }
-      .backgroundColor($r('app.color.app_background'))
-      .padding(4)
     }
     .alignItems(HorizontalAlign.Center)
   }
@@ -82,12 +85,12 @@ export struct ScrollRecordNode {
     Column() {
       if (this.item.showMonthHeader) {
         Text(this.item.monthLabel)
-          .fontSize(22)
+          .fontSize(18)
           .fontFamily('serif')
           .fontWeight(FontWeight.Medium)
           .fontColor($r('app.color.text_primary'))
-          .letterSpacing(2.4)
-          .margin({ top: 20, bottom: 26 })
+          .letterSpacing(2.8)
+          .margin({ top: 24, bottom: 22 })
           .accessibilityLevel('yes')
       }
 
@@ -98,7 +101,7 @@ export struct ScrollRecordNode {
 
           Divider()
             .vertical(true)
-            .height(136)
+            .height(128)
             .strokeWidth(1)
             .color($r('app.color.divider_subtle'))
 
@@ -123,7 +126,7 @@ export struct ScrollRecordNode {
         }
       }
       .width('100%')
-      .height(136)
+      .height(128)
       .onClick(() => this.onOpen(this.item.localDate))
       .accessibilityGroup(true)
       .accessibilityText(this.item.recordType === RecordType.BLANK ?

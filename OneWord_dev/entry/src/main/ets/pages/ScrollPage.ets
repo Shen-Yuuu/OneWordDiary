@@ -1,4 +1,6 @@
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
+import { DiaryIconButton } from '../components/common/DiaryIconButton';
+import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { ScrollFooter } from '../components/scroll/ScrollFooter';
 import { ScrollRecordNode } from '../components/scroll/ScrollRecordNode';
 import { ScrollDisplayItem } from '../model/ScrollDisplayItem';
@@ -29,115 +31,133 @@ export struct ScrollPage {
 
   build() {
     NavDestination() {
-      Column() {
-        Row() {
-          Button('返回')
-            .height($r('app.float.touch_target_min'))
-            .fontSize(12)
-            .fontColor($r('app.color.text_secondary'))
-            .backgroundColor(Color.Transparent)
-            .accessibilityText('返回今日')
-            .onClick(() => this.onBack())
+      Stack() {
+        PaperBackdrop()
 
-          Column({ space: 2 }) {
-            Text('文字长卷')
-              .fontSize(22)
-              .fontFamily('serif')
-              .fontWeight(FontWeight.Medium)
-              .fontColor($r('app.color.text_primary'))
-              .letterSpacing(2.4)
+        Column() {
+          Row() {
+            DiaryIconButton({
+              icon: $r('app.media.ic_back'),
+              accessibilityLabel: '返回今日',
+              onTap: () => this.onBack()
+            })
 
-            Text(`已留下 ${this.viewModel.totalCount} 天`)
-              .fontSize(10)
-              .fontColor($r('app.color.text_secondary'))
-              .letterSpacing(1)
+            Column({ space: 2 }) {
+              Text('文字长卷')
+                .fontSize(20)
+                .fontFamily('serif')
+                .fontWeight(FontWeight.Medium)
+                .fontColor($r('app.color.text_primary'))
+                .letterSpacing(2.6)
+
+              Text(`已留下 ${this.viewModel.totalCount} 天`)
+                .fontSize(9)
+                .fontColor($r('app.color.text_tertiary'))
+                .letterSpacing(1.2)
+            }
+            .alignItems(HorizontalAlign.Center)
+
+            DiaryIconButton({
+              icon: $r('app.media.ic_share'),
+              accessibilityLabel: '分享最近七日',
+              onTap: () => this.onShareSevenDays()
+            })
           }
-          .alignItems(HorizontalAlign.Center)
-
-          Button('近七日')
-            .height($r('app.float.touch_target_min'))
-            .fontSize(12)
-            .fontColor($r('app.color.text_secondary'))
-            .backgroundColor(Color.Transparent)
-            .accessibilityText('分享最近七日')
-            .onClick(() => this.onShareSevenDays())
-        }
-        .width('100%')
-        .height(64)
-        .padding({ left: 12, right: 12 })
-        .justifyContent(FlexAlign.SpaceBetween)
-
-        if (this.viewModel.uiState === ScrollUiState.INITIAL_LOADING) {
-          AppLoadingPanel()
-            .layoutWeight(1)
-        } else if (this.viewModel.uiState === ScrollUiState.INITIAL_ERROR) {
-          AppErrorPanel({
-            title: '暂时未能展开长卷',
-            message: this.viewModel.errorMessage,
-            onRetry: () => this.viewModel.load()
-          })
-            .layoutWeight(1)
-        } else if (this.viewModel.uiState === ScrollUiState.EMPTY) {
-          Column({ space: 18 }) {
-            Text('长卷尚空')
-              .fontSize(24)
-              .fontFamily('serif')
-              .fontColor($r('app.color.text_primary'))
-              .letterSpacing(4)
-
-            Text('今天落下的字，会从这里慢慢展开。')
-              .fontSize(13)
-              .fontColor($r('app.color.text_secondary'))
-              .textAlign(TextAlign.Center)
-
-            Button('回到今天')
-              .width(160)
-              .height(50)
-              .fontSize(13)
-              .fontColor('#FFFFFF')
-              .backgroundColor($r('app.color.text_primary'))
-              .borderRadius(25)
-              .onClick(() => this.onBack())
-          }
-          .layoutWeight(1)
           .width('100%')
-          .justifyContent(FlexAlign.Center)
-          .alignItems(HorizontalAlign.Center)
-          .padding(32)
-          .accessibilityGroup(true)
-        } else {
-          List() {
-            LazyForEach(this.viewModel.dataSource, (item: ScrollDisplayItem) => {
+          .height($r('app.float.top_bar_height'))
+          .padding({ left: 12, right: 12 })
+          .justifyContent(FlexAlign.SpaceBetween)
+          .alignItems(VerticalAlign.Center)
+
+          if (this.viewModel.uiState === ScrollUiState.INITIAL_LOADING) {
+            AppLoadingPanel()
+              .layoutWeight(1)
+          } else if (this.viewModel.uiState === ScrollUiState.INITIAL_ERROR) {
+            AppErrorPanel({
+              title: '暂时未能展开长卷',
+              message: this.viewModel.errorMessage,
+              onRetry: () => this.viewModel.load()
+            })
+              .layoutWeight(1)
+          } else if (this.viewModel.uiState === ScrollUiState.EMPTY) {
+            Column({ space: 18 }) {
+              Stack({ alignContent: Alignment.Center }) {
+                Row()
+                  .width(68)
+                  .height(68)
+                  .border({ width: 1, color: $r('app.color.outline_soft') })
+                  .borderRadius(34)
+
+                Row()
+                  .width(6)
+                  .height(6)
+                  .backgroundColor($r('app.color.accent_vermilion'))
+                  .borderRadius(2)
+              }
+
+              Text('长卷尚空')
+                .fontSize(22)
+                .fontFamily('serif')
+                .fontColor($r('app.color.text_primary'))
+                .letterSpacing(4)
+
+              Text('今天落下的字，会从这里慢慢展开。')
+                .fontSize(12)
+                .fontColor($r('app.color.text_secondary'))
+                .textAlign(TextAlign.Center)
+
+              Button('回到今天')
+                .width($r('app.float.primary_button_width'))
+                .height($r('app.float.primary_button_height'))
+                .fontSize(12)
+                .fontColor('#FFFFFF')
+                .backgroundColor($r('app.color.ink_button'))
+                .borderRadius(26)
+                .onClick(() => this.onBack())
+            }
+            .layoutWeight(1)
+            .width('100%')
+            .justifyContent(FlexAlign.Center)
+            .alignItems(HorizontalAlign.Center)
+            .padding(32)
+            .accessibilityGroup(true)
+          } else {
+            List() {
+              LazyForEach(this.viewModel.dataSource, (item: ScrollDisplayItem) => {
+                ListItem() {
+                  ScrollRecordNode({
+                    item: item,
+                    onOpen: (localDate: string) => this.onOpenDetail(localDate)
+                  })
+                }
+              }, (item: ScrollDisplayItem): string => item.localDate)
+
               ListItem() {
-                ScrollRecordNode({
-                  item: item,
-                  onOpen: (localDate: string) => this.onOpenDetail(localDate)
+                ScrollFooter({
+                  isLoading: this.viewModel.isLoadingMore,
+                  errorMessage: this.viewModel.loadMoreError,
+                  hasMore: this.viewModel.hasMore,
+                  onRetry: () => this.viewModel.retryLoadMore()
                 })
               }
-            }, (item: ScrollDisplayItem): string => item.localDate)
-
-            ListItem() {
-              ScrollFooter({
-                isLoading: this.viewModel.isLoadingMore,
-                errorMessage: this.viewModel.loadMoreError,
-                hasMore: this.viewModel.hasMore,
-                onRetry: () => this.viewModel.retryLoadMore()
-              })
             }
+            .layoutWeight(1)
+            .width('100%')
+            .padding({ left: 20, right: 20 })
+            .cachedCount(6)
+            .scrollBar(BarState.Off)
+            .edgeEffect(EdgeEffect.Spring)
+            .onReachEnd(() => this.viewModel.loadMore())
           }
-          .layoutWeight(1)
-          .width('100%')
-          .cachedCount(6)
-          .scrollBar(BarState.Off)
-          .edgeEffect(EdgeEffect.Spring)
-          .onReachEnd(() => this.viewModel.loadMore())
         }
+        .width('100%')
+        .height('100%')
+        .backgroundColor(Color.Transparent)
       }
       .width('100%')
       .height('100%')
-      .backgroundColor($r('app.color.app_background'))
     }
     .hideTitleBar(true)
-    .backgroundColor($r('app.color.app_background'))
+    .backgroundColor(Color.Transparent)
   }
 }

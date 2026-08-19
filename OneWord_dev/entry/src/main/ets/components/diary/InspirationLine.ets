@@ -1,3 +1,5 @@
+import { DiaryIconButton } from '../common/DiaryIconButton';
+
 @Component
 export struct InspirationLine {
   @Prop text: string = '';
@@ -5,23 +7,23 @@ export struct InspirationLine {
   };
 
   build() {
-    Row({ space: 8 }) {
+    Row({ space: 2 }) {
       Text(this.text)
-        .fontSize(15)
+        .fontSize(14)
         .fontWeight(FontWeight.Lighter)
         .fontColor($r('app.color.text_secondary'))
-        .letterSpacing(0.6)
+        .letterSpacing(0.8)
         .maxLines(2)
+        .textAlign(TextAlign.Center)
 
-      Button('换一句')
-        .height($r('app.float.touch_target_min'))
-        .fontSize(11)
-        .fontColor($r('app.color.text_secondary'))
-        .backgroundColor(Color.Transparent)
-        .accessibilityText('换一句今日灵感')
-        .onClick(() => this.onRefresh())
+      DiaryIconButton({
+        icon: $r('app.media.ic_refresh'),
+        accessibilityLabel: '换一句今日灵感',
+        onTap: () => this.onRefresh()
+      })
     }
     .width('100%')
+    .height(56)
     .justifyContent(FlexAlign.Center)
     .alignItems(VerticalAlign.Center)
   }
