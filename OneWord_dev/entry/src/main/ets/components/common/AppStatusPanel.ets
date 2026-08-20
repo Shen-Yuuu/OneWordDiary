@@ -16,7 +16,7 @@ export struct AppLoadingPanel {
       }
 
       Text('正在展开今天…')
-        .fontSize(11)
+        .fontSize(13)
         .fontColor($r('app.color.text_secondary'))
         .letterSpacing(1.2)
     }
@@ -51,20 +51,20 @@ export struct AppErrorPanel {
       }
 
       Text(this.title)
-        .fontSize(22)
+        .fontSize(24)
         .fontFamily('serif')
         .fontColor($r('app.color.text_primary'))
         .letterSpacing(2)
 
       Text(this.message)
-        .fontSize(13)
+        .fontSize(15)
         .fontColor($r('app.color.text_secondary'))
         .textAlign(TextAlign.Center)
 
       Button('重试')
         .width($r('app.float.primary_button_width'))
         .height($r('app.float.primary_button_height'))
-        .fontSize(12)
+        .fontSize(14)
         .fontColor('#FFFFFF')
         .backgroundColor($r('app.color.ink_button'))
         .borderRadius(26)

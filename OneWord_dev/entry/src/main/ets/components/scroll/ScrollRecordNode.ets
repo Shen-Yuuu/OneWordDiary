@@ -19,19 +19,19 @@ export struct ScrollRecordNode {
 
   get recordFontSize(): number {
     if (this.item.contentCount <= 1) {
-      return 52;
+      return 56;
     }
     if (this.item.contentCount === 2) {
-      return 42;
+      return 46;
     }
-    return this.item.contentCount === 3 ? 36 : 31;
+    return this.item.contentCount === 3 ? 39 : 34;
   }
 
   @Builder
   private wordContent() {
     Column({ space: 10 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(10)
+        .fontSize(12)
         .fontColor($r('app.color.text_tertiary'))
         .letterSpacing(1.2)
 
@@ -57,7 +57,7 @@ export struct ScrollRecordNode {
   private blankContent() {
     Column({ space: 12 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(10)
+        .fontSize(12)
         .fontColor($r('app.color.text_tertiary'))
         .letterSpacing(1.2)
         .backgroundColor($r('app.color.paper_warm'))
@@ -85,7 +85,7 @@ export struct ScrollRecordNode {
     Column() {
       if (this.item.showMonthHeader) {
         Text(this.item.monthLabel)
-          .fontSize(18)
+          .fontSize(20)
           .fontFamily('serif')
           .fontWeight(FontWeight.Medium)
           .fontColor($r('app.color.text_primary'))

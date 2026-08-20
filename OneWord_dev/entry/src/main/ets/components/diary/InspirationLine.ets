@@ -9,7 +9,7 @@ export struct InspirationLine {
   build() {
     Row({ space: 2 }) {
       Text(this.text)
-        .fontSize(14)
+        .fontSize(16)
         .fontWeight(FontWeight.Lighter)
         .fontColor($r('app.color.text_secondary'))
         .letterSpacing(0.8)

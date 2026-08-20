@@ -62,7 +62,7 @@ export struct DetailPage {
             })
 
             Text('一字日记')
-              .fontSize(20)
+              .fontSize(22)
               .fontFamily('serif')
               .fontColor($r('app.color.text_primary'))
               .letterSpacing(2.6)
@@ -110,14 +110,14 @@ export struct DetailPage {
                 .letterSpacing(3)
 
               Text('它可能已在恢复或清空数据时离开长卷。')
-                .fontSize(12)
+                .fontSize(14)
                 .fontColor($r('app.color.text_secondary'))
                 .textAlign(TextAlign.Center)
 
               Button('返回长卷')
                 .width($r('app.float.primary_button_width'))
                 .height($r('app.float.primary_button_height'))
-                .fontSize(12)
+                .fontSize(14)
                 .fontColor('#FFFFFF')
                 .backgroundColor($r('app.color.ink_button'))
                 .borderRadius(26)

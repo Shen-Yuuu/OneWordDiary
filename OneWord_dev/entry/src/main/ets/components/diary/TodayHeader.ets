@@ -19,13 +19,13 @@ export struct TodayHeader {
 
       Column({ space: 3 }) {
         Text(this.dateText)
-          .fontSize(14)
+          .fontSize(16)
           .fontWeight(FontWeight.Lighter)
           .fontColor($r('app.color.text_primary'))
           .letterSpacing(1.5)
 
         Text(this.weekdayText)
-          .fontSize(10)
+          .fontSize(12)
           .fontColor($r('app.color.text_tertiary'))
           .letterSpacing(1.2)
       }

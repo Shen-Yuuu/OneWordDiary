@@ -114,6 +114,31 @@ export default function todayViewModelTest(): void {
       expect(fixture.viewModel.recordCount).assertEqual(1);
     });
 
+    it('submitsWordAndOptionalNoteTogether', 0, async () => {
+      const fixture = new ViewModelFixture();
+      await fixture.viewModel.load();
+      fixture.viewModel.setContent('静');
+      fixture.viewModel.setNote('雨后的窗');
+      fixture.viewModel.showWordConfirmation();
+      await fixture.viewModel.confirmPending();
+
+      const saved = await fixture.repository.findByDate('2026-08-18');
+      expect(saved !== null && saved.content === '静').assertTrue();
+      expect(saved !== null && saved.note === '雨后的窗').assertTrue();
+    });
+
+    it('keepsBlankSemanticallyEmptyWhenDraftNoteExists', 0, async () => {
+      const fixture = new ViewModelFixture();
+      await fixture.viewModel.load();
+      fixture.viewModel.setNote('这句话不应进入留白记录');
+      fixture.viewModel.showBlankConfirmation();
+      await fixture.viewModel.confirmPending();
+
+      const saved = await fixture.repository.findByDate('2026-08-18');
+      expect(saved !== null && saved.recordType === RecordType.BLANK).assertTrue();
+      expect(saved !== null && saved.content === null && saved.note === null).assertTrue();
+    });
+
     it('submitsABlankDayAsAnExplicitRecord', 0, async () => {
       const fixture = new ViewModelFixture();
       await fixture.viewModel.load();

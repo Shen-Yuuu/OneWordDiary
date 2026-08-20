@@ -44,14 +44,14 @@ export struct ScrollPage {
 
             Column({ space: 2 }) {
               Text('文字长卷')
-                .fontSize(20)
+                .fontSize(22)
                 .fontFamily('serif')
                 .fontWeight(FontWeight.Medium)
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(2.6)
 
               Text(`已留下 ${this.viewModel.totalCount} 天`)
-                .fontSize(9)
+                .fontSize(11)
                 .fontColor($r('app.color.text_tertiary'))
                 .letterSpacing(1.2)
             }
@@ -102,14 +102,14 @@ export struct ScrollPage {
                 .letterSpacing(4)
 
               Text('今天落下的字，会从这里慢慢展开。')
-                .fontSize(12)
+                .fontSize(14)
                 .fontColor($r('app.color.text_secondary'))
                 .textAlign(TextAlign.Center)
 
               Button('回到今天')
                 .width($r('app.float.primary_button_width'))
                 .height($r('app.float.primary_button_height'))
-                .fontSize(12)
+                .fontSize(14)
                 .fontColor('#FFFFFF')
                 .backgroundColor($r('app.color.ink_button'))
                 .borderRadius(26)

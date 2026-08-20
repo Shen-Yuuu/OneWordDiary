@@ -15,22 +15,22 @@ export struct ScrollFooter {
           .color($r('app.color.accent_vermilion'))
 
         Text('长卷仍在展开…')
-          .fontSize(11)
+          .fontSize(13)
           .fontColor($r('app.color.text_secondary'))
       } else if (this.errorMessage.length > 0) {
         Text(this.errorMessage)
-          .fontSize(12)
+          .fontSize(14)
           .fontColor($r('app.color.text_secondary'))
 
         Button('重试')
           .height($r('app.float.touch_target_min'))
-          .fontSize(12)
+          .fontSize(14)
           .fontColor($r('app.color.text_primary'))
           .backgroundColor(Color.Transparent)
           .onClick(() => this.onRetry())
       } else if (!this.hasMore) {
         Text('卷尾')
-          .fontSize(11)
+          .fontSize(13)
           .fontColor($r('app.color.text_secondary'))
           .letterSpacing(3)
       }

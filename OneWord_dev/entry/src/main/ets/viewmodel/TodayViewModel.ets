@@ -21,7 +21,6 @@ export class TodayViewModel {
   contentError: string = '';
   noteError: string = '';
   errorMessage: string = '';
-  noteExpanded: boolean = false;
   recordCount: number = 0;
   localDate: string = '';
   weekday: string = '';
@@ -97,7 +96,6 @@ export class TodayViewModel {
   get isEditingState(): boolean {
     return this.uiState === TodayUiState.TODAY_EMPTY ||
       this.uiState === TodayUiState.TODAY_EDITING_WORD ||
-      this.uiState === TodayUiState.TODAY_NOTE_EXPANDED ||
       this.uiState === TodayUiState.TODAY_INPUT_INVALID ||
       this.uiState === TodayUiState.TODAY_NOTE_INVALID ||
       this.uiState === TodayUiState.TODAY_REVISING_WORD ||
@@ -151,11 +149,6 @@ export class TodayViewModel {
     const normalized = value.normalize('NFC').trim();
     this.noteCount = this.textRules.countGraphemes(normalized);
     this.noteError = this.validateNote(value);
-    this.updateEditingState();
-  }
-
-  toggleNote(): void {
-    this.noteExpanded = !this.noteExpanded;
     this.updateEditingState();
   }
 
@@ -231,7 +224,6 @@ export class TodayViewModel {
     this.draftNote = this.record.note === null ? '' : this.record.note;
     this.contentCount = this.textRules.countGraphemes(this.draftContent);
     this.noteCount = this.textRules.countGraphemes(this.draftNote);
-    this.noteExpanded = this.draftNote.length > 0;
     this.contentError = '';
     this.noteError = '';
     this.errorMessage = '';
@@ -296,10 +288,6 @@ export class TodayViewModel {
         TodayUiState.TODAY_REVISING_BLANK : TodayUiState.TODAY_REVISING_WORD;
       return;
     }
-    if (this.noteExpanded) {
-      this.uiState = TodayUiState.TODAY_NOTE_EXPANDED;
-      return;
-    }
     this.uiState = this.contentCount === 0 ? TodayUiState.TODAY_EMPTY : TodayUiState.TODAY_EDITING_WORD;
   }
 
@@ -362,7 +350,6 @@ export class TodayViewModel {
     this.noteCount = 0;
     this.contentError = '';
     this.noteError = '';
-    this.noteExpanded = false;
     this.isRevisionDraft = false;
   }
 

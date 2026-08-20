@@ -78,10 +78,6 @@ struct Index {
       this.viewModel.cancelRevision();
       return true;
     }
-    if (this.viewModel.noteExpanded) {
-      this.viewModel.toggleNote();
-      return true;
-    }
     return false;
   }
 
@@ -157,13 +153,11 @@ struct Index {
                 recordCount: this.viewModel.recordCount,
                 contentError: this.viewModel.contentError,
                 noteError: this.viewModel.noteError,
-                noteExpanded: this.viewModel.noteExpanded,
                 canConfirm: this.viewModel.canConfirmWord,
                 isRevision: this.viewModel.isRevisionDraft,
                 inspiration: this.viewModel.inspiration,
                 onContentChange: (value: string) => this.viewModel.setContent(value),
                 onNoteChange: (value: string) => this.viewModel.setNote(value),
-                onToggleNote: () => this.viewModel.toggleNote(),
                 onRefreshInspiration: () => this.viewModel.nextInspiration(),
                 onConfirmWord: () => this.viewModel.showWordConfirmation(),
                 onConfirmBlank: () => this.viewModel.showBlankConfirmation(),
