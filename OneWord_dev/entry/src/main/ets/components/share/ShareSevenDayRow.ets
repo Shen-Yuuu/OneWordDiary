@@ -1,4 +1,5 @@
 import { ShareDayItem, ShareDayKind } from '../../model/ShareModel';
+import { GraphemeCounter } from '../../utils/GraphemeCounter';
 
 @Component
 export struct ShareSevenDayRow {
@@ -12,9 +13,10 @@ export struct ShareSevenDayRow {
   @Prop index: number = 0;
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
+  private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
   get dateOnLeft(): boolean {
-    return Math.floor(this.index / 2) % 2 === 0;
+    return this.index % 2 === 0;
   }
 
   get fontFamily(): string {
@@ -37,18 +39,28 @@ export struct ShareSevenDayRow {
     return this.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
   }
 
-  get wordSize(): number {
-    return this.item.content.length > 2 ? 18 : 29;
+  get contentCount(): number {
+    return this.graphemeCounter.count(this.item.content);
+  }
+
+  get wordSize(): string {
+    if (this.contentCount <= 1) {
+      return '30vp';
+    }
+    if (this.contentCount === 2) {
+      return '26vp';
+    }
+    return this.contentCount === 3 ? '23vp' : '21vp';
   }
 
   @Builder
   private dateBlock() {
     Text(`${this.item.dateLabel}  ${this.item.weekdayLabel}`)
-      .width(108)
-      .fontSize(9)
+      .width(112)
+      .fontSize(10)
       .fontFamily('sans-serif')
       .fontColor(this.item.kind === ShareDayKind.MISSING ? this.faintColor : this.secondaryColor)
-      .letterSpacing(0.8)
+      .letterSpacing(0.5)
       .textAlign(this.dateOnLeft ? TextAlign.End : TextAlign.Start)
       .minFontScale(1)
       .maxFontScale(1)
@@ -58,10 +70,11 @@ export struct ShareSevenDayRow {
   private contentBlock() {
     if (this.item.kind === ShareDayKind.WORD) {
       Text(this.item.content)
-        .width(108)
+        .width(112)
         .fontSize(this.wordSize)
+        .lineHeight('34vp')
         .fontFamily(this.fontFamily)
-        .fontWeight(FontWeight.Medium)
+        .fontWeight(FontWeight.Normal)
         .fontColor(this.textColor)
         .maxLines(1)
         .textAlign(this.dateOnLeft ? TextAlign.Start : TextAlign.End)
@@ -69,8 +82,8 @@ export struct ShareSevenDayRow {
         .maxFontScale(1)
     } else if (this.item.kind === ShareDayKind.BLANK) {
       Text('留白')
-        .width(108)
-        .fontSize(11)
+        .width(112)
+        .fontSize(12)
         .fontFamily(this.fontFamily)
         .fontColor(this.secondaryColor)
         .letterSpacing(3)
@@ -79,7 +92,7 @@ export struct ShareSevenDayRow {
         .maxFontScale(1)
     } else {
       Row()
-        .width(108)
+        .width(112)
         .height(1)
     }
   }
@@ -89,16 +102,16 @@ export struct ShareSevenDayRow {
     Stack({ alignContent: Alignment.Center }) {
       if (this.item.kind === ShareDayKind.WORD) {
         Row()
-          .width(7)
-          .height(7)
+          .width(6)
+          .height(6)
           .backgroundColor(this.accentColor)
-          .borderRadius(3.5)
+          .borderRadius(3)
       } else if (this.item.kind === ShareDayKind.BLANK) {
         Row()
-          .width(15)
-          .height(15)
+          .width(13)
+          .height(13)
           .border({ width: 1, color: this.accentColor })
-          .borderRadius(7.5)
+          .borderRadius(6.5)
         Row()
           .width(3)
           .height(3)
@@ -106,14 +119,14 @@ export struct ShareSevenDayRow {
           .borderRadius(1.5)
       } else {
         Row()
-          .width(11)
-          .height(11)
-          .border({ width: 1, color: this.faintColor, style: BorderStyle.Dashed })
-          .borderRadius(5.5)
+          .width(4)
+          .height(4)
+          .backgroundColor(this.faintColor)
+          .borderRadius(2)
       }
     }
     .width(20)
-    .height(40)
+    .height(38)
   }
 
   build() {
@@ -129,7 +142,7 @@ export struct ShareSevenDayRow {
       }
     }
     .width('100%')
-    .height(40)
+    .height(38)
     .justifyContent(FlexAlign.Center)
     .alignItems(VerticalAlign.Center)
   }

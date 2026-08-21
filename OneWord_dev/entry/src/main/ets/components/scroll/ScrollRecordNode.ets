@@ -13,43 +13,53 @@ export struct ScrollRecordNode {
     return this.item.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
   }
 
-  get recordPaperColor(): ResourceColor {
-    return this.item.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm');
-  }
 
-  get recordFontSize(): number {
+  get recordFontSize(): string {
     if (this.item.contentCount <= 1) {
-      return 60;
+      return '48vp';
     }
     if (this.item.contentCount === 2) {
-      return 50;
+      return '42vp';
     }
-    return this.item.contentCount === 3 ? 43 : 38;
+    return this.item.contentCount === 3 ? '36vp' : '32vp';
+  }
+
+  get recordLineHeight(): string {
+    if (this.item.contentCount <= 1) {
+      return '60vp';
+    }
+    if (this.item.contentCount === 2) {
+      return '54vp';
+    }
+    return this.item.contentCount === 3 ? '48vp' : '44vp';
   }
 
   @Builder
   private wordContent() {
     Column({ space: 8 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(13)
+        .fontSize(12)
         .fontColor($r('app.color.text_tertiary'))
         .letterSpacing(1.2)
 
       Text(this.item.content)
         .fontSize(this.recordFontSize)
+        .lineHeight(this.recordLineHeight)
         .fontFamily(this.recordFontFamily)
-        .fontWeight(FontWeight.Medium)
+        .fontWeight(FontWeight.Normal)
         .fontColor($r('app.color.text_primary'))
+        .letterSpacing(this.item.contentCount > 1 ? 2 : 0)
+        .minFontScale(1)
+        .maxFontScale(1)
         .maxLines(1)
 
       Row()
         .width(32)
         .height(1)
-        .backgroundColor(this.recordPaperColor)
-        .border({ width: { bottom: 1 }, color: $r('app.color.outline_soft') })
+        .backgroundColor($r('app.color.outline_soft'))
     }
     .layoutWeight(1)
-    .padding({ left: 12, right: 12, top: 8, bottom: 8 })
+    .padding({ left: 12, right: 12, top: 10, bottom: 10 })
     .alignItems(this.item.side === ScrollItemSide.LEFT ? HorizontalAlign.End : HorizontalAlign.Start)
   }
 
@@ -57,7 +67,7 @@ export struct ScrollRecordNode {
   private blankContent() {
     Column({ space: 12 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(13)
+        .fontSize(12)
         .fontColor($r('app.color.text_tertiary'))
         .letterSpacing(1.2)
         .backgroundColor($r('app.color.paper_warm'))
@@ -101,7 +111,7 @@ export struct ScrollRecordNode {
 
           Divider()
             .vertical(true)
-            .height(112)
+            .height(136)
             .strokeWidth(1)
             .color($r('app.color.divider_subtle'))
 
@@ -123,10 +133,16 @@ export struct ScrollRecordNode {
             }
           }
           .width('100%')
+
+          Row()
+            .width(6)
+            .height(6)
+            .backgroundColor($r('app.color.accent_vermilion'))
+            .borderRadius(3)
         }
       }
       .width('100%')
-      .height(112)
+      .height(136)
       .onClick(() => this.onOpen(this.item.localDate))
       .accessibilityGroup(true)
       .accessibilityText(this.item.recordType === RecordType.BLANK ?

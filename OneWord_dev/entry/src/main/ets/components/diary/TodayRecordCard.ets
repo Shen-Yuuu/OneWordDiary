@@ -27,9 +27,39 @@ export struct TodayRecordCard {
     Column() {
       Blank()
 
-      Column({ space: 12 }) {
-        Row() {
-          Blank()
+      Column({ space: 16 }) {
+        Stack({ alignContent: Alignment.Center }) {
+          if (this.recordType === RecordType.BLANK) {
+            Column({ space: 14 }) {
+              Stack({ alignContent: Alignment.Center }) {
+                Row()
+                  .width(86)
+                  .height(86)
+                  .border({ width: 1, color: $r('app.color.outline_soft') })
+                  .borderRadius(43)
+
+                Row()
+                  .width(8)
+                  .height(8)
+                  .backgroundColor($r('app.color.accent_vermilion'))
+                  .borderRadius(2)
+              }
+
+              Text('今日留白')
+                .fontSize(24)
+                .fontFamily('serif')
+                .fontColor($r('app.color.text_primary'))
+                .letterSpacing(4)
+            }
+            .alignItems(HorizontalAlign.Center)
+          } else {
+            DiaryWordDisplay({
+              content: this.content,
+              contentCount: this.contentCount,
+              fontFamily: this.fontFamily,
+              accessibilityPrefix: '今日正文'
+            })
+          }
 
           Text('已')
             .width(26)
@@ -39,40 +69,13 @@ export struct TodayRecordCard {
             .backgroundColor($r('app.color.accent_vermilion'))
             .textAlign(TextAlign.Center)
             .borderRadius(2)
+            .translate({ x: 126, y: -54 })
             .accessibilityText('已收入长卷')
         }
         .width('100%')
-        .height(26)
+        .height(170)
 
-        if (this.recordType === RecordType.BLANK) {
-          Stack({ alignContent: Alignment.Center }) {
-            Row()
-              .width(86)
-              .height(86)
-              .border({ width: 1, color: $r('app.color.outline_soft') })
-              .borderRadius(43)
-
-            Row()
-              .width(8)
-              .height(8)
-              .backgroundColor($r('app.color.accent_vermilion'))
-              .borderRadius(2)
-          }
-          .height(126)
-
-          Text('今日留白')
-            .fontSize(24)
-            .fontFamily('serif')
-            .fontColor($r('app.color.text_primary'))
-            .letterSpacing(4)
-        } else {
-          DiaryWordDisplay({
-            content: this.content,
-            contentCount: this.contentCount,
-            fontFamily: this.fontFamily,
-            accessibilityPrefix: '今日正文'
-          })
-
+        if (this.recordType === RecordType.WORD) {
           Text('「 见字如面 」')
             .fontSize(14)
             .fontFamily('serif')

@@ -40,7 +40,7 @@ export struct ShareSevenCard {
         .letterSpacing(2.2)
         .minFontScale(1)
         .maxFontScale(1)
-        .margin({ top: 30 })
+        .margin({ top: 28 })
 
       Row()
         .width(18)
@@ -51,7 +51,7 @@ export struct ShareSevenCard {
       Stack({ alignContent: Alignment.Center }) {
         Row()
           .width(1)
-          .height(272)
+          .height(252)
           .backgroundColor(this.lineColor)
 
         Column() {
@@ -67,7 +67,7 @@ export struct ShareSevenCard {
         .width('100%')
       }
       .width('100%')
-      .height(280)
+      .height(266)
 
       Row({ space: 8 }) {
         Stack({ alignContent: Alignment.Center }) {

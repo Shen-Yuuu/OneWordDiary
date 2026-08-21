@@ -1,5 +1,6 @@
 import { RecordType } from '../../model/DailyRecord';
 import { DiaryDateFormatter } from '../../utils/DiaryDateFormatter';
+import { GraphemeCounter } from '../../utils/GraphemeCounter';
 
 @Component
 export struct ShareSingleCard {
@@ -9,6 +10,7 @@ export struct ShareSingleCard {
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
+  private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
   get paperColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#FFFFFF' : '#FFFCFB';
@@ -30,14 +32,28 @@ export struct ShareSingleCard {
     return this.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
   }
 
-  get wordSize(): number {
-    if (this.content.length >= 4) {
-      return 48;
+  get contentCount(): number {
+    return this.graphemeCounter.count(this.content);
+  }
+
+  get wordSize(): string {
+    if (this.contentCount <= 1) {
+      return '96vp';
     }
-    if (this.content.length >= 2) {
-      return 64;
+    if (this.contentCount === 2) {
+      return '78vp';
     }
-    return 94;
+    return this.contentCount === 3 ? '62vp' : '52vp';
+  }
+
+  get wordLineHeight(): string {
+    if (this.contentCount <= 1) {
+      return '112vp';
+    }
+    if (this.contentCount === 2) {
+      return '94vp';
+    }
+    return this.contentCount === 3 ? '78vp' : '68vp';
   }
 
   build() {
@@ -50,20 +66,25 @@ export struct ShareSingleCard {
         .letterSpacing(2.4)
         .minFontScale(1)
         .maxFontScale(1)
-        .margin({ top: 42 })
+        .margin({ top: 38 })
 
       if (this.recordType === RecordType.WORD) {
-        Text(this.content)
-          .fontSize(this.wordSize)
-          .fontFamily(this.fontFamily)
-          .fontWeight(FontWeight.Medium)
-          .fontColor(this.textColor)
-          .letterSpacing(this.content.length > 1 ? 2 : 0)
-          .maxLines(1)
-          .minFontScale(1)
-          .maxFontScale(1)
-          .layoutWeight(1)
-          .textAlign(TextAlign.Center)
+        Stack({ alignContent: Alignment.Center }) {
+          Text(this.content)
+            .width('100%')
+            .fontSize(this.wordSize)
+            .lineHeight(this.wordLineHeight)
+            .fontFamily(this.fontFamily)
+            .fontWeight(FontWeight.Normal)
+            .fontColor(this.textColor)
+            .letterSpacing(this.contentCount > 1 ? 3 : 0)
+            .maxLines(1)
+            .minFontScale(1)
+            .maxFontScale(1)
+            .textAlign(TextAlign.Center)
+        }
+        .width('100%')
+        .height(292)
       } else {
         Column({ space: 14 }) {
           Stack({ alignContent: Alignment.Center }) {
@@ -88,7 +109,7 @@ export struct ShareSingleCard {
             .minFontScale(1)
             .maxFontScale(1)
         }
-        .layoutWeight(1)
+        .height(292)
         .justifyContent(FlexAlign.Center)
         .alignItems(HorizontalAlign.Center)
       }
@@ -117,7 +138,7 @@ export struct ShareSingleCard {
           .minFontScale(1)
           .maxFontScale(1)
       }
-      .margin({ bottom: 38 })
+      .margin({ bottom: 32 })
       .alignItems(VerticalAlign.Center)
     }
     .width(286)

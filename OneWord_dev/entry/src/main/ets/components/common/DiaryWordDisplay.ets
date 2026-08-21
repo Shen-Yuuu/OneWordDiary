@@ -3,25 +3,31 @@ export struct DiaryWordDisplay {
   @Prop content: string = '';
   @Prop contentCount: number = 0;
   @Prop fontFamily: string = 'serif';
-  @Prop stageHeight: number = 132;
+  @Prop stageHeight: number = 160;
   @Prop accessibilityPrefix: string = '正文';
 
-  get contentFontSize(): number {
+  get contentFontSize(): string {
     if (this.contentCount <= 1) {
-      return 84;
+      return '88vp';
     }
     if (this.contentCount === 2) {
-      return 68;
+      return '72vp';
     }
-    return this.contentCount === 3 ? 54 : 46;
+    return this.contentCount === 3 ? '58vp' : '48vp';
   }
 
-  get contentLineHeight(): number {
-    return this.contentFontSize + 16;
+  get contentLineHeight(): string {
+    if (this.contentCount <= 1) {
+      return '104vp';
+    }
+    if (this.contentCount === 2) {
+      return '88vp';
+    }
+    return this.contentCount === 3 ? '74vp' : '64vp';
   }
 
   build() {
-    Row() {
+    Stack({ alignContent: Alignment.Center }) {
       Text(this.content)
         .width('100%')
         .fontSize(this.contentFontSize)
@@ -29,15 +35,14 @@ export struct DiaryWordDisplay {
         .minFontScale(1)
         .maxFontScale(1)
         .fontFamily(this.fontFamily)
-        .fontWeight(FontWeight.Medium)
+        .fontWeight(FontWeight.Normal)
         .fontColor($r('app.color.text_primary'))
+        .letterSpacing(this.contentCount > 1 ? 3 : 0)
         .textAlign(TextAlign.Center)
         .maxLines(1)
         .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
     }
     .width('100%')
     .height(this.stageHeight)
-    .justifyContent(FlexAlign.Center)
-    .alignItems(VerticalAlign.Center)
   }
 }
