@@ -17,6 +17,8 @@ export struct SettingsPage {
   };
   onOpenPrivacy: (paperId: string) => void = () => {
   };
+  onOpenBackup: (paperId: string) => void = () => {
+  };
   onClearComplete: () => void = () => {
   };
 
@@ -274,6 +276,7 @@ export struct SettingsPage {
                 Divider().color($r('app.color.divider_subtle'))
 
                 this.sectionTitle('关于数据')
+                this.navigationRow('备份与恢复', '', () => this.onOpenBackup(this.activePaperId))
                 this.navigationRow('隐私说明', '', () => this.onOpenPrivacy(this.activePaperId))
 
                 Divider().color($r('app.color.divider_subtle'))

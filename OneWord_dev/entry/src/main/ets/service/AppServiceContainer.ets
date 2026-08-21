@@ -6,6 +6,8 @@ import { RdbDiaryRepository } from '../repository/RdbDiaryRepository';
 import { SystemClock } from '../utils/Clock';
 import { SystemLocalTimeResolver } from '../utils/LocalTimeResolver';
 import { AppResetService } from './AppResetService';
+import { BackupCodec } from './BackupCodec';
+import { BackupService } from './BackupService';
 import { DiaryService } from './DiaryService';
 import { DiaryTextRules } from './DiaryTextRules';
 import { ReminderScheduler, SystemReminderScheduler } from './ReminderScheduler';
@@ -15,6 +17,7 @@ export class AppServiceContainer {
   private static settingsRepository: SettingsRepository | null = null;
   private static reminderScheduler: ReminderScheduler | null = null;
   private static resetService: AppResetService | null = null;
+  private static backupService: BackupService | null = null;
 
   static async initialize(context: common.UIAbilityContext): Promise<void> {
     const store = await DiaryDatabase.open(context);
@@ -33,6 +36,12 @@ export class AppServiceContainer {
     AppServiceContainer.settingsRepository = settingsRepository;
     AppServiceContainer.reminderScheduler = reminderScheduler;
     AppServiceContainer.resetService = resetService;
+    AppServiceContainer.backupService = new BackupService(
+      repository,
+      settingsRepository,
+      new SystemClock(),
+      new BackupCodec(new DiaryTextRules())
+    );
   }
 
   static getDiaryService(): DiaryService {
@@ -61,5 +70,12 @@ export class AppServiceContainer {
       throw new Error('AppServiceContainer has not been initialized');
     }
     return AppServiceContainer.resetService;
+  }
+
+  static getBackupService(): BackupService {
+    if (AppServiceContainer.backupService === null) {
+      throw new Error('AppServiceContainer has not been initialized');
+    }
+    return AppServiceContainer.backupService;
   }
 }

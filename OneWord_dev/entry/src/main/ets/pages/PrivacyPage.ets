@@ -70,7 +70,7 @@ export struct PrivacyPage {
               this.privacyItem('没有追踪', '应用不申请网络权限，不接入统计、广告或用户画像服务。')
               this.privacyItem('克制的提醒', '每日提醒只显示固定文案，不读取或展示你的日记正文与注解。')
               this.privacyItem('谨慎分享', '分享图片默认不包含注解；分享前始终展示完整预览。')
-              this.privacyItem('主动备份', '系统自动备份保持关闭。后续备份功能只在你主动导出或导入时工作。')
+              this.privacyItem('主动备份', '应用未接入系统备份恢复扩展。只有你主动选择时才会导出或导入；导出的 .oneword 文件未加密，请保存到可信位置。')
 
               Text('一字 1.0 · 离线优先')
                 .fontSize(13)

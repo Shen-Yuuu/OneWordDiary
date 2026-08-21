@@ -6,6 +6,7 @@ import { TodayHeader } from '../components/diary/TodayHeader';
 import { TodayRecordCard } from '../components/diary/TodayRecordCard';
 import {
   AppRouteName,
+  BackupRouteParam,
   DetailRouteParam,
   PrivacyRouteParam,
   ScrollRouteParam,
@@ -14,6 +15,7 @@ import {
 import { StylePresetId } from '../constants/StyleTokens';
 import { RecordType } from '../model/DailyRecord';
 import { TodayUiState } from '../model/TodayUiState';
+import { BackupPage } from './BackupPage';
 import { DetailPage } from './DetailPage';
 import { ScrollPage } from './ScrollPage';
 import { PrivacyPage } from './PrivacyPage';
@@ -110,6 +112,13 @@ struct Index {
     });
   }
 
+  private openBackup(paperId: string): void {
+    this.navPathStack.pushPath({
+      name: AppRouteName.BACKUP,
+      param: new BackupRouteParam(paperId)
+    });
+  }
+
   private openPrivacy(paperId: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.PRIVACY,
@@ -144,7 +153,13 @@ struct Index {
       SettingsPage({
         onBack: () => this.closeDestination(),
         onOpenPrivacy: (paperId: string) => this.openPrivacy(paperId),
+        onOpenBackup: (paperId: string) => this.openBackup(paperId),
         onClearComplete: () => this.finishClear()
+      })
+    } else if (name === AppRouteName.BACKUP && param instanceof BackupRouteParam) {
+      BackupPage({
+        paperId: param.paperId,
+        onBack: () => this.closeDestination()
       })
     } else if (name === AppRouteName.PRIVACY && param instanceof PrivacyRouteParam) {
       PrivacyPage({
