@@ -13,6 +13,7 @@ import { DiaryTextRules } from './DiaryTextRules';
 import { ReminderScheduler, SystemReminderScheduler } from './ReminderScheduler';
 
 export class AppServiceContainer {
+  private static abilityContext: common.UIAbilityContext | null = null;
   private static diaryService: DiaryService | null = null;
   private static settingsRepository: SettingsRepository | null = null;
   private static reminderScheduler: ReminderScheduler | null = null;
@@ -20,6 +21,7 @@ export class AppServiceContainer {
   private static backupService: BackupService | null = null;
 
   static async initialize(context: common.UIAbilityContext): Promise<void> {
+    AppServiceContainer.abilityContext = context;
     const store = await DiaryDatabase.open(context);
     const repository: DiaryRepository = new RdbDiaryRepository(store);
     const settingsRepository = await PreferencesSettingsRepository.create(context);
@@ -42,6 +44,13 @@ export class AppServiceContainer {
       new SystemClock(),
       new BackupCodec(new DiaryTextRules())
     );
+  }
+
+  static getAbilityContext(): common.UIAbilityContext {
+    if (AppServiceContainer.abilityContext === null) {
+      throw new Error('AppServiceContainer has not been initialized');
+    }
+    return AppServiceContainer.abilityContext;
   }
 
   static getDiaryService(): DiaryService {

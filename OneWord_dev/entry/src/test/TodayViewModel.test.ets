@@ -121,6 +121,9 @@ export default function todayViewModelTest(): void {
 
       expect(fixture.viewModel.uiState).assertEqual(TodayUiState.TODAY_RECORDED_WORD_EDITABLE);
       expect(fixture.viewModel.record !== null && fixture.viewModel.record.content === '静').assertTrue();
+      expect(fixture.viewModel.recordDisplayContent).assertEqual('静');
+      expect(fixture.viewModel.recordDisplayContentCount).assertEqual(1);
+      expect(fixture.viewModel.recordDisplayType).assertEqual(RecordType.WORD);
       expect(fixture.viewModel.recordCount).assertEqual(1);
     });
 
@@ -158,6 +161,8 @@ export default function todayViewModelTest(): void {
       expect(fixture.viewModel.uiState).assertEqual(TodayUiState.TODAY_RECORDED_BLANK_EDITABLE);
       expect(fixture.viewModel.record !== null && fixture.viewModel.record.recordType === RecordType.BLANK).assertTrue();
       expect(fixture.viewModel.record !== null && fixture.viewModel.record.content === null).assertTrue();
+      expect(fixture.viewModel.recordDisplayType).assertEqual(RecordType.BLANK);
+      expect(fixture.viewModel.recordDisplayContent).assertEqual('');
     });
 
     it('exposesInputAndNoteValidationBeforeConfirmation', 0, async () => {
@@ -222,6 +227,7 @@ export default function todayViewModelTest(): void {
       fixture.clock.setTime(2001);
       await fixture.viewModel.load();
       expect(fixture.viewModel.uiState).assertEqual(TodayUiState.TODAY_FINAL_EXPIRED);
+      expect(fixture.viewModel.recordDisplayContent).assertEqual('静');
     });
   });
 }

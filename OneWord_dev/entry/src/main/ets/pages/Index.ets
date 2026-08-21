@@ -10,21 +10,23 @@ import {
   DetailRouteParam,
   PrivacyRouteParam,
   ScrollRouteParam,
-  SettingsRouteParam
+  SettingsRouteParam,
+  ShareRouteParam
 } from '../model/AppRoute';
 import { StylePresetId } from '../constants/StyleTokens';
-import { RecordType } from '../model/DailyRecord';
+import { DiaryShareMode } from '../model/ShareModel';
 import { TodayUiState } from '../model/TodayUiState';
 import { BackupPage } from './BackupPage';
 import { DetailPage } from './DetailPage';
 import { ScrollPage } from './ScrollPage';
 import { PrivacyPage } from './PrivacyPage';
 import { SettingsPage } from './SettingsPage';
+import { SharePreviewPage } from './SharePreviewPage';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SystemCompletionFeedback } from '../service/CompletionFeedback';
 import { DiaryTextRules } from '../service/DiaryTextRules';
 import { SystemClock } from '../utils/Clock';
-import { GraphemeCounter } from '../utils/GraphemeCounter';
+
 import { SystemLocalTimeResolver } from '../utils/LocalTimeResolver';
 import { TodayViewModel } from '../viewmodel/TodayViewModel';
 
@@ -32,7 +34,7 @@ import { TodayViewModel } from '../viewmodel/TodayViewModel';
 @Component
 struct Index {
   private navPathStack: NavPathStack = new NavPathStack();
-  private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
+
   @State private viewModel: TodayViewModel = new TodayViewModel(
     AppServiceContainer.getDiaryService(),
     AppServiceContainer.getSettingsRepository(),
@@ -43,21 +45,10 @@ struct Index {
   );
 
   get activePaperId(): string {
+    if (this.viewModel.isRecordedState) {
+      return this.viewModel.recordPaperId;
+    }
     return this.viewModel.stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev';
-  }
-
-  get recordType(): RecordType {
-    return this.viewModel.record === null ? RecordType.WORD : this.viewModel.record.recordType;
-  }
-
-  get recordContent(): string {
-    return this.viewModel.record === null || this.viewModel.record.content === null ? '' :
-      this.viewModel.record.content;
-  }
-
-
-  get recordContentCount(): number {
-    return this.recordContent.length === 0 ? 0 : this.graphemeCounter.count(this.recordContent);
   }
 
   get recordCanRevise(): boolean {
@@ -105,6 +96,20 @@ struct Index {
     });
   }
 
+  private openSingleShare(localDate: string): void {
+    this.navPathStack.pushPath({
+      name: AppRouteName.SHARE,
+      param: new ShareRouteParam(DiaryShareMode.SINGLE, localDate)
+    });
+  }
+
+  private openSevenDayShare(): void {
+    this.navPathStack.pushPath({
+      name: AppRouteName.SHARE,
+      param: new ShareRouteParam(DiaryShareMode.SEVEN_DAYS)
+    });
+  }
+
   private openSettings(): void {
     this.navPathStack.pushPath({
       name: AppRouteName.SETTINGS,
@@ -141,13 +146,19 @@ struct Index {
       ScrollPage({
         onBack: () => this.closeDestination(),
         onOpenDetail: (localDate: string) => this.openDetail(localDate),
-        onShareSevenDays: () => this.showComingSoon('最近七日分享将在节点 5 开放')
+        onShareSevenDays: () => this.openSevenDayShare()
       })
     } else if (name === AppRouteName.DETAIL && param instanceof DetailRouteParam) {
       DetailPage({
         localDate: param.localDate,
         onBack: () => this.closeDestination(),
-        onShare: () => this.showComingSoon('单日分享将在节点 5 开放')
+        onShare: () => this.openSingleShare(param.localDate)
+      })
+    } else if (name === AppRouteName.SHARE && param instanceof ShareRouteParam) {
+      SharePreviewPage({
+        initialMode: param.mode,
+        preferredSingleDate: param.localDate,
+        onBack: () => this.closeDestination()
       })
     } else if (name === AppRouteName.SETTINGS) {
       SettingsPage({
@@ -169,12 +180,6 @@ struct Index {
     }
   }
 
-  private showComingSoon(message: string): void {
-    this.getUIContext().getPromptAction().showToast({
-      message: message,
-      duration: 1800
-    });
-  }
 
   build() {
     Navigation(this.navPathStack) {
@@ -236,15 +241,16 @@ struct Index {
             } else if (this.viewModel.isRecordedState) {
               TodayRecordCard({
                 dateText: this.viewModel.displayDate,
-                recordType: this.recordType,
-                content: this.recordContent,
-                contentCount: this.recordContentCount,
+                recordType: this.viewModel.recordDisplayType,
+                content: this.viewModel.recordDisplayContent,
+                contentCount: this.viewModel.recordDisplayContentCount,
+                fontId: this.viewModel.recordFontId,
                 canRevise: this.recordCanRevise,
                 revisionDeadline: this.viewModel.revisionDeadlineLabel,
                 finalLabel: this.finalLabel,
                 recordCount: this.viewModel.recordCount,
                 onRevise: () => this.viewModel.startRevision(),
-                onShare: () => this.showComingSoon('分享预览将在节点 5 开放')
+                onShare: () => this.openSingleShare(this.viewModel.localDate)
               })
                 .layoutWeight(1)
                 .animation({ duration: 240, curve: Curve.EaseOut })

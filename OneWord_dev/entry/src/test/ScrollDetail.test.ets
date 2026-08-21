@@ -191,11 +191,16 @@ export default function scrollDetailTest(): void {
       await viewModel.load('2026-08-18');
       expect(viewModel.uiState).assertEqual(DetailUiState.WORD);
       expect(viewModel.contentCount).assertEqual(4);
+      expect(viewModel.content).assertEqual('微风正好');
+      expect(viewModel.note).assertEqual('风停在窗边');
+      expect(viewModel.recordType).assertEqual(RecordType.WORD);
       expect(viewModel.record !== null && viewModel.record.note === '风停在窗边').assertTrue();
       expect(viewModel.dateLabel).assertEqual('8月18日 星期二');
 
       await viewModel.load('2026-08-17');
       expect(viewModel.uiState).assertEqual(DetailUiState.BLANK);
+      expect(viewModel.recordType).assertEqual(RecordType.BLANK);
+      expect(viewModel.content).assertEqual('');
       expect(viewModel.record !== null && viewModel.record.content === null).assertTrue();
 
       await viewModel.load('2026-08-16');

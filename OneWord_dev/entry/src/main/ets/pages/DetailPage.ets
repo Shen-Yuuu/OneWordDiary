@@ -2,7 +2,7 @@ import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPa
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { DetailRecordContent } from '../components/detail/DetailRecordContent';
-import { DailyRecord, RecordType } from '../model/DailyRecord';
+
 import { DetailUiState } from '../model/DetailUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { DiaryDateFormatter } from '../utils/DiaryDateFormatter';
@@ -20,29 +20,6 @@ export struct DetailPage {
   onShare: () => void = () => {
   };
 
-  get record(): DailyRecord | null {
-    return this.viewModel.record;
-  }
-
-  get recordType(): RecordType {
-    return this.record === null ? RecordType.WORD : this.record.recordType;
-  }
-
-  get content(): string {
-    return this.record === null || this.record.content === null ? '' : this.record.content;
-  }
-
-  get note(): string {
-    return this.record === null || this.record.note === null ? '' : this.record.note;
-  }
-
-  get fontId(): string {
-    return this.record === null ? 'system_serif_dev' : this.record.fontId;
-  }
-
-  get paperId(): string {
-    return this.record === null ? 'warm_paper_dev' : this.record.paperId;
-  }
 
   aboutToAppear(): void {
     this.viewModel.load(this.localDate);
@@ -51,7 +28,7 @@ export struct DetailPage {
   build() {
     NavDestination() {
       Stack() {
-        PaperBackdrop({ paperId: this.paperId })
+        PaperBackdrop({ paperId: this.viewModel.paperId })
 
         Column() {
           Row() {
@@ -132,12 +109,12 @@ export struct DetailPage {
           } else {
             DetailRecordContent({
               dateLabel: this.viewModel.dateLabel,
-              recordType: this.recordType,
-              content: this.content,
+              recordType: this.viewModel.recordType,
+              content: this.viewModel.content,
               contentCount: this.viewModel.contentCount,
-              note: this.note,
-              fontId: this.fontId,
-              paperId: this.paperId,
+              note: this.viewModel.note,
+              fontId: this.viewModel.fontId,
+              paperId: this.viewModel.paperId,
               onShare: () => this.onShare()
             })
               .layoutWeight(1)

@@ -9,6 +9,7 @@ export struct TodayRecordCard {
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop content: string = '';
   @Prop contentCount: number = 0;
+  @Prop fontId: string = 'system_serif_dev';
   @Prop canRevise: boolean = false;
   @Prop revisionDeadline: string = '';
   @Prop finalLabel: string = '';
@@ -18,6 +19,9 @@ export struct TodayRecordCard {
   onShare: () => void = () => {
   };
 
+  get fontFamily(): string {
+    return this.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
+  }
 
   build() {
     Column() {
@@ -65,6 +69,7 @@ export struct TodayRecordCard {
           DiaryWordDisplay({
             content: this.content,
             contentCount: this.contentCount,
+            fontFamily: this.fontFamily,
             accessibilityPrefix: '今日正文'
           })
 

@@ -16,11 +16,18 @@ export struct DiaryWordDisplay {
     return this.contentCount === 3 ? 54 : 46;
   }
 
+  get contentLineHeight(): number {
+    return this.contentFontSize + 16;
+  }
+
   build() {
-    Column() {
+    Row() {
       Text(this.content)
         .width('100%')
         .fontSize(this.contentFontSize)
+        .lineHeight(this.contentLineHeight)
+        .minFontScale(1)
+        .maxFontScale(1)
         .fontFamily(this.fontFamily)
         .fontWeight(FontWeight.Medium)
         .fontColor($r('app.color.text_primary'))
@@ -31,6 +38,6 @@ export struct DiaryWordDisplay {
     .width('100%')
     .height(this.stageHeight)
     .justifyContent(FlexAlign.Center)
-    .alignItems(HorizontalAlign.Center)
+    .alignItems(VerticalAlign.Center)
   }
 }

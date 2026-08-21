@@ -8,6 +8,7 @@ import invisibleTextTest from './InvisibleText.test';
 import localTimeResolverTest from './LocalTimeResolver.test';
 import scrollDetailTest from './ScrollDetail.test';
 import settingsViewModelTest from './SettingsViewModel.test';
+import shareViewModelTest from './ShareViewModel.test';
 import timeBoundaryTest from './TimeBoundary.test';
 import todayViewModelTest from './TodayViewModel.test';
 
@@ -21,6 +22,7 @@ export default function testsuite(): void {
   timeBoundaryTest();
   scrollDetailTest();
   settingsViewModelTest();
+  shareViewModelTest();
   diaryConcurrencyTest();
   diaryServiceTest();
   todayViewModelTest();

@@ -45,7 +45,7 @@ export struct ShareSingleCard {
       Text(this.dateFormatter.compactLabel(this.localDate))
         .fontSize(12)
         .fontFamily('serif')
-        .fontWeight(FontWeight.Light)
+        .fontWeight(FontWeight.Lighter)
         .fontColor(this.secondaryColor)
         .letterSpacing(2.4)
         .minFontScale(1)

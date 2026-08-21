@@ -27,6 +27,11 @@ export class TodayViewModel {
   stylePresetId: StylePresetId = StylePresetId.PAPER_INK;
   isRevisionDraft: boolean = false;
   inspirationIndex: number = 0;
+  recordDisplayType: RecordType = RecordType.WORD;
+  recordDisplayContent: string = '';
+  recordDisplayContentCount: number = 0;
+  recordFontId: string = 'system_serif_dev';
+  recordPaperId: string = 'warm_paper_dev';
 
   private readonly diaryService: DiaryService;
   private readonly completionFeedback: CompletionFeedback;
@@ -124,6 +129,7 @@ export class TodayViewModel {
       this.weekday = this.formatWeekday(new Date(timestamp).getDay());
       this.stylePresetId = settings.stylePresetId;
       this.record = record;
+      this.syncRecordPresentation(record);
       this.recordCount = recordCount;
       this.clearDraft();
       this.deriveStateFromRecord();
@@ -200,6 +206,7 @@ export class TodayViewModel {
       const saved = this.isRevisionDraft ? await this.reviseRecord(input) :
         await this.diaryService.submit(input);
       this.record = saved;
+      this.syncRecordPresentation(saved);
       this.recordCount = await this.diaryService.getRecordCount();
       this.completionFeedback.playRecordCommitted();
       this.clearDraft();
@@ -351,6 +358,22 @@ export class TodayViewModel {
     this.contentError = '';
     this.noteError = '';
     this.isRevisionDraft = false;
+  }
+
+  private syncRecordPresentation(record: DailyRecord | null): void {
+    if (record === null) {
+      this.recordDisplayType = RecordType.WORD;
+      this.recordDisplayContent = '';
+      this.recordDisplayContentCount = 0;
+      this.recordFontId = 'system_serif_dev';
+      this.recordPaperId = 'warm_paper_dev';
+      return;
+    }
+    this.recordDisplayType = record.recordType;
+    this.recordDisplayContent = record.content === null ? '' : record.content;
+    this.recordDisplayContentCount = this.textRules.countGraphemes(this.recordDisplayContent);
+    this.recordFontId = record.fontId;
+    this.recordPaperId = record.paperId;
   }
 
   private formatWeekday(day: number): string {
