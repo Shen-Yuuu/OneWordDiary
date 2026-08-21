@@ -14,6 +14,7 @@ import { TodayViewModel } from '../main/ets/viewmodel/TodayViewModel';
 
 class MemorySettingsRepository implements SettingsRepository {
   private settings: AppSettings = DEFAULT_APP_SETTINGS;
+  private resetPending: boolean = false;
 
   async load(): Promise<AppSettings> {
     return this.settings;
@@ -33,8 +34,17 @@ class MemorySettingsRepository implements SettingsRepository {
     };
   }
 
+  async isResetPending(): Promise<boolean> {
+    return this.resetPending;
+  }
+
+  async markResetPending(): Promise<void> {
+    this.resetPending = true;
+  }
+
   async reset(): Promise<void> {
     this.settings = DEFAULT_APP_SETTINGS;
+    this.resetPending = false;
   }
 }
 

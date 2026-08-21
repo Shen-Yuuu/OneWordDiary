@@ -4,12 +4,20 @@ import { TodayConfirmation } from '../components/diary/TodayConfirmation';
 import { TodayEditor } from '../components/diary/TodayEditor';
 import { TodayHeader } from '../components/diary/TodayHeader';
 import { TodayRecordCard } from '../components/diary/TodayRecordCard';
-import { AppRouteName, DetailRouteParam, ScrollRouteParam } from '../model/AppRoute';
+import {
+  AppRouteName,
+  DetailRouteParam,
+  PrivacyRouteParam,
+  ScrollRouteParam,
+  SettingsRouteParam
+} from '../model/AppRoute';
 import { StylePresetId } from '../constants/StyleTokens';
 import { RecordType } from '../model/DailyRecord';
 import { TodayUiState } from '../model/TodayUiState';
 import { DetailPage } from './DetailPage';
 import { ScrollPage } from './ScrollPage';
+import { PrivacyPage } from './PrivacyPage';
+import { SettingsPage } from './SettingsPage';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SystemCompletionFeedback } from '../service/CompletionFeedback';
 import { DiaryTextRules } from '../service/DiaryTextRules';
@@ -95,6 +103,25 @@ struct Index {
     });
   }
 
+  private openSettings(): void {
+    this.navPathStack.pushPath({
+      name: AppRouteName.SETTINGS,
+      param: new SettingsRouteParam()
+    });
+  }
+
+  private openPrivacy(paperId: string): void {
+    this.navPathStack.pushPath({
+      name: AppRouteName.PRIVACY,
+      param: new PrivacyRouteParam(paperId)
+    });
+  }
+
+  private finishClear(): void {
+    this.navPathStack.clear();
+    this.viewModel.load();
+  }
+
   private closeDestination(): void {
     this.navPathStack.pop();
   }
@@ -112,6 +139,17 @@ struct Index {
         localDate: param.localDate,
         onBack: () => this.closeDestination(),
         onShare: () => this.showComingSoon('单日分享将在节点 5 开放')
+      })
+    } else if (name === AppRouteName.SETTINGS) {
+      SettingsPage({
+        onBack: () => this.closeDestination(),
+        onOpenPrivacy: (paperId: string) => this.openPrivacy(paperId),
+        onClearComplete: () => this.finishClear()
+      })
+    } else if (name === AppRouteName.PRIVACY && param instanceof PrivacyRouteParam) {
+      PrivacyPage({
+        paperId: param.paperId,
+        onBack: () => this.closeDestination()
       })
     }
   }
@@ -141,7 +179,7 @@ struct Index {
               dateText: this.viewModel.displayDate,
               weekdayText: this.viewModel.weekday,
               onScroll: () => this.openScroll(),
-              onSettings: () => this.showComingSoon('设置将在节点 4 开放')
+              onSettings: () => this.openSettings()
             })
 
             if (this.viewModel.isEditingState) {
