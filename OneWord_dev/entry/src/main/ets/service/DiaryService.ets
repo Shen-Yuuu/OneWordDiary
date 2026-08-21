@@ -47,6 +47,10 @@ export class DiaryService {
     return this.repository.findPageBefore(exclusiveDate, limit);
   }
 
+  async getRecordsBetween(startDate: string, endDate: string): Promise<DailyRecord[]> {
+    return this.repository.findBetween(startDate, endDate);
+  }
+
   async getRecordCount(): Promise<number> {
     return this.repository.countAll();
   }

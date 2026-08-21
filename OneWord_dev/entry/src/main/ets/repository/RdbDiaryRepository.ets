@@ -44,6 +44,26 @@ export class RdbDiaryRepository implements DiaryRepository {
     }
   }
 
+  async findBetween(startDate: string, endDate: string): Promise<DailyRecord[]> {
+    const predicates = new relationalStore.RdbPredicates(DatabaseConstants.TABLE_DAILY_RECORD);
+    predicates.greaterThanOrEqualTo(DatabaseConstants.COLUMN_LOCAL_DATE, startDate)
+      .and()
+      .lessThanOrEqualTo(DatabaseConstants.COLUMN_LOCAL_DATE, endDate)
+      .orderByDesc(DatabaseConstants.COLUMN_LOCAL_DATE);
+    const resultSet = await this.store.query(predicates);
+    const records: DailyRecord[] = [];
+    try {
+      if (resultSet.goToFirstRow()) {
+        do {
+          records.push(this.readRecord(resultSet));
+        } while (resultSet.goToNextRow());
+      }
+      return records;
+    } finally {
+      resultSet.close();
+    }
+  }
+
   async insert(record: DailyRecord): Promise<void> {
     await this.store.insert(DatabaseConstants.TABLE_DAILY_RECORD, this.toValuesBucket(record));
   }

@@ -36,4 +36,29 @@ export class DiaryDateFormatter {
     return `${Number(localDate.substring(5, 7))}月${Number(localDate.substring(8, 10))}日 ` +
       this.weekdayLabel(localDate);
   }
+
+  compactLabel(localDate: string): string {
+    return localDate.replace(/-/g, '.');
+  }
+
+  shiftDays(localDate: string, offset: number): string {
+    const year = Number(localDate.substring(0, 4));
+    const month = Number(localDate.substring(5, 7));
+    const day = Number(localDate.substring(8, 10));
+    const shifted = new Date(year, month - 1, day + offset, 12, 0, 0, 0);
+    return `${shifted.getFullYear()}-${this.padTwoDigits(shifted.getMonth() + 1)}-` +
+      `${this.padTwoDigits(shifted.getDate())}`;
+  }
+
+  recentDates(anchorDate: string, days: number): string[] {
+    const dates: string[] = [];
+    for (let offset = 0; offset < days; offset++) {
+      dates.push(this.shiftDays(anchorDate, -offset));
+    }
+    return dates;
+  }
+
+  private padTwoDigits(value: number): string {
+    return value < 10 ? `0${value}` : value.toString();
+  }
 }
