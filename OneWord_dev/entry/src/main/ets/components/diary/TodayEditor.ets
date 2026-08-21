@@ -1,4 +1,5 @@
 import { InspirationLine } from './InspirationLine';
+import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
 
 @Component
 export struct TodayEditor {
@@ -41,18 +42,18 @@ export struct TodayEditor {
         text: this.inspiration,
         onRefresh: () => this.onRefreshInspiration()
       })
-        .margin({ top: 16, bottom: 2 })
+        .margin({ top: 10, bottom: 0 })
 
       Column({ space: 4 }) {
         TextInput({ text: this.content, placeholder: '一至四字' })
           .width('100%')
-          .height(150)
+          .height(140)
           .fontSize(this.contentFontSize)
           .fontWeight(FontWeight.Medium)
           .fontFamily('serif')
           .fontColor($r('app.color.text_primary'))
           .placeholderColor($r('app.color.outline_soft'))
-          .placeholderFont({ size: 26, weight: FontWeight.Lighter })
+          .placeholderFont({ size: 28, weight: FontWeight.Lighter })
           .textAlign(TextAlign.Center)
           .caretColor($r('app.color.accent_vermilion'))
           .backgroundColor(Color.Transparent)
@@ -61,7 +62,7 @@ export struct TodayEditor {
           .onChange((value: string) => this.onContentChange(value))
 
         Text(`${this.contentCount} / 4`)
-          .fontSize(12)
+          .fontSize(13)
           .fontColor(this.contentError.length > 0 ? '#BA1A1A' : $r('app.color.text_tertiary'))
           .letterSpacing(1.4)
 
@@ -79,13 +80,13 @@ export struct TodayEditor {
       Column({ space: 4 }) {
         Row() {
           Text('备注（可选）')
-            .fontSize(13)
+            .fontSize(14)
             .fontColor($r('app.color.text_secondary'))
 
           Blank()
 
           Text(`${this.noteCount} / 30`)
-            .fontSize(12)
+            .fontSize(13)
             .fontColor(this.noteError.length > 0 ? '#BA1A1A' : $r('app.color.text_tertiary'))
         }
         .width('100%')
@@ -113,21 +114,15 @@ export struct TodayEditor {
       }
       .width('100%')
       .padding({ left: 24, right: 24 })
-      .margin({ top: 10 })
+      .margin({ top: 6 })
 
       Blank()
 
-      Button(this.isRevision ? '继续确认' : '落字')
-        .width($r('app.float.primary_button_width'))
-        .height($r('app.float.primary_button_height'))
-        .fontSize(14)
-        .fontWeight(FontWeight.Medium)
-        .fontColor('#FFFFFF')
-        .backgroundColor($r('app.color.ink_button'))
-        .borderRadius(26)
-        .enabled(this.canConfirm)
-        .opacity(this.canConfirm ? 1 : 0.24)
-        .onClick(() => this.onConfirmWord())
+      DiaryPrimaryButton({
+        label: this.isRevision ? '继续确认' : '落字',
+        isEnabled: this.canConfirm,
+        onTap: () => this.onConfirmWord()
+      })
 
       if (this.isRevision) {
         Row({ space: 8 }) {

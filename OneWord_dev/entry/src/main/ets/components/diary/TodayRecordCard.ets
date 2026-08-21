@@ -1,4 +1,6 @@
 import { DiaryIconButton } from '../common/DiaryIconButton';
+import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
+import { DiaryWordDisplay } from '../common/DiaryWordDisplay';
 import { RecordType } from '../../model/DailyRecord';
 
 @Component
@@ -16,15 +18,6 @@ export struct TodayRecordCard {
   onShare: () => void = () => {
   };
 
-  get contentFontSize(): number {
-    if (this.contentCount <= 1) {
-      return 112;
-    }
-    if (this.contentCount === 2) {
-      return 84;
-    }
-    return this.contentCount === 3 ? 68 : 56;
-  }
 
   build() {
     Column() {
@@ -69,16 +62,11 @@ export struct TodayRecordCard {
             .fontColor($r('app.color.text_primary'))
             .letterSpacing(4)
         } else {
-          Text(this.content)
-            .width('100%')
-            .height(126)
-            .fontSize(this.contentFontSize)
-            .fontFamily('serif')
-            .fontWeight(FontWeight.Medium)
-            .fontColor($r('app.color.text_primary'))
-            .textAlign(TextAlign.Center)
-            .maxLines(1)
-            .accessibilityText(`今日正文，${this.content}`)
+          DiaryWordDisplay({
+            content: this.content,
+            contentCount: this.contentCount,
+            accessibilityPrefix: '今日正文'
+          })
 
           Text('「 见字如面 」')
             .fontSize(14)
@@ -116,15 +104,10 @@ export struct TodayRecordCard {
             .width($r('app.float.touch_target_min'))
             .height($r('app.float.touch_target_min'))
 
-          Button('修订今日')
-            .width($r('app.float.primary_button_width'))
-            .height($r('app.float.primary_button_height'))
-            .fontSize(14)
-            .fontWeight(FontWeight.Medium)
-            .fontColor('#FFFFFF')
-            .backgroundColor($r('app.color.ink_button'))
-            .borderRadius(26)
-            .onClick(() => this.onRevise())
+          DiaryPrimaryButton({
+            label: '修订今日',
+            onTap: () => this.onRevise()
+          })
 
           DiaryIconButton({
             icon: $r('app.media.ic_share'),

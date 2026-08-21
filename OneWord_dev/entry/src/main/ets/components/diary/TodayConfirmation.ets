@@ -1,4 +1,6 @@
 import { DiaryIconButton } from '../common/DiaryIconButton';
+import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
+import { DiaryWordDisplay } from '../common/DiaryWordDisplay';
 import { PaperBackdrop } from '../common/PaperBackdrop';
 import { RecordType } from '../../model/DailyRecord';
 
@@ -28,15 +30,6 @@ export struct TodayConfirmation {
     return this.draftType === RecordType.BLANK ? '确认留白' : '收入长卷';
   }
 
-  get contentFontSize(): number {
-    if (this.contentCount <= 1) {
-      return 108;
-    }
-    if (this.contentCount === 2) {
-      return 82;
-    }
-    return this.contentCount === 3 ? 66 : 54;
-  }
 
   build() {
     Stack() {
@@ -105,16 +98,11 @@ export struct TodayConfirmation {
                 .accessibilityLevel('yes')
             }
           } else {
-            Text(this.content)
-              .width('100%')
-              .height(126)
-              .fontSize(this.contentFontSize)
-              .fontFamily('serif')
-              .fontWeight(FontWeight.Medium)
-              .fontColor($r('app.color.text_primary'))
-              .textAlign(TextAlign.Center)
-              .maxLines(1)
-              .accessibilityText(`今日正文，${this.content}`)
+            DiaryWordDisplay({
+              content: this.content,
+              contentCount: this.contentCount,
+              accessibilityPrefix: '今日正文'
+            })
 
             Text('「 见字如面 」')
               .fontSize(14)
@@ -166,17 +154,11 @@ export struct TodayConfirmation {
             .margin({ bottom: 14 })
         }
 
-        Button(this.primaryLabel)
-          .width($r('app.float.primary_button_width'))
-          .height($r('app.float.primary_button_height'))
-          .fontSize(14)
-          .fontWeight(FontWeight.Medium)
-          .fontColor('#FFFFFF')
-          .backgroundColor($r('app.color.ink_button'))
-          .borderRadius(26)
-          .enabled(!this.isBusy)
-          .opacity(this.isBusy ? 0.4 : 1)
-          .onClick(() => this.onConfirm())
+        DiaryPrimaryButton({
+          label: this.primaryLabel,
+          isEnabled: !this.isBusy,
+          onTap: () => this.onConfirm()
+        })
 
         Button(this.errorMessage.length > 0 ? '返回修改' : '再想想')
           .height($r('app.float.touch_target_min'))

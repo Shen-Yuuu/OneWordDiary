@@ -91,7 +91,7 @@ export struct SettingsPage {
   private showFinalClearConfirmation(): void {
     AlertDialog.show({
       title: '确认永久清空？',
-      message: '设备上的全部记录将永久删除且无法恢复。请确认你已做好需要的备份。',
+      message: '设备上的全部记录将永久删除且无法恢复。此操作无法撤销。',
       primaryButton: {
         value: '取消',
         action: () => {
@@ -120,7 +120,7 @@ export struct SettingsPage {
       .fontWeight(FontWeight.Medium)
       .fontColor($r('app.color.text_tertiary'))
       .letterSpacing(1.6)
-      .padding({ top: 18, bottom: 10 })
+      .padding({ top: 16, bottom: 10 })
   }
 
   @Builder

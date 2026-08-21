@@ -1,4 +1,5 @@
 import { DiaryIconButton } from '../common/DiaryIconButton';
+import { DiaryWordDisplay } from '../common/DiaryWordDisplay';
 import { RecordType } from '../../model/DailyRecord';
 
 @Component
@@ -17,15 +18,6 @@ export struct DetailRecordContent {
     return this.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
   }
 
-  get contentFontSize(): number {
-    if (this.contentCount <= 1) {
-      return 112;
-    }
-    if (this.contentCount === 2) {
-      return 84;
-    }
-    return this.contentCount === 3 ? 68 : 56;
-  }
 
   build() {
     Column() {
@@ -70,15 +62,12 @@ export struct DetailRecordContent {
             .fontColor($r('app.color.text_primary'))
             .letterSpacing(4)
         } else {
-          Text(this.content)
-            .width('100%')
-            .height(126)
-            .fontSize(this.contentFontSize)
-            .fontFamily(this.recordFontFamily)
-            .fontWeight(FontWeight.Medium)
-            .fontColor($r('app.color.text_primary'))
-            .maxLines(1)
-            .textAlign(TextAlign.Center)
+          DiaryWordDisplay({
+            content: this.content,
+            contentCount: this.contentCount,
+            fontFamily: this.recordFontFamily,
+            accessibilityPrefix: '日记正文'
+          })
 
           Text('「 见字如面 」')
             .fontSize(14)

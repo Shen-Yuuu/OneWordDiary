@@ -19,19 +19,19 @@ export struct ScrollRecordNode {
 
   get recordFontSize(): number {
     if (this.item.contentCount <= 1) {
-      return 56;
+      return 60;
     }
     if (this.item.contentCount === 2) {
-      return 46;
+      return 50;
     }
-    return this.item.contentCount === 3 ? 39 : 34;
+    return this.item.contentCount === 3 ? 43 : 38;
   }
 
   @Builder
   private wordContent() {
-    Column({ space: 10 }) {
+    Column({ space: 8 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(12)
+        .fontSize(13)
         .fontColor($r('app.color.text_tertiary'))
         .letterSpacing(1.2)
 
@@ -49,7 +49,7 @@ export struct ScrollRecordNode {
         .border({ width: { bottom: 1 }, color: $r('app.color.outline_soft') })
     }
     .layoutWeight(1)
-    .padding({ left: 18, right: 18, top: 12, bottom: 12 })
+    .padding({ left: 12, right: 12, top: 8, bottom: 8 })
     .alignItems(this.item.side === ScrollItemSide.LEFT ? HorizontalAlign.End : HorizontalAlign.Start)
   }
 
@@ -57,7 +57,7 @@ export struct ScrollRecordNode {
   private blankContent() {
     Column({ space: 12 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(12)
+        .fontSize(13)
         .fontColor($r('app.color.text_tertiary'))
         .letterSpacing(1.2)
         .backgroundColor($r('app.color.paper_warm'))
@@ -101,7 +101,7 @@ export struct ScrollRecordNode {
 
           Divider()
             .vertical(true)
-            .height(128)
+            .height(112)
             .strokeWidth(1)
             .color($r('app.color.divider_subtle'))
 
@@ -126,7 +126,7 @@ export struct ScrollRecordNode {
         }
       }
       .width('100%')
-      .height(128)
+      .height(112)
       .onClick(() => this.onOpen(this.item.localDate))
       .accessibilityGroup(true)
       .accessibilityText(this.item.recordType === RecordType.BLANK ?

@@ -173,6 +173,22 @@ struct Index {
             message: this.viewModel.errorMessage,
             onRetry: () => this.viewModel.load()
           })
+        } else if (this.viewModel.isConfirmationVisible) {
+          TodayConfirmation({
+            dateText: this.viewModel.displayDate,
+            draftType: this.viewModel.draftType,
+            content: this.viewModel.draftContent,
+            contentCount: this.viewModel.contentCount,
+            note: this.viewModel.draftNote,
+            paperId: this.activePaperId,
+            isRevision: this.viewModel.isRevisionDraft,
+            isBusy: this.viewModel.isBusy,
+            errorMessage: this.viewModel.errorMessage,
+            onConfirm: () => this.viewModel.confirmPending(),
+            onCancel: () => this.viewModel.errorMessage.length > 0 ?
+              this.viewModel.returnFromError() : this.viewModel.cancelConfirmation()
+          })
+            .transition(TransitionEffect.OPACITY)
         } else {
           Column() {
             TodayHeader({
@@ -227,23 +243,6 @@ struct Index {
           })
           .backgroundColor(Color.Transparent)
 
-          if (this.viewModel.isConfirmationVisible) {
-            TodayConfirmation({
-              dateText: this.viewModel.displayDate,
-              draftType: this.viewModel.draftType,
-              content: this.viewModel.draftContent,
-              contentCount: this.viewModel.contentCount,
-              note: this.viewModel.draftNote,
-              paperId: this.activePaperId,
-              isRevision: this.viewModel.isRevisionDraft,
-              isBusy: this.viewModel.isBusy,
-              errorMessage: this.viewModel.errorMessage,
-              onConfirm: () => this.viewModel.confirmPending(),
-              onCancel: () => this.viewModel.errorMessage.length > 0 ?
-                this.viewModel.returnFromError() : this.viewModel.cancelConfirmation()
-            })
-              .transition(TransitionEffect.OPACITY)
-          }
         }
       }
       .width('100%')
