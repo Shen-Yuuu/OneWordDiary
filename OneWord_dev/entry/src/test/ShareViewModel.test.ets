@@ -90,7 +90,7 @@ export default function shareViewModelTest(): void {
     it('usesHistoricalContentAndStyleForSingleShare', 0, async () => {
       const fixture = new ShareFixture();
       await fixture.repository.insert(createShareRecord(
-        '2026-01-01', RecordType.WORD, '静', '这句备注不能进入分享图',
+        '2026-01-01', RecordType.WORD, '静', '这是今天留下的一句备注',
         'system_sans_dev', 'plain_ash_dev'
       ));
 
@@ -98,6 +98,8 @@ export default function shareViewModelTest(): void {
 
       expect(fixture.viewModel.uiState).assertEqual(ShareUiState.READY);
       expect(fixture.viewModel.singleData !== null && fixture.viewModel.singleData.content === '静').assertTrue();
+      expect(fixture.viewModel.singleData !== null &&
+        fixture.viewModel.singleData.note === '这是今天留下的一句备注').assertTrue();
       expect(fixture.viewModel.singleData !== null &&
         fixture.viewModel.singleData.fontId === 'system_sans_dev').assertTrue();
       expect(fixture.viewModel.activePaperId).assertEqual('plain_ash_dev');
@@ -113,9 +115,13 @@ export default function shareViewModelTest(): void {
       expect(fixture.viewModel.sevenDays.length).assertEqual(7);
       expect(fixture.viewModel.sevenDays[0].localDate).assertEqual('2026-01-02');
       expect(fixture.viewModel.sevenDays[0].kind).assertEqual(ShareDayKind.WORD);
+      expect(fixture.viewModel.sevenDays[0].showMonthHeader).assertTrue();
+      expect(fixture.viewModel.sevenDays[0].monthLabel).assertEqual('二〇二六年一月');
       expect(fixture.viewModel.sevenDays[1].kind).assertEqual(ShareDayKind.BLANK);
       expect(fixture.viewModel.sevenDays[2].localDate).assertEqual('2025-12-31');
       expect(fixture.viewModel.sevenDays[2].kind).assertEqual(ShareDayKind.MISSING);
+      expect(fixture.viewModel.sevenDays[2].showMonthHeader).assertTrue();
+      expect(fixture.viewModel.sevenDays[2].monthLabel).assertEqual('二〇二五年十二月');
     });
 
     it('guardsRenderingAndAllowsRetryAfterFailure', 0, async () => {

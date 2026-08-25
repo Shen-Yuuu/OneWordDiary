@@ -15,6 +15,7 @@ export interface ShareSingleData {
   localDate: string;
   recordType: RecordType;
   content: string;
+  note: string;
   fontId: string;
   paperId: string;
 }
@@ -23,7 +24,9 @@ export interface ShareDayItem {
   localDate: string;
   dateLabel: string;
   weekdayLabel: string;
+  monthLabel: string;
+  showMonthHeader: boolean;
   kind: ShareDayKind;
   content: string;
+  note: string;
 }
-

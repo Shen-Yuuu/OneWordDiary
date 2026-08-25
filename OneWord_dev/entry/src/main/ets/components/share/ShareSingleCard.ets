@@ -7,6 +7,8 @@ export struct ShareSingleCard {
   @Prop localDate: string = '';
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop content: string = '';
+  @Prop note: string = '';
+  @Prop showNote: boolean = false;
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
@@ -34,6 +36,10 @@ export struct ShareSingleCard {
 
   get contentCount(): number {
     return this.graphemeCounter.count(this.content);
+  }
+
+  get hasVisibleNote(): boolean {
+    return this.showNote && this.note.length > 0;
   }
 
   get wordSize(): string {
@@ -68,51 +74,79 @@ export struct ShareSingleCard {
         .maxFontScale(1)
         .margin({ top: 38 })
 
-      if (this.recordType === RecordType.WORD) {
-        Stack({ alignContent: Alignment.Center }) {
-          Text(this.content)
-            .width('100%')
-            .fontSize(this.wordSize)
-            .lineHeight(this.wordLineHeight)
-            .fontFamily(this.fontFamily)
-            .fontWeight(FontWeight.Normal)
-            .fontColor(this.textColor)
-            .letterSpacing(this.contentCount > 1 ? 3 : 0)
-            .maxLines(1)
-            .minFontScale(1)
-            .maxFontScale(1)
-            .textAlign(TextAlign.Center)
-        }
-        .width('100%')
-        .height(292)
-      } else {
-        Column({ space: 14 }) {
+      Column() {
+        if (this.recordType === RecordType.WORD) {
           Stack({ alignContent: Alignment.Center }) {
-            Row()
-              .width(70)
-              .height(70)
-              .border({ width: 1, color: this.secondaryColor })
-              .borderRadius(35)
-
-            Row()
-              .width(5)
-              .height(5)
-              .backgroundColor(this.accentColor)
-              .borderRadius(2.5)
+            Text(this.content)
+              .width('100%')
+              .fontSize(this.wordSize)
+              .lineHeight(this.wordLineHeight)
+              .fontFamily(this.fontFamily)
+              .fontWeight(FontWeight.Normal)
+              .fontColor(this.textColor)
+              .letterSpacing(this.contentCount > 1 ? 3 : 0)
+              .maxLines(1)
+              .minFontScale(1)
+              .maxFontScale(1)
+              .textAlign(TextAlign.Center)
           }
+          .width('100%')
+          .height(this.hasVisibleNote ? 224 : 292)
+        } else {
+          Column({ space: 14 }) {
+            Stack({ alignContent: Alignment.Center }) {
+              Row()
+                .width(70)
+                .height(70)
+                .border({ width: 1, color: this.secondaryColor })
+                .borderRadius(35)
 
-          Text('留白')
-            .fontSize(14)
-            .fontFamily(this.fontFamily)
-            .fontColor(this.secondaryColor)
-            .letterSpacing(4)
-            .minFontScale(1)
-            .maxFontScale(1)
+              Row()
+                .width(5)
+                .height(5)
+                .backgroundColor(this.accentColor)
+                .borderRadius(2.5)
+            }
+
+            Text('留白')
+              .fontSize(14)
+              .fontFamily(this.fontFamily)
+              .fontColor(this.secondaryColor)
+              .letterSpacing(4)
+              .minFontScale(1)
+              .maxFontScale(1)
+          }
+          .height(this.hasVisibleNote ? 224 : 292)
+          .justifyContent(FlexAlign.Center)
+          .alignItems(HorizontalAlign.Center)
         }
-        .height(292)
-        .justifyContent(FlexAlign.Center)
-        .alignItems(HorizontalAlign.Center)
+
+        if (this.hasVisibleNote) {
+          Column({ space: 6 }) {
+            Row()
+              .width(28)
+              .height(1)
+              .backgroundColor(this.secondaryColor)
+
+            Text(this.note)
+              .width(238)
+              .fontSize(12)
+              .lineHeight(18)
+              .fontFamily(this.fontFamily)
+              .fontColor(this.secondaryColor)
+              .letterSpacing(0.5)
+              .textAlign(TextAlign.Center)
+              .maxLines(3)
+              .minFontScale(1)
+              .maxFontScale(1)
+          }
+          .height(68)
+          .alignItems(HorizontalAlign.Center)
+        }
       }
+      .width('100%')
+      .height(292)
+      .alignItems(HorizontalAlign.Center)
 
       Row({ space: 9 }) {
         Stack({ alignContent: Alignment.Center }) {
@@ -146,8 +180,6 @@ export struct ShareSingleCard {
     .backgroundColor(this.paperColor)
     .border({ width: 1, color: this.paperId === 'plain_ash_dev' ? '#E5E5E2' : '#EEE5E1' })
     .borderRadius(2)
-    .shadow({ radius: 22, color: '#16000000', offsetX: 0, offsetY: 10 })
     .alignItems(HorizontalAlign.Center)
   }
 }
-

@@ -27,8 +27,12 @@ export struct TodayRecordCard {
     Column() {
       Blank()
 
-      Column({ space: 16 }) {
-        Stack({ alignContent: Alignment.Center }) {
+      Column({ space: 10 }) {
+        Row() {
+          Row()
+            .width(52)
+            .height(52)
+
           if (this.recordType === RecordType.BLANK) {
             Column({ space: 14 }) {
               Stack({ alignContent: Alignment.Center }) {
@@ -51,29 +55,35 @@ export struct TodayRecordCard {
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(4)
             }
+            .layoutWeight(1)
+            .justifyContent(FlexAlign.Center)
             .alignItems(HorizontalAlign.Center)
           } else {
             DiaryWordDisplay({
               content: this.content,
               contentCount: this.contentCount,
               fontFamily: this.fontFamily,
+              stageHeight: 300,
+              isHero: true,
               accessibilityPrefix: '今日正文'
             })
+              .layoutWeight(1)
           }
 
           Text('已')
-            .width(26)
-            .height(26)
-            .fontSize(12)
+            .width(52)
+            .height(52)
+            .fontSize(22)
+            .fontFamily('serif')
             .fontColor('#FFFFFF')
             .backgroundColor($r('app.color.accent_vermilion'))
             .textAlign(TextAlign.Center)
-            .borderRadius(2)
-            .translate({ x: 126, y: -54 })
+            .borderRadius(3)
             .accessibilityText('已收入长卷')
         }
         .width('100%')
-        .height(170)
+        .height(300)
+        .alignItems(VerticalAlign.Center)
 
         if (this.recordType === RecordType.WORD) {
           Text('「 见字如面 」')

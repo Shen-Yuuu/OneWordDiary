@@ -22,6 +22,7 @@ export struct PaperBackdrop {
     }
     .width('100%')
     .height('100%')
+    .backgroundColor(this.paperColor)
     .hitTestBehavior(HitTestMode.None)
   }
 }

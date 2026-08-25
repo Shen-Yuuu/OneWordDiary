@@ -51,6 +51,11 @@ struct Index {
     return this.viewModel.stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev';
   }
 
+  get activePaperColor(): ResourceColor {
+    return this.activePaperId === 'plain_ash_dev' ?
+      $r('app.color.paper_plain') : $r('app.color.paper_warm');
+  }
+
   get recordCanRevise(): boolean {
     return this.viewModel.uiState === TodayUiState.TODAY_RECORDED_WORD_EDITABLE ||
       this.viewModel.uiState === TodayUiState.TODAY_RECORDED_BLANK_EDITABLE;
@@ -86,49 +91,49 @@ struct Index {
     this.navPathStack.pushPath({
       name: AppRouteName.SCROLL,
       param: new ScrollRouteParam()
-    });
+    }, false);
   }
 
   private openDetail(localDate: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.DETAIL,
       param: new DetailRouteParam(localDate)
-    });
+    }, false);
   }
 
   private openSingleShare(localDate: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.SHARE,
       param: new ShareRouteParam(DiaryShareMode.SINGLE, localDate)
-    });
+    }, false);
   }
 
   private openSevenDayShare(): void {
     this.navPathStack.pushPath({
       name: AppRouteName.SHARE,
       param: new ShareRouteParam(DiaryShareMode.SEVEN_DAYS)
-    });
+    }, false);
   }
 
   private openSettings(): void {
     this.navPathStack.pushPath({
       name: AppRouteName.SETTINGS,
       param: new SettingsRouteParam()
-    });
+    }, false);
   }
 
   private openBackup(paperId: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.BACKUP,
       param: new BackupRouteParam(paperId)
-    });
+    }, false);
   }
 
   private openPrivacy(paperId: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.PRIVACY,
       param: new PrivacyRouteParam(paperId)
-    });
+    }, false);
   }
 
   private finishClear(): void {
@@ -262,19 +267,19 @@ struct Index {
             left: $r('app.float.page_horizontal_margin'),
             right: $r('app.float.page_horizontal_margin')
           })
-          .backgroundColor(Color.Transparent)
+          .backgroundColor(this.activePaperColor)
 
         }
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(Color.Transparent)
+      .backgroundColor(this.activePaperColor)
     }
     .width('100%')
     .height('100%')
     .navDestination(this.routeBuilder)
     .hideTitleBar(true)
     .mode(NavigationMode.Stack)
-    .backgroundColor(Color.Transparent)
+    .backgroundColor(this.activePaperColor)
   }
 }

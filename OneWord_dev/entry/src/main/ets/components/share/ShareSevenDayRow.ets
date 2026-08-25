@@ -7,15 +7,19 @@ export struct ShareSevenDayRow {
     localDate: '',
     dateLabel: '',
     weekdayLabel: '',
+    monthLabel: '',
+    showMonthHeader: false,
     kind: ShareDayKind.MISSING,
-    content: ''
+    content: '',
+    note: ''
   };
   @Prop index: number = 0;
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
+  @Prop showNote: boolean = false;
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
-  get dateOnLeft(): boolean {
+  get contentOnLeft(): boolean {
     return this.index % 2 === 0;
   }
 
@@ -33,6 +37,10 @@ export struct ShareSevenDayRow {
 
   get faintColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#B5B5B1' : '#C2B9B4';
+  }
+
+  get lineColor(): string {
+    return this.paperId === 'plain_ash_dev' ? '#DDDCD8' : '#E5DCD7';
   }
 
   get accentColor(): string {
@@ -53,48 +61,79 @@ export struct ShareSevenDayRow {
     return this.contentCount === 3 ? '23vp' : '21vp';
   }
 
-  @Builder
-  private dateBlock() {
-    Text(`${this.item.dateLabel}  ${this.item.weekdayLabel}`)
-      .width(112)
-      .fontSize(10)
-      .fontFamily('sans-serif')
-      .fontColor(this.item.kind === ShareDayKind.MISSING ? this.faintColor : this.secondaryColor)
-      .letterSpacing(0.5)
-      .textAlign(this.dateOnLeft ? TextAlign.End : TextAlign.Start)
-      .minFontScale(1)
-      .maxFontScale(1)
+  get hasVisibleNote(): boolean {
+    return this.showNote && this.item.note.length > 0;
+  }
+
+  get timelineHeight(): number {
+    return this.hasVisibleNote ? 86 : 58;
+  }
+
+  get totalHeight(): number {
+    return this.timelineHeight + (this.item.showMonthHeader ? 40 : 0);
   }
 
   @Builder
-  private contentBlock() {
-    if (this.item.kind === ShareDayKind.WORD) {
-      Text(this.item.content)
-        .width(112)
-        .fontSize(this.wordSize)
-        .lineHeight('34vp')
-        .fontFamily(this.fontFamily)
-        .fontWeight(FontWeight.Normal)
-        .fontColor(this.textColor)
-        .maxLines(1)
-        .textAlign(this.dateOnLeft ? TextAlign.Start : TextAlign.End)
+  private recordBlock() {
+    Column({ space: 4 }) {
+      Text(`${this.item.dateLabel}  ${this.item.weekdayLabel}`)
+        .width(108)
+        .fontSize(9)
+        .fontFamily('sans-serif')
+        .fontColor(this.item.kind === ShareDayKind.MISSING ? this.faintColor : this.secondaryColor)
+        .letterSpacing(0.4)
+        .textAlign(this.contentOnLeft ? TextAlign.End : TextAlign.Start)
         .minFontScale(1)
         .maxFontScale(1)
-    } else if (this.item.kind === ShareDayKind.BLANK) {
-      Text('留白')
-        .width(112)
-        .fontSize(12)
-        .fontFamily(this.fontFamily)
-        .fontColor(this.secondaryColor)
-        .letterSpacing(3)
-        .textAlign(this.dateOnLeft ? TextAlign.Start : TextAlign.End)
-        .minFontScale(1)
-        .maxFontScale(1)
-    } else {
-      Row()
-        .width(112)
-        .height(1)
+
+      if (this.item.kind === ShareDayKind.WORD) {
+        Text(this.item.content)
+          .width(108)
+          .fontSize(this.wordSize)
+          .lineHeight('34vp')
+          .fontFamily(this.fontFamily)
+          .fontWeight(FontWeight.Normal)
+          .fontColor(this.textColor)
+          .letterSpacing(this.contentCount > 1 ? 1 : 0)
+          .maxLines(1)
+          .textAlign(this.contentOnLeft ? TextAlign.End : TextAlign.Start)
+          .minFontScale(1)
+          .maxFontScale(1)
+      } else if (this.item.kind === ShareDayKind.BLANK) {
+        Text('留白')
+          .width(108)
+          .fontSize(12)
+          .fontFamily(this.fontFamily)
+          .fontColor(this.secondaryColor)
+          .letterSpacing(3)
+          .textAlign(this.contentOnLeft ? TextAlign.End : TextAlign.Start)
+          .minFontScale(1)
+          .maxFontScale(1)
+      }
+
+      if (this.hasVisibleNote) {
+        Text(this.item.note)
+          .width(108)
+          .fontSize(9)
+          .lineHeight(13)
+          .fontFamily(this.fontFamily)
+          .fontColor(this.secondaryColor)
+          .letterSpacing(0.2)
+          .maxLines(3)
+          .textAlign(this.contentOnLeft ? TextAlign.End : TextAlign.Start)
+          .minFontScale(1)
+          .maxFontScale(1)
+      }
+
+      if (this.item.kind !== ShareDayKind.MISSING) {
+        Row()
+          .width(24)
+          .height(1)
+          .backgroundColor(this.lineColor)
+      }
     }
+    .width(108)
+    .alignItems(this.contentOnLeft ? HorizontalAlign.End : HorizontalAlign.Start)
   }
 
   @Builder
@@ -108,10 +147,11 @@ export struct ShareSevenDayRow {
           .borderRadius(3)
       } else if (this.item.kind === ShareDayKind.BLANK) {
         Row()
-          .width(13)
-          .height(13)
+          .width(14)
+          .height(14)
+          .backgroundColor(this.paperId === 'plain_ash_dev' ? '#FFFFFF' : '#FFFCFB')
           .border({ width: 1, color: this.accentColor })
-          .borderRadius(6.5)
+          .borderRadius(7)
         Row()
           .width(3)
           .height(3)
@@ -126,25 +166,51 @@ export struct ShareSevenDayRow {
       }
     }
     .width(20)
-    .height(38)
+    .height(this.timelineHeight)
   }
 
   build() {
-    Row() {
-      if (this.dateOnLeft) {
-        this.dateBlock()
-        this.axisNode()
-        this.contentBlock()
-      } else {
-        this.contentBlock()
-        this.axisNode()
-        this.dateBlock()
+    Column() {
+      if (this.item.showMonthHeader) {
+        Text(this.item.monthLabel)
+          .height(40)
+          .fontSize(16)
+          .fontFamily('serif')
+          .fontWeight(FontWeight.Medium)
+          .fontColor(this.textColor)
+          .letterSpacing(2.2)
+          .textAlign(TextAlign.Center)
+          .minFontScale(1)
+          .maxFontScale(1)
       }
+
+      Stack({ alignContent: Alignment.Center }) {
+        Row()
+          .width(1)
+          .height(this.timelineHeight)
+          .backgroundColor(this.lineColor)
+
+        Row() {
+          if (this.contentOnLeft) {
+            this.recordBlock()
+            Row().width(20)
+            Row().width(108)
+          } else {
+            Row().width(108)
+            Row().width(20)
+            this.recordBlock()
+          }
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.Center)
+        .alignItems(VerticalAlign.Center)
+
+        this.axisNode()
+      }
+      .width('100%')
+      .height(this.timelineHeight)
     }
     .width('100%')
-    .height(38)
-    .justifyContent(FlexAlign.Center)
-    .alignItems(VerticalAlign.Center)
+    .height(this.totalHeight)
   }
 }
-

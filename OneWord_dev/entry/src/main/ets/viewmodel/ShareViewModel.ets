@@ -131,25 +131,43 @@ export class ShareViewModel {
     records.forEach((record: DailyRecord) => {
       recordByDate.set(record.localDate, record);
     });
-    return dates.map((localDate: string): ShareDayItem => {
+    return dates.map((localDate: string, index: number): ShareDayItem => {
+      const showMonthHeader = index === 0 ||
+        this.dateFormatter.monthKey(localDate) !== this.dateFormatter.monthKey(dates[index - 1]);
       const record = recordByDate.get(localDate);
       if (record === undefined) {
-        return this.createDayItem(localDate, ShareDayKind.MISSING, '');
+        return this.createDayItem(localDate, ShareDayKind.MISSING, '', '', showMonthHeader);
       }
+      const note = record.note === null ? '' : record.note;
       if (record.recordType === RecordType.BLANK) {
-        return this.createDayItem(localDate, ShareDayKind.BLANK, '');
+        return this.createDayItem(localDate, ShareDayKind.BLANK, '', note, showMonthHeader);
       }
-      return this.createDayItem(localDate, ShareDayKind.WORD, record.content === null ? '' : record.content);
+      return this.createDayItem(
+        localDate,
+        ShareDayKind.WORD,
+        record.content === null ? '' : record.content,
+        note,
+        showMonthHeader
+      );
     });
   }
 
-  private createDayItem(localDate: string, kind: ShareDayKind, content: string): ShareDayItem {
+  private createDayItem(
+    localDate: string,
+    kind: ShareDayKind,
+    content: string,
+    note: string,
+    showMonthHeader: boolean
+  ): ShareDayItem {
     return {
       localDate: localDate,
       dateLabel: this.dateFormatter.dayLabel(localDate),
       weekdayLabel: this.dateFormatter.weekdayLabel(localDate),
+      monthLabel: this.dateFormatter.monthLabel(localDate),
+      showMonthHeader: showMonthHeader,
       kind: kind,
-      content: content
+      content: content,
+      note: note
     };
   }
 
@@ -158,9 +176,9 @@ export class ShareViewModel {
       localDate: record.localDate,
       recordType: record.recordType,
       content: record.content === null ? '' : record.content,
+      note: record.note === null ? '' : record.note,
       fontId: record.fontId,
       paperId: record.paperId
     };
   }
 }
-

@@ -4,9 +4,19 @@ export struct DiaryWordDisplay {
   @Prop contentCount: number = 0;
   @Prop fontFamily: string = 'serif';
   @Prop stageHeight: number = 160;
+  @Prop isHero: boolean = false;
   @Prop accessibilityPrefix: string = '正文';
 
   get contentFontSize(): string {
+    if (this.isHero) {
+      if (this.contentCount <= 1) {
+        return '152vp';
+      }
+      if (this.contentCount === 2) {
+        return '118vp';
+      }
+      return this.contentCount === 3 ? '84vp' : '64vp';
+    }
     if (this.contentCount <= 1) {
       return '88vp';
     }
@@ -17,6 +27,15 @@ export struct DiaryWordDisplay {
   }
 
   get contentLineHeight(): string {
+    if (this.isHero) {
+      if (this.contentCount <= 1) {
+        return '176vp';
+      }
+      if (this.contentCount === 2) {
+        return '140vp';
+      }
+      return this.contentCount === 3 ? '104vp' : '84vp';
+    }
     if (this.contentCount <= 1) {
       return '104vp';
     }

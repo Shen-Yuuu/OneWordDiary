@@ -152,12 +152,13 @@ export struct ScrollPage {
         }
         .width('100%')
         .height('100%')
-        .backgroundColor(Color.Transparent)
+        .backgroundColor($r('app.color.paper_warm'))
       }
       .width('100%')
       .height('100%')
+      .backgroundColor($r('app.color.paper_warm'))
     }
     .hideTitleBar(true)
-    .backgroundColor(Color.Transparent)
+    .backgroundColor($r('app.color.paper_warm'))
   }
 }

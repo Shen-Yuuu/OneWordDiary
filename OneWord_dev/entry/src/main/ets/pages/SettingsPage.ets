@@ -26,6 +26,11 @@ export struct SettingsPage {
     return this.viewModel.stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev';
   }
 
+  get activePaperColor(): ResourceColor {
+    return this.activePaperId === 'plain_ash_dev' ?
+      $r('app.color.paper_plain') : $r('app.color.paper_warm');
+  }
+
   aboutToAppear(): void {
     this.viewModel.load();
   }
@@ -331,8 +336,9 @@ export struct SettingsPage {
       }
       .width('100%')
       .height('100%')
+      .backgroundColor(this.activePaperColor)
     }
     .hideTitleBar(true)
-    .backgroundColor(Color.Transparent)
+    .backgroundColor(this.activePaperColor)
   }
 }

@@ -17,6 +17,7 @@ import { ShareViewModel } from '../viewmodel/ShareViewModel';
 export struct SharePreviewPage {
   @Prop initialMode: DiaryShareMode = DiaryShareMode.SINGLE;
   @Prop preferredSingleDate: string | null = null;
+  @State private showNote: boolean = false;
   @State private viewModel: ShareViewModel = new ShareViewModel(
     AppServiceContainer.getDiaryService(),
     AppServiceContainer.getSettingsRepository(),
@@ -27,6 +28,11 @@ export struct SharePreviewPage {
   private readonly imageService: ShareImageService = new ShareImageService();
   onBack: () => void = () => {
   };
+
+  get activePaperColor(): ResourceColor {
+    return this.viewModel.activePaperId === 'plain_ash_dev' ?
+      $r('app.color.paper_plain') : $r('app.color.paper_warm');
+  }
 
   aboutToAppear(): void {
     this.viewModel.load(this.initialMode, this.preferredSingleDate);
@@ -69,24 +75,34 @@ export struct SharePreviewPage {
   }
 
   @Builder
-  private shareCard() {
+  private shareCardContent() {
     if (this.viewModel.mode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
       ShareSingleCard({
         localDate: this.viewModel.singleData.localDate,
         recordType: this.viewModel.singleData.recordType,
         content: this.viewModel.singleData.content,
+        note: this.viewModel.singleData.note,
+        showNote: this.showNote,
         fontId: this.viewModel.singleData.fontId,
         paperId: this.viewModel.singleData.paperId
       })
-        .id(SHARE_CARD_COMPONENT_ID)
     } else if (this.viewModel.mode === DiaryShareMode.SEVEN_DAYS) {
       ShareSevenCard({
         days: this.viewModel.sevenDays,
         fontId: this.viewModel.sevenFontId,
-        paperId: this.viewModel.sevenPaperId
+        paperId: this.viewModel.sevenPaperId,
+        showNote: this.showNote
       })
-        .id(SHARE_CARD_COMPONENT_ID)
     }
+  }
+
+  @Builder
+  private shareCard() {
+    Stack() {
+      this.shareCardContent()
+    }
+    .id(SHARE_CARD_COMPONENT_ID)
+    .backgroundColor(this.activePaperColor)
   }
 
   build() {
@@ -135,40 +151,70 @@ export struct SharePreviewPage {
             })
               .layoutWeight(1)
           } else {
-            Column({ space: 16 }) {
-              Row() {
-                this.modeButton(DiaryShareMode.SINGLE, '单日')
-                this.modeButton(DiaryShareMode.SEVEN_DAYS, '最近七日')
+            Scroll() {
+              Column({ space: 16 }) {
+                Row() {
+                  this.modeButton(DiaryShareMode.SINGLE, '单日')
+                  this.modeButton(DiaryShareMode.SEVEN_DAYS, '最近七日')
+                }
+                .padding(3)
+                .border({ width: 1, color: $r('app.color.outline_soft') })
+                .borderRadius(20)
+
+                Row() {
+                  Column({ space: 3 }) {
+                    Text('展示备注')
+                      .fontSize(14)
+                      .fontColor($r('app.color.text_primary'))
+
+                    Text('仅影响本次预览与分享图')
+                      .fontSize(11)
+                      .fontColor($r('app.color.text_tertiary'))
+                  }
+                  .alignItems(HorizontalAlign.Start)
+
+                  Toggle({ type: ToggleType.Switch, isOn: this.showNote })
+                    .selectedColor($r('app.color.accent_vermilion'))
+                    .enabled(!this.viewModel.isBusy)
+                    .onChange((isOn: boolean) => {
+                      this.showNote = isOn;
+                    })
+                }
+                .width(286)
+                .justifyContent(FlexAlign.SpaceBetween)
+                .alignItems(VerticalAlign.Center)
+
+                Stack() {
+                  this.shareCard()
+                }
+                .shadow({ radius: 22, color: '#16000000', offsetX: 0, offsetY: 10 })
+
+                Text(this.showNote ? '分享图已展示备注' : '分享图不展示备注')
+                  .fontSize(12)
+                  .fontColor($r('app.color.text_tertiary'))
+                  .letterSpacing(1)
+
+                if (this.viewModel.errorMessage.length > 0) {
+                  Text(this.viewModel.errorMessage)
+                    .fontSize(13)
+                    .fontColor($r('app.color.accent_vermilion'))
+                    .textAlign(TextAlign.Center)
+                }
+
+                DiaryPrimaryButton({
+                  label: this.viewModel.uiState === ShareUiState.RENDERING ? '正在生成…' : '系统分享',
+                  isEnabled: this.viewModel.canShare && !this.viewModel.isBusy,
+                  onTap: () => this.shareCurrentCard()
+                })
               }
-              .padding(3)
-              .border({ width: 1, color: $r('app.color.outline_soft') })
-              .borderRadius(20)
-
-              this.shareCard()
-
-              Text('分享图不包含备注')
-                .fontSize(12)
-                .fontColor($r('app.color.text_tertiary'))
-                .letterSpacing(1)
-
-              if (this.viewModel.errorMessage.length > 0) {
-                Text(this.viewModel.errorMessage)
-                  .fontSize(13)
-                  .fontColor($r('app.color.accent_vermilion'))
-                  .textAlign(TextAlign.Center)
-              }
-
-              DiaryPrimaryButton({
-                label: this.viewModel.uiState === ShareUiState.RENDERING ? '正在生成…' : '系统分享',
-                isEnabled: this.viewModel.canShare && !this.viewModel.isBusy,
-                onTap: () => this.shareCurrentCard()
-              })
+              .width('100%')
+              .alignItems(HorizontalAlign.Center)
+              .padding({ top: 12, bottom: 24 })
             }
             .layoutWeight(1)
             .width('100%')
-            .justifyContent(FlexAlign.Center)
-            .alignItems(HorizontalAlign.Center)
-            .padding({ top: 12, bottom: 18 })
+            .scrollBar(BarState.Off)
+            .edgeEffect(EdgeEffect.Spring)
           }
         }
         .width('100%')
@@ -177,8 +223,9 @@ export struct SharePreviewPage {
       }
       .width('100%')
       .height('100%')
+      .backgroundColor(this.activePaperColor)
     }
     .hideTitleBar(true)
-    .backgroundColor(Color.Transparent)
+    .backgroundColor(this.activePaperColor)
   }
 }
