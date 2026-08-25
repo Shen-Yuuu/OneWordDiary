@@ -19,6 +19,7 @@ export struct SharePreviewPage {
   @Prop preferredSingleDate: string | null = null;
   @State private selectedMode: DiaryShareMode = DiaryShareMode.SINGLE;
   @State private showNote: boolean = false;
+  @State private renderRevision: number = 0;
   @State private viewModel: ShareViewModel = new ShareViewModel(
     AppServiceContainer.getDiaryService(),
     AppServiceContainer.getSettingsRepository(),
@@ -73,12 +74,14 @@ export struct SharePreviewPage {
   private async loadShareData(): Promise<void> {
     await this.viewModel.load(this.initialMode, this.preferredSingleDate);
     this.selectedMode = this.viewModel.mode;
+    this.renderRevision += 1;
   }
 
   private selectMode(mode: DiaryShareMode): void {
     this.viewModel.selectMode(mode);
     if (this.viewModel.mode === mode) {
       this.selectedMode = mode;
+      this.renderRevision += 1;
     }
   }
 
@@ -141,7 +144,9 @@ export struct SharePreviewPage {
   @Builder
   private shareCard() {
     Stack() {
-      this.shareCardContent()
+      ForEach([this.renderRevision], (revision: number) => {
+        this.shareCardContent()
+      }, (revision: number): string => `${this.selectedMode}-${revision}`)
     }
     .id(SHARE_CARD_COMPONENT_ID)
     .backgroundColor(this.activePaperColor)
@@ -220,6 +225,7 @@ export struct SharePreviewPage {
                     .enabled(!this.viewModel.isBusy)
                     .onChange((isOn: boolean) => {
                       this.showNote = isOn;
+                      this.renderRevision += 1;
                     })
                 }
                 .width(286)

@@ -1,6 +1,5 @@
 import { DiaryIconButton } from '../common/DiaryIconButton';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
-import { DiaryWordDisplay } from '../common/DiaryWordDisplay';
 import { RecordType } from '../../model/DailyRecord';
 
 @Component
@@ -23,8 +22,18 @@ export struct TodayRecordCard {
     return this.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
   }
 
-  get heroStageWidth(): number {
-    return this.contentCount <= 1 ? 230 : 282;
+  get heroTextWidth(): number {
+    if (this.contentCount <= 1) {
+      return 150;
+    }
+    if (this.contentCount === 2) {
+      return 170;
+    }
+    return this.contentCount === 3 ? 190 : 200;
+  }
+
+  get heroGroupWidth(): number {
+    return this.heroTextWidth + 76;
   }
 
   build() {
@@ -55,22 +64,53 @@ export struct TodayRecordCard {
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(4)
             }
-            .width(this.heroStageWidth)
+            .width(this.heroTextWidth)
+            .height(300)
+            .flexShrink(0)
             .justifyContent(FlexAlign.Center)
             .alignItems(HorizontalAlign.Center)
           } else {
-            Column() {
-              DiaryWordDisplay({
-                content: this.content,
-                contentCount: this.contentCount,
-                fontFamily: this.fontFamily,
-                stageHeight: 300,
-                isHero: true,
-                accessibilityPrefix: '今日正文'
-              })
+            Stack({ alignContent: Alignment.Center }) {
+              if (this.contentCount <= 1) {
+                Text(this.content)
+                  .fontSize(136)
+                  .fontFamily(this.fontFamily)
+                  .fontWeight(FontWeight.Normal)
+                  .fontColor($r('app.color.text_primary'))
+                  .textAlign(TextAlign.Center)
+                  .accessibilityText(`今日正文，${this.content}`)
+              } else if (this.contentCount === 2) {
+                Text(this.content)
+                  .fontSize(76)
+                  .fontFamily(this.fontFamily)
+                  .fontWeight(FontWeight.Normal)
+                  .fontColor($r('app.color.text_primary'))
+                  .letterSpacing(3)
+                  .textAlign(TextAlign.Center)
+                  .accessibilityText(`今日正文，${this.content}`)
+              } else if (this.contentCount === 3) {
+                Text(this.content)
+                  .fontSize(56)
+                  .fontFamily(this.fontFamily)
+                  .fontWeight(FontWeight.Normal)
+                  .fontColor($r('app.color.text_primary'))
+                  .letterSpacing(3)
+                  .textAlign(TextAlign.Center)
+                  .accessibilityText(`今日正文，${this.content}`)
+              } else {
+                Text(this.content)
+                  .fontSize(44)
+                  .fontFamily(this.fontFamily)
+                  .fontWeight(FontWeight.Normal)
+                  .fontColor($r('app.color.text_primary'))
+                  .letterSpacing(3)
+                  .textAlign(TextAlign.Center)
+                  .accessibilityText(`今日正文，${this.content}`)
+              }
             }
-            .width(this.heroStageWidth)
+            .width(this.heroTextWidth)
             .height(300)
+            .flexShrink(0)
           }
 
           Text('已')
@@ -83,9 +123,10 @@ export struct TodayRecordCard {
             .backgroundColor($r('app.color.accent_vermilion'))
             .textAlign(TextAlign.Center)
             .borderRadius(3)
+            .flexShrink(0)
             .accessibilityText('已收入长卷')
         }
-        .width('100%')
+        .width(this.heroGroupWidth)
         .height(300)
         .justifyContent(FlexAlign.Center)
         .alignItems(VerticalAlign.Center)

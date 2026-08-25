@@ -38,34 +38,6 @@ export struct ShareSingleCard {
     return this.graphemeCounter.count(this.content);
   }
 
-  get hasVisibleNote(): boolean {
-    return this.showNote;
-  }
-
-  get visibleNote(): string {
-    return this.note.length > 0 ? this.note : '这条记录没有备注';
-  }
-
-  get wordSize(): string {
-    if (this.contentCount <= 1) {
-      return '96vp';
-    }
-    if (this.contentCount === 2) {
-      return '78vp';
-    }
-    return this.contentCount === 3 ? '62vp' : '52vp';
-  }
-
-  get wordLineHeight(): string {
-    if (this.contentCount <= 1) {
-      return '112vp';
-    }
-    if (this.contentCount === 2) {
-      return '94vp';
-    }
-    return this.contentCount === 3 ? '78vp' : '68vp';
-  }
-
   build() {
     Column() {
       Text(this.dateFormatter.compactLabel(this.localDate))
@@ -81,21 +53,41 @@ export struct ShareSingleCard {
       Column() {
         if (this.recordType === RecordType.WORD) {
           Stack({ alignContent: Alignment.Center }) {
-            Text(this.content)
-              .width('100%')
-              .fontSize(this.wordSize)
-              .lineHeight(this.wordLineHeight)
-              .fontFamily(this.fontFamily)
-              .fontWeight(FontWeight.Normal)
-              .fontColor(this.textColor)
-              .letterSpacing(this.contentCount > 1 ? 3 : 0)
-              .maxLines(1)
-              .minFontScale(1)
-              .maxFontScale(1)
-              .textAlign(TextAlign.Center)
+            if (this.contentCount <= 1) {
+              Text(this.content)
+                .fontSize(96)
+                .fontFamily(this.fontFamily)
+                .fontWeight(FontWeight.Normal)
+                .fontColor(this.textColor)
+                .textAlign(TextAlign.Center)
+            } else if (this.contentCount === 2) {
+              Text(this.content)
+                .fontSize(78)
+                .fontFamily(this.fontFamily)
+                .fontWeight(FontWeight.Normal)
+                .fontColor(this.textColor)
+                .letterSpacing(3)
+                .textAlign(TextAlign.Center)
+            } else if (this.contentCount === 3) {
+              Text(this.content)
+                .fontSize(62)
+                .fontFamily(this.fontFamily)
+                .fontWeight(FontWeight.Normal)
+                .fontColor(this.textColor)
+                .letterSpacing(3)
+                .textAlign(TextAlign.Center)
+            } else {
+              Text(this.content)
+                .fontSize(52)
+                .fontFamily(this.fontFamily)
+                .fontWeight(FontWeight.Normal)
+                .fontColor(this.textColor)
+                .letterSpacing(3)
+                .textAlign(TextAlign.Center)
+            }
           }
           .width('100%')
-          .height(this.hasVisibleNote ? 224 : 292)
+          .height(this.showNote ? 224 : 292)
         } else {
           Column({ space: 14 }) {
             Stack({ alignContent: Alignment.Center }) {
@@ -120,19 +112,19 @@ export struct ShareSingleCard {
               .minFontScale(1)
               .maxFontScale(1)
           }
-          .height(this.hasVisibleNote ? 224 : 292)
+          .height(this.showNote ? 224 : 292)
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
         }
 
-        if (this.hasVisibleNote) {
+        if (this.showNote) {
           Column({ space: 6 }) {
             Row()
               .width(28)
               .height(1)
               .backgroundColor(this.secondaryColor)
 
-            Text(this.visibleNote)
+            Text(this.note.length > 0 ? this.note : '这条记录没有备注')
               .width(238)
               .fontSize(12)
               .lineHeight(18)
