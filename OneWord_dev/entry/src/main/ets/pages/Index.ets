@@ -249,6 +249,7 @@ struct Index {
                 recordType: this.viewModel.recordDisplayType,
                 content: this.viewModel.recordDisplayContent,
                 contentCount: this.viewModel.recordDisplayContentCount,
+                note: this.viewModel.recordDisplayNote,
                 fontId: this.viewModel.recordFontId,
                 canRevise: this.recordCanRevise,
                 revisionDeadline: this.viewModel.revisionDeadlineLabel,

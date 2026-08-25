@@ -30,6 +30,7 @@ export class TodayViewModel {
   recordDisplayType: RecordType = RecordType.WORD;
   recordDisplayContent: string = '';
   recordDisplayContentCount: number = 0;
+  recordDisplayNote: string = '';
   recordFontId: string = 'system_serif_dev';
   recordPaperId: string = 'warm_paper_dev';
 
@@ -365,6 +366,7 @@ export class TodayViewModel {
       this.recordDisplayType = RecordType.WORD;
       this.recordDisplayContent = '';
       this.recordDisplayContentCount = 0;
+      this.recordDisplayNote = '';
       this.recordFontId = 'system_serif_dev';
       this.recordPaperId = 'warm_paper_dev';
       return;
@@ -372,6 +374,7 @@ export class TodayViewModel {
     this.recordDisplayType = record.recordType;
     this.recordDisplayContent = record.content === null ? '' : record.content;
     this.recordDisplayContentCount = this.textRules.countGraphemes(this.recordDisplayContent);
+    this.recordDisplayNote = record.note === null ? '' : record.note;
     this.recordFontId = record.fontId;
     this.recordPaperId = record.paperId;
   }

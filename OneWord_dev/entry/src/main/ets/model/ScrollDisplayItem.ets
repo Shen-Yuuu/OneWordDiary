@@ -19,6 +19,9 @@ export class ScrollDisplayItem {
   readonly fontId: string;
   readonly paperId: string;
   readonly side: ScrollItemSide;
+  readonly note: string;
+  readonly showNote: boolean;
+  readonly isMissing: boolean;
 
   constructor(
     localDate: string,
@@ -32,7 +35,10 @@ export class ScrollDisplayItem {
     contentCount: number,
     fontId: string,
     paperId: string,
-    side: ScrollItemSide
+    side: ScrollItemSide,
+    note: string = '',
+    showNote: boolean = false,
+    isMissing: boolean = false
   ) {
     this.localDate = localDate;
     this.monthKey = monthKey;
@@ -46,5 +52,8 @@ export class ScrollDisplayItem {
     this.fontId = fontId;
     this.paperId = paperId;
     this.side = side;
+    this.note = note;
+    this.showNote = showNote;
+    this.isMissing = isMissing;
   }
 }

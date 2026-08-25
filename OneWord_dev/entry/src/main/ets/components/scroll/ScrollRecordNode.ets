@@ -6,13 +6,13 @@ export struct ScrollRecordNode {
   @Prop item: ScrollDisplayItem = new ScrollDisplayItem(
     '', '', '', false, '', '', RecordType.BLANK, '', 0, '', '', ScrollItemSide.CENTER
   );
+  @Prop isInteractive: boolean = true;
   onOpen: (localDate: string) => void = (localDate: string) => {
   };
 
   get recordFontFamily(): string {
     return this.item.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
   }
-
 
   get recordFontSize(): string {
     if (this.item.contentCount <= 1) {
@@ -34,12 +34,47 @@ export struct ScrollRecordNode {
     return this.item.contentCount === 3 ? '48vp' : '44vp';
   }
 
+  get paperColor(): string {
+    return this.item.paperId === 'plain_ash_dev' ? '#FFFFFF' : '#FFFCFB';
+  }
+
+  get textColor(): string {
+    return this.item.paperId === 'plain_ash_dev' ? '#242424' : '#282622';
+  }
+
+  get secondaryColor(): string {
+    return this.item.paperId === 'plain_ash_dev' ? '#777775' : '#8C8783';
+  }
+
+  get faintColor(): string {
+    return this.item.paperId === 'plain_ash_dev' ? '#AFAFAC' : '#B8ADA7';
+  }
+
+  get lineColor(): string {
+    return this.item.paperId === 'plain_ash_dev' ? '#D8D8D4' : '#E0D5D0';
+  }
+
+  get accentColor(): string {
+    return this.item.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
+  }
+
+  get visibleNote(): string {
+    return this.item.note.length > 0 ? this.item.note : '这条记录没有备注';
+  }
+
+  get nodeHeight(): number {
+    if (this.item.isMissing) {
+      return 92;
+    }
+    return this.item.showNote ? 166 : 136;
+  }
+
   @Builder
   private wordContent() {
     Column({ space: 8 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(12)
-        .fontColor($r('app.color.text_tertiary'))
+        .fontColor(this.secondaryColor)
         .letterSpacing(1.2)
 
       Text(this.item.content)
@@ -47,16 +82,27 @@ export struct ScrollRecordNode {
         .lineHeight(this.recordLineHeight)
         .fontFamily(this.recordFontFamily)
         .fontWeight(FontWeight.Normal)
-        .fontColor($r('app.color.text_primary'))
+        .fontColor(this.textColor)
         .letterSpacing(this.item.contentCount > 1 ? 2 : 0)
         .minFontScale(1)
         .maxFontScale(1)
         .maxLines(1)
 
+      if (this.item.showNote) {
+        Text(this.visibleNote)
+          .width('100%')
+          .fontSize(10)
+          .lineHeight(15)
+          .fontFamily(this.recordFontFamily)
+          .fontColor(this.secondaryColor)
+          .maxLines(2)
+          .textAlign(this.item.side === ScrollItemSide.LEFT ? TextAlign.End : TextAlign.Start)
+      }
+
       Row()
         .width(32)
         .height(1)
-        .backgroundColor($r('app.color.outline_soft'))
+        .backgroundColor(this.lineColor)
     }
     .layoutWeight(1)
     .padding({ left: 12, right: 12, top: 10, bottom: 10 })
@@ -65,28 +111,59 @@ export struct ScrollRecordNode {
 
   @Builder
   private blankContent() {
-    Column({ space: 12 }) {
+    Column({ space: 10 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(12)
-        .fontColor($r('app.color.text_tertiary'))
+        .fontColor(this.secondaryColor)
         .letterSpacing(1.2)
-        .backgroundColor($r('app.color.paper_warm'))
+        .backgroundColor(this.paperColor)
         .padding({ left: 8, right: 8 })
 
       Stack({ alignContent: Alignment.Center }) {
         Row()
           .width(42)
           .height(42)
-          .backgroundColor($r('app.color.paper_warm'))
-          .border({ width: 1, color: $r('app.color.outline_soft') })
+          .backgroundColor(this.paperColor)
+          .border({ width: 1, color: this.lineColor })
           .borderRadius(21)
 
         Row()
           .width(5)
           .height(5)
-          .backgroundColor($r('app.color.accent_vermilion'))
+          .backgroundColor(this.accentColor)
           .borderRadius(2)
       }
+
+      if (this.item.showNote) {
+        Text(this.visibleNote)
+          .width(150)
+          .fontSize(10)
+          .lineHeight(15)
+          .fontFamily(this.recordFontFamily)
+          .fontColor(this.secondaryColor)
+          .maxLines(2)
+          .textAlign(TextAlign.Center)
+      }
+    }
+    .alignItems(HorizontalAlign.Center)
+  }
+
+  @Builder
+  private missingContent() {
+    Column({ space: 10 }) {
+      Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
+        .fontSize(11)
+        .fontColor(this.faintColor)
+        .letterSpacing(1)
+        .backgroundColor(this.paperColor)
+        .padding({ left: 8, right: 8 })
+
+      Row()
+        .width(18)
+        .height(18)
+        .backgroundColor(this.paperColor)
+        .border({ width: 1, color: this.faintColor })
+        .borderRadius(9)
     }
     .alignItems(HorizontalAlign.Center)
   }
@@ -95,12 +172,14 @@ export struct ScrollRecordNode {
     Column() {
       if (this.item.showMonthHeader) {
         Text(this.item.monthLabel)
+          .width('100%')
+          .height(70)
           .fontSize(20)
           .fontFamily('serif')
           .fontWeight(FontWeight.Medium)
-          .fontColor($r('app.color.text_primary'))
+          .fontColor(this.textColor)
           .letterSpacing(2.8)
-          .margin({ top: 24, bottom: 22 })
+          .textAlign(TextAlign.Center)
           .accessibilityLevel('yes')
       }
 
@@ -111,16 +190,18 @@ export struct ScrollRecordNode {
 
           Divider()
             .vertical(true)
-            .height(136)
+            .height(this.nodeHeight)
             .strokeWidth(1)
-            .color($r('app.color.divider_subtle'))
+            .color(this.lineColor)
 
           Blank()
             .layoutWeight(1)
         }
         .width('100%')
 
-        if (this.item.recordType === RecordType.BLANK) {
+        if (this.item.isMissing) {
+          this.missingContent()
+        } else if (this.item.recordType === RecordType.BLANK) {
           this.blankContent()
         } else {
           Row() {
@@ -137,16 +218,23 @@ export struct ScrollRecordNode {
           Row()
             .width(6)
             .height(6)
-            .backgroundColor($r('app.color.accent_vermilion'))
+            .backgroundColor(this.accentColor)
             .borderRadius(3)
         }
       }
       .width('100%')
-      .height(136)
-      .onClick(() => this.onOpen(this.item.localDate))
+      .height(this.nodeHeight)
+      .onClick(() => {
+        if (this.isInteractive && !this.item.isMissing) {
+          this.onOpen(this.item.localDate);
+        }
+      })
       .accessibilityGroup(true)
-      .accessibilityText(this.item.recordType === RecordType.BLANK ?
-        `${this.item.localDate}，正式留白` : `${this.item.localDate}，${this.item.content}`)
+      .accessibilityText(this.item.isMissing ?
+        `${this.item.localDate}，没有记录` :
+        this.item.recordType === RecordType.BLANK ?
+          `${this.item.localDate}，正式留白` :
+          `${this.item.localDate}，${this.item.content}${this.item.showNote ? `，备注，${this.visibleNote}` : ''}`)
     }
     .width('100%')
   }

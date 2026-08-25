@@ -107,7 +107,9 @@ export default function shareViewModelTest(): void {
 
     it('buildsSevenNaturalDaysAcrossYearBoundary', 0, async () => {
       const fixture = new ShareFixture();
-      await fixture.repository.insert(createShareRecord('2026-01-02', RecordType.WORD, '新'));
+      await fixture.repository.insert(createShareRecord(
+        '2026-01-02', RecordType.WORD, '新', '跨年的第一句备注'
+      ));
       await fixture.repository.insert(createShareRecord('2026-01-01', RecordType.BLANK, null));
 
       await fixture.viewModel.load(DiaryShareMode.SEVEN_DAYS, null);
@@ -115,6 +117,7 @@ export default function shareViewModelTest(): void {
       expect(fixture.viewModel.sevenDays.length).assertEqual(7);
       expect(fixture.viewModel.sevenDays[0].localDate).assertEqual('2026-01-02');
       expect(fixture.viewModel.sevenDays[0].kind).assertEqual(ShareDayKind.WORD);
+      expect(fixture.viewModel.sevenDays[0].note).assertEqual('跨年的第一句备注');
       expect(fixture.viewModel.sevenDays[0].showMonthHeader).assertTrue();
       expect(fixture.viewModel.sevenDays[0].monthLabel).assertEqual('二〇二六年一月');
       expect(fixture.viewModel.sevenDays[1].kind).assertEqual(ShareDayKind.BLANK);
