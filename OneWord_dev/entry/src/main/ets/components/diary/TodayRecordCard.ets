@@ -23,16 +23,16 @@ export struct TodayRecordCard {
     return this.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
   }
 
+  get heroStageWidth(): number {
+    return this.contentCount <= 1 ? 230 : 282;
+  }
+
   build() {
     Column() {
       Blank()
 
       Column({ space: 10 }) {
-        Row() {
-          Row()
-            .width(52)
-            .height(52)
-
+        Row({ space: 12 }) {
           if (this.recordType === RecordType.BLANK) {
             Column({ space: 14 }) {
               Stack({ alignContent: Alignment.Center }) {
@@ -55,26 +55,30 @@ export struct TodayRecordCard {
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(4)
             }
-            .layoutWeight(1)
+            .width(this.heroStageWidth)
             .justifyContent(FlexAlign.Center)
             .alignItems(HorizontalAlign.Center)
           } else {
-            DiaryWordDisplay({
-              content: this.content,
-              contentCount: this.contentCount,
-              fontFamily: this.fontFamily,
-              stageHeight: 300,
-              isHero: true,
-              accessibilityPrefix: '今日正文'
-            })
-              .layoutWeight(1)
+            Column() {
+              DiaryWordDisplay({
+                content: this.content,
+                contentCount: this.contentCount,
+                fontFamily: this.fontFamily,
+                stageHeight: 300,
+                isHero: true,
+                accessibilityPrefix: '今日正文'
+              })
+            }
+            .width(this.heroStageWidth)
+            .height(300)
           }
 
           Text('已')
-            .width(52)
-            .height(52)
-            .fontSize(22)
+            .width(64)
+            .height(64)
+            .fontSize(28)
             .fontFamily('serif')
+            .fontWeight(FontWeight.Bold)
             .fontColor('#FFFFFF')
             .backgroundColor($r('app.color.accent_vermilion'))
             .textAlign(TextAlign.Center)
@@ -83,6 +87,7 @@ export struct TodayRecordCard {
         }
         .width('100%')
         .height(300)
+        .justifyContent(FlexAlign.Center)
         .alignItems(VerticalAlign.Center)
 
         if (this.recordType === RecordType.WORD) {

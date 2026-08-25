@@ -1,12 +1,12 @@
-import { ShareDayItem } from '../../model/ShareModel';
-import { ShareSevenDayRow } from './ShareSevenDayRow';
+import { ShareDayItem, ShareDayKind } from '../../model/ShareModel';
+import { ShareScrollDayNode } from './ShareScrollDayNode';
 
 @Component
-export struct ShareSevenCard {
+export struct ShareScrollCard {
   @Prop days: ShareDayItem[] = [];
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
-  @Prop showNote: boolean = false;
+  @Prop includeNote: boolean = false;
 
   get paperColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#FFFFFF' : '#FFFCFB';
@@ -31,60 +31,74 @@ export struct ShareSevenCard {
   get timelineHeight(): number {
     let height = 0;
     for (const item of this.days) {
-      height += this.showNote && item.note.length > 0 ? 86 : 58;
       if (item.showMonthHeader) {
-        height += 40;
+        height += 66;
+      }
+      if (item.kind === ShareDayKind.MISSING) {
+        height += 82;
+      } else {
+        height += this.includeNote ? 156 : 126;
       }
     }
     return height;
   }
 
   get cardHeight(): number {
-    return this.timelineHeight + 92;
+    return this.timelineHeight + 116;
   }
 
   build() {
     Column() {
       Column() {
         ForEach(this.days, (item: ShareDayItem, index: number) => {
-          ShareSevenDayRow({
+          ShareScrollDayNode({
             item: item,
             index: index,
             fontId: this.fontId,
             paperId: this.paperId,
-            showNote: this.showNote
+            includeNote: this.includeNote
           })
         }, (item: ShareDayItem): string => item.localDate)
       }
       .width('100%')
-      .margin({ top: 14 })
+      .margin({ top: 16 })
 
-      Row({ space: 8 }) {
-        Stack({ alignContent: Alignment.Center }) {
-          Row()
-            .width(19)
-            .height(19)
-            .backgroundColor(this.accentColor)
-            .borderRadius(2)
+      Column({ space: 16 }) {
+        Text('卷尾')
+          .fontSize(13)
+          .fontFamily(this.fontFamily)
+          .fontColor(this.secondaryColor)
+          .letterSpacing(2)
 
-          Text('字')
-            .fontSize(9)
-            .fontFamily('serif')
-            .fontColor('#FFFFFF')
+        Row({ space: 8 }) {
+          Stack({ alignContent: Alignment.Center }) {
+            Row()
+              .width(19)
+              .height(19)
+              .backgroundColor(this.accentColor)
+              .borderRadius(2)
+
+            Text('字')
+              .fontSize(9)
+              .fontFamily('serif')
+              .fontColor('#FFFFFF')
+              .minFontScale(1)
+              .maxFontScale(1)
+          }
+
+          Text('一字日记')
+            .fontSize(11)
+            .fontFamily(this.fontFamily)
+            .fontColor(this.textColor)
+            .letterSpacing(2.4)
             .minFontScale(1)
             .maxFontScale(1)
         }
-
-        Text('一字日记')
-          .fontSize(11)
-          .fontFamily(this.fontFamily)
-          .fontColor(this.textColor)
-          .letterSpacing(2.4)
-          .minFontScale(1)
-          .maxFontScale(1)
+        .alignItems(VerticalAlign.Center)
       }
-      .height(78)
-      .alignItems(VerticalAlign.Center)
+      .height(100)
+      .justifyContent(FlexAlign.Center)
+      .alignItems(HorizontalAlign.Center)
     }
     .width(286)
     .height(this.cardHeight)

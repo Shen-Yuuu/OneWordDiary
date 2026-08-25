@@ -7,42 +7,42 @@ export struct DiaryWordDisplay {
   @Prop isHero: boolean = false;
   @Prop accessibilityPrefix: string = '正文';
 
-  get contentFontSize(): string {
+  get contentFontSize(): number {
     if (this.isHero) {
       if (this.contentCount <= 1) {
-        return '152vp';
+        return 210;
       }
       if (this.contentCount === 2) {
-        return '118vp';
+        return 136;
       }
-      return this.contentCount === 3 ? '84vp' : '64vp';
+      return this.contentCount === 3 ? 92 : 66;
     }
     if (this.contentCount <= 1) {
-      return '88vp';
+      return 88;
     }
     if (this.contentCount === 2) {
-      return '72vp';
+      return 72;
     }
-    return this.contentCount === 3 ? '58vp' : '48vp';
+    return this.contentCount === 3 ? 58 : 48;
   }
 
-  get contentLineHeight(): string {
+  get contentLineHeight(): number {
     if (this.isHero) {
       if (this.contentCount <= 1) {
-        return '176vp';
+        return 246;
       }
       if (this.contentCount === 2) {
-        return '140vp';
+        return 164;
       }
-      return this.contentCount === 3 ? '104vp' : '84vp';
+      return this.contentCount === 3 ? 116 : 90;
     }
     if (this.contentCount <= 1) {
-      return '104vp';
+      return 104;
     }
     if (this.contentCount === 2) {
-      return '88vp';
+      return 88;
     }
-    return this.contentCount === 3 ? '74vp' : '64vp';
+    return this.contentCount === 3 ? 74 : 64;
   }
 
   build() {

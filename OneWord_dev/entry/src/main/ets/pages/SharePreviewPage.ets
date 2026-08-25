@@ -2,7 +2,7 @@ import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPa
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { DiaryPrimaryButton } from '../components/common/DiaryPrimaryButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
-import { ShareSevenCard } from '../components/share/ShareSevenCard';
+import { ShareScrollCard } from '../components/share/ShareScrollCard';
 import { ShareSingleCard } from '../components/share/ShareSingleCard';
 import { DiaryShareMode } from '../model/ShareModel';
 import { ShareUiState } from '../model/ShareUiState';
@@ -17,6 +17,7 @@ import { ShareViewModel } from '../viewmodel/ShareViewModel';
 export struct SharePreviewPage {
   @Prop initialMode: DiaryShareMode = DiaryShareMode.SINGLE;
   @Prop preferredSingleDate: string | null = null;
+  @State private selectedMode: DiaryShareMode = DiaryShareMode.SINGLE;
   @State private showNote: boolean = false;
   @State private viewModel: ShareViewModel = new ShareViewModel(
     AppServiceContainer.getDiaryService(),
@@ -30,12 +31,13 @@ export struct SharePreviewPage {
   };
 
   get activePaperColor(): ResourceColor {
-    return this.viewModel.activePaperId === 'plain_ash_dev' ?
+    return this.activePaperId === 'plain_ash_dev' ?
       $r('app.color.paper_plain') : $r('app.color.paper_warm');
   }
 
   aboutToAppear(): void {
-    this.viewModel.load(this.initialMode, this.preferredSingleDate);
+    this.selectedMode = this.initialMode;
+    this.loadShareData();
   }
 
   aboutToDisappear(): void {
@@ -47,7 +49,7 @@ export struct SharePreviewPage {
       return;
     }
     try {
-      const fileName = this.viewModel.mode === DiaryShareMode.SINGLE ?
+      const fileName = this.selectedMode === DiaryShareMode.SINGLE ?
         'oneword-single-share.png' : 'oneword-seven-days-share.png';
       await this.imageService.shareCard(
         this.getUIContext(),
@@ -61,38 +63,78 @@ export struct SharePreviewPage {
     }
   }
 
+  get activePaperId(): string {
+    if (this.selectedMode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
+      return this.viewModel.singleData.paperId;
+    }
+    return this.viewModel.sevenPaperId;
+  }
+
+  private async loadShareData(): Promise<void> {
+    await this.viewModel.load(this.initialMode, this.preferredSingleDate);
+    this.selectedMode = this.viewModel.mode;
+  }
+
+  private selectMode(mode: DiaryShareMode): void {
+    this.viewModel.selectMode(mode);
+    if (this.viewModel.mode === mode) {
+      this.selectedMode = mode;
+    }
+  }
+
   @Builder
   private modeButton(mode: DiaryShareMode, label: string) {
     Button(label)
       .height(34)
       .padding({ left: 22, right: 22 })
       .fontSize(13)
-      .fontColor(this.viewModel.mode === mode ? '#FFFFFF' : $r('app.color.text_secondary'))
-      .backgroundColor(this.viewModel.mode === mode ? $r('app.color.ink_button') : Color.Transparent)
+      .fontColor(this.selectedMode === mode ? '#FFFFFF' : $r('app.color.text_secondary'))
+      .backgroundColor(this.selectedMode === mode ? $r('app.color.ink_button') : Color.Transparent)
       .borderRadius(17)
       .enabled(!this.viewModel.isBusy)
-      .onClick(() => this.viewModel.selectMode(mode))
+      .onClick(() => this.selectMode(mode))
   }
 
   @Builder
   private shareCardContent() {
-    if (this.viewModel.mode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
-      ShareSingleCard({
-        localDate: this.viewModel.singleData.localDate,
-        recordType: this.viewModel.singleData.recordType,
-        content: this.viewModel.singleData.content,
-        note: this.viewModel.singleData.note,
-        showNote: this.showNote,
-        fontId: this.viewModel.singleData.fontId,
-        paperId: this.viewModel.singleData.paperId
-      })
-    } else if (this.viewModel.mode === DiaryShareMode.SEVEN_DAYS) {
-      ShareSevenCard({
-        days: this.viewModel.sevenDays,
-        fontId: this.viewModel.sevenFontId,
-        paperId: this.viewModel.sevenPaperId,
-        showNote: this.showNote
-      })
+    if (this.selectedMode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
+      if (this.showNote) {
+        ShareSingleCard({
+          localDate: this.viewModel.singleData.localDate,
+          recordType: this.viewModel.singleData.recordType,
+          content: this.viewModel.singleData.content,
+          note: this.viewModel.singleData.note,
+          showNote: true,
+          fontId: this.viewModel.singleData.fontId,
+          paperId: this.viewModel.singleData.paperId
+        })
+      } else {
+        ShareSingleCard({
+          localDate: this.viewModel.singleData.localDate,
+          recordType: this.viewModel.singleData.recordType,
+          content: this.viewModel.singleData.content,
+          note: '',
+          showNote: false,
+          fontId: this.viewModel.singleData.fontId,
+          paperId: this.viewModel.singleData.paperId
+        })
+      }
+    } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
+      if (this.showNote) {
+        ShareScrollCard({
+          days: this.viewModel.sevenDays,
+          fontId: this.viewModel.sevenFontId,
+          paperId: this.viewModel.sevenPaperId,
+          includeNote: true
+        })
+      } else {
+        ShareScrollCard({
+          days: this.viewModel.sevenDays,
+          fontId: this.viewModel.sevenFontId,
+          paperId: this.viewModel.sevenPaperId,
+          includeNote: false
+        })
+      }
     }
   }
 
@@ -108,7 +150,7 @@ export struct SharePreviewPage {
   build() {
     NavDestination() {
       Stack() {
-        PaperBackdrop({ paperId: this.viewModel.activePaperId })
+        PaperBackdrop({ paperId: this.activePaperId })
 
         Column() {
           Row() {
@@ -140,7 +182,7 @@ export struct SharePreviewPage {
             AppErrorPanel({
               title: '暂时无法准备分享内容',
               message: this.viewModel.errorMessage,
-              onRetry: () => this.viewModel.load(this.initialMode, this.preferredSingleDate)
+              onRetry: () => this.loadShareData()
             })
               .layoutWeight(1)
           } else if (this.viewModel.uiState === ShareUiState.SINGLE_NOT_FOUND) {

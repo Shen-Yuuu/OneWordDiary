@@ -39,7 +39,11 @@ export struct ShareSingleCard {
   }
 
   get hasVisibleNote(): boolean {
-    return this.showNote && this.note.length > 0;
+    return this.showNote;
+  }
+
+  get visibleNote(): string {
+    return this.note.length > 0 ? this.note : '这条记录没有备注';
   }
 
   get wordSize(): string {
@@ -128,7 +132,7 @@ export struct ShareSingleCard {
               .height(1)
               .backgroundColor(this.secondaryColor)
 
-            Text(this.note)
+            Text(this.visibleNote)
               .width(238)
               .fontSize(12)
               .lineHeight(18)
