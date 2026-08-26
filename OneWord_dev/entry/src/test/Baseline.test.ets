@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { AppConstants } from '../main/ets/constants/AppConstants';
+import { ScrollLayoutMetrics } from '../main/ets/constants/ScrollLayoutMetrics';
 import {
   PAPER_INK_STYLE,
   PLAIN_ASH_STYLE,
@@ -11,6 +12,16 @@ export default function baselineTest(): void {
     it('definesProductLimits', 0, () => {
       expect(AppConstants.RECORD_CONTENT_MAX_GRAPHEMES).assertEqual(4);
       expect(AppConstants.RECORD_NOTE_MAX_GRAPHEMES).assertEqual(30);
+    });
+
+    it('definesCompactScrollMetrics', 0, () => {
+      expect(ScrollLayoutMetrics.MONTH_HEADER_HEIGHT).assertEqual(48);
+      expect(ScrollLayoutMetrics.nodeHeight(false, false)).assertEqual(88);
+      expect(ScrollLayoutMetrics.nodeHeight(false, true)).assertEqual(116);
+      expect(ScrollLayoutMetrics.nodeHeight(true, true)).assertEqual(48);
+      expect(ScrollLayoutMetrics.WORD_NODE_SIZE).assertEqual(10);
+      expect(ScrollLayoutMetrics.BLANK_NODE_SIZE).assertEqual(24);
+      expect(ScrollLayoutMetrics.MISSING_NODE_SIZE).assertEqual(14);
     });
 
     it('definesTwoCompleteStylePresets', 0, () => {

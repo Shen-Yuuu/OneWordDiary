@@ -1,5 +1,6 @@
 import { RecordType } from '../../model/DailyRecord';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
+import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 
 @Component
 export struct ScrollRecordNode {
@@ -16,22 +17,22 @@ export struct ScrollRecordNode {
 
   get recordFontSize(): string {
     if (this.item.contentCount <= 1) {
-      return '48vp';
-    }
-    if (this.item.contentCount === 2) {
       return '42vp';
     }
-    return this.item.contentCount === 3 ? '36vp' : '32vp';
+    if (this.item.contentCount === 2) {
+      return '36vp';
+    }
+    return this.item.contentCount === 3 ? '32vp' : '28vp';
   }
 
   get recordLineHeight(): string {
     if (this.item.contentCount <= 1) {
-      return '60vp';
+      return '48vp';
     }
     if (this.item.contentCount === 2) {
-      return '54vp';
+      return '44vp';
     }
-    return this.item.contentCount === 3 ? '48vp' : '44vp';
+    return this.item.contentCount === 3 ? '40vp' : '36vp';
   }
 
   get paperColor(): string {
@@ -63,19 +64,21 @@ export struct ScrollRecordNode {
   }
 
   get nodeHeight(): number {
-    if (this.item.isMissing) {
-      return 92;
-    }
-    return this.item.showNote ? 166 : 136;
+    return ScrollLayoutMetrics.nodeHeight(this.item.isMissing, this.item.showNote);
+  }
+
+  get totalHeight(): number {
+    return this.nodeHeight +
+      (this.item.showMonthHeader ? ScrollLayoutMetrics.MONTH_HEADER_HEIGHT : 0);
   }
 
   @Builder
   private wordContent() {
-    Column({ space: 8 }) {
+    Column({ space: 4 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(12)
+        .fontSize(11)
         .fontColor(this.secondaryColor)
-        .letterSpacing(1.2)
+        .letterSpacing(1)
 
       Text(this.item.content)
         .fontSize(this.recordFontSize)
@@ -92,7 +95,7 @@ export struct ScrollRecordNode {
         Text(this.visibleNote)
           .width('100%')
           .fontSize(10)
-          .lineHeight(15)
+          .lineHeight(14)
           .fontFamily(this.recordFontFamily)
           .fontColor(this.secondaryColor)
           .maxLines(2)
@@ -105,52 +108,45 @@ export struct ScrollRecordNode {
         .backgroundColor(this.lineColor)
     }
     .layoutWeight(1)
-    .padding({ left: 12, right: 12, top: 10, bottom: 10 })
+    .height('100%')
+    .padding({ left: 12, right: 12, top: 4, bottom: 4 })
+    .justifyContent(FlexAlign.Center)
     .alignItems(this.item.side === ScrollItemSide.LEFT ? HorizontalAlign.End : HorizontalAlign.Start)
   }
 
   @Builder
   private blankContent() {
-    Column({ space: 10 }) {
+    Column() {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
-        .fontSize(12)
+        .fontSize(11)
         .fontColor(this.secondaryColor)
-        .letterSpacing(1.2)
+        .letterSpacing(1)
         .backgroundColor(this.paperColor)
         .padding({ left: 8, right: 8 })
 
-      Stack({ alignContent: Alignment.Center }) {
-        Row()
-          .width(42)
-          .height(42)
-          .backgroundColor(this.paperColor)
-          .border({ width: 1, color: this.lineColor })
-          .borderRadius(21)
-
-        Row()
-          .width(5)
-          .height(5)
-          .backgroundColor(this.accentColor)
-          .borderRadius(2)
-      }
+      Blank()
 
       if (this.item.showNote) {
         Text(this.visibleNote)
           .width(150)
           .fontSize(10)
-          .lineHeight(15)
+          .lineHeight(14)
           .fontFamily(this.recordFontFamily)
           .fontColor(this.secondaryColor)
           .maxLines(2)
           .textAlign(TextAlign.Center)
       }
     }
+    .width(176)
+    .height('100%')
+    .padding({ top: 6, bottom: 6 })
     .alignItems(HorizontalAlign.Center)
+    .zIndex(1)
   }
 
   @Builder
   private missingContent() {
-    Column({ space: 10 }) {
+    Column() {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(11)
         .fontColor(this.faintColor)
@@ -158,14 +154,57 @@ export struct ScrollRecordNode {
         .backgroundColor(this.paperColor)
         .padding({ left: 8, right: 8 })
 
+      Blank()
+    }
+    .width(176)
+    .height('100%')
+    .padding({ top: 6, bottom: 6 })
+    .alignItems(HorizontalAlign.Center)
+    .zIndex(1)
+  }
+
+  @Builder
+  private axisMarker() {
+    if (this.item.isMissing) {
       Row()
-        .width(18)
-        .height(18)
+        .width(ScrollLayoutMetrics.MISSING_NODE_SIZE)
+        .height(ScrollLayoutMetrics.MISSING_NODE_SIZE)
         .backgroundColor(this.paperColor)
         .border({ width: 1, color: this.faintColor })
-        .borderRadius(9)
+        .borderRadius(ScrollLayoutMetrics.MISSING_NODE_SIZE / 2)
+        .zIndex(3)
+    } else if (this.item.recordType === RecordType.BLANK) {
+      Stack({ alignContent: Alignment.Center }) {
+        Row()
+          .width(ScrollLayoutMetrics.BLANK_NODE_SIZE)
+          .height(ScrollLayoutMetrics.BLANK_NODE_SIZE)
+          .backgroundColor(this.paperColor)
+          .border({ width: 2, color: this.accentColor })
+          .borderRadius(ScrollLayoutMetrics.BLANK_NODE_SIZE / 2)
+
+        Row()
+          .width(4)
+          .height(4)
+          .backgroundColor(this.accentColor)
+          .borderRadius(2)
+      }
+      .zIndex(3)
+    } else {
+      Stack({ alignContent: Alignment.Center }) {
+        Row()
+          .width(ScrollLayoutMetrics.WORD_NODE_SIZE + 4)
+          .height(ScrollLayoutMetrics.WORD_NODE_SIZE + 4)
+          .backgroundColor(this.paperColor)
+          .borderRadius((ScrollLayoutMetrics.WORD_NODE_SIZE + 4) / 2)
+
+        Row()
+          .width(ScrollLayoutMetrics.WORD_NODE_SIZE)
+          .height(ScrollLayoutMetrics.WORD_NODE_SIZE)
+          .backgroundColor(this.accentColor)
+          .borderRadius(ScrollLayoutMetrics.WORD_NODE_SIZE / 2)
+      }
+      .zIndex(3)
     }
-    .alignItems(HorizontalAlign.Center)
   }
 
   build() {
@@ -173,8 +212,8 @@ export struct ScrollRecordNode {
       if (this.item.showMonthHeader) {
         Text(this.item.monthLabel)
           .width('100%')
-          .height(70)
-          .fontSize(20)
+          .height(ScrollLayoutMetrics.MONTH_HEADER_HEIGHT)
+          .fontSize(18)
           .fontFamily('serif')
           .fontWeight(FontWeight.Medium)
           .fontColor(this.textColor)
@@ -193,6 +232,7 @@ export struct ScrollRecordNode {
             .height(this.nodeHeight)
             .strokeWidth(1)
             .color(this.lineColor)
+            .zIndex(0)
 
           Blank()
             .layoutWeight(1)
@@ -214,16 +254,15 @@ export struct ScrollRecordNode {
             }
           }
           .width('100%')
-
-          Row()
-            .width(6)
-            .height(6)
-            .backgroundColor(this.accentColor)
-            .borderRadius(3)
+          .height('100%')
+          .zIndex(1)
         }
+
+        this.axisMarker()
       }
       .width('100%')
       .height(this.nodeHeight)
+      .clip(false)
       .onClick(() => {
         if (this.isInteractive && !this.item.isMissing) {
           this.onOpen(this.item.localDate);
@@ -237,5 +276,6 @@ export struct ScrollRecordNode {
           `${this.item.localDate}，${this.item.content}${this.item.showNote ? `，备注，${this.visibleNote}` : ''}`)
     }
     .width('100%')
+    .height(this.totalHeight)
   }
 }

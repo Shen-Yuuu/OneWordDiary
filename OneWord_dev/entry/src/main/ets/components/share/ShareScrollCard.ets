@@ -3,6 +3,7 @@ import { RecordType } from '../../model/DailyRecord';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
 import { ShareDayItem, ShareDayKind } from '../../model/ShareModel';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
+import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 
 @Component
 export struct ShareScrollCard {
@@ -69,10 +70,10 @@ export struct ShareScrollCard {
   }
 
   private nodeHeight(item: ShareDayItem): number {
-    if (item.kind === ShareDayKind.MISSING) {
-      return 92;
-    }
-    return this.includeNote && item.note.length > 0 ? 166 : 136;
+    return ScrollLayoutMetrics.nodeHeight(
+      item.kind === ShareDayKind.MISSING,
+      this.includeNote && item.note.length > 0
+    );
   }
 
   get timelineHeight(): number {
@@ -80,14 +81,15 @@ export struct ShareScrollCard {
     for (const item of this.days) {
       height += this.nodeHeight(item);
       if (item.showMonthHeader) {
-        height += 70;
+        height += ScrollLayoutMetrics.MONTH_HEADER_HEIGHT;
       }
     }
     return height;
   }
 
   get cardHeight(): number {
-    return this.timelineHeight + 116;
+    return this.timelineHeight + ScrollLayoutMetrics.SHARE_TOP_SPACING +
+      ScrollLayoutMetrics.SHARE_FOOTER_HEIGHT;
   }
 
   build() {
@@ -102,9 +104,9 @@ export struct ShareScrollCard {
           `${item.localDate}-${this.includeNote ? item.note : 'no-note'}-${this.revision}`)
       }
       .width('100%')
-      .margin({ top: 16 })
+      .margin({ top: ScrollLayoutMetrics.SHARE_TOP_SPACING })
 
-      Column({ space: 16 }) {
+      Column({ space: 10 }) {
         Text('卷尾')
           .fontSize(13)
           .fontFamily(this.fontFamily)
@@ -133,7 +135,7 @@ export struct ShareScrollCard {
         }
         .alignItems(VerticalAlign.Center)
       }
-      .height(100)
+      .height(ScrollLayoutMetrics.SHARE_FOOTER_HEIGHT)
       .justifyContent(FlexAlign.Center)
       .alignItems(HorizontalAlign.Center)
     }
