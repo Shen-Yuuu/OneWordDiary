@@ -159,11 +159,6 @@ export struct SharePreviewPage {
   @Builder
   private shareCard() {
     Stack() {
-      Rect()
-        .width('100%')
-        .height('100%')
-        .fill(this.activePaperColor)
-
       ForEach([this.renderRevision], (revision: number) => {
         this.shareCardContent()
       }, (revision: number): string => `${this.selectedMode}-${revision}`)

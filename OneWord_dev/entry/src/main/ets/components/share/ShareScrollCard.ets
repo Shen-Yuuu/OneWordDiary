@@ -15,7 +15,7 @@ export struct ShareScrollCard {
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
   get paperColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#FFFFFF' : '#FFFCFB';
+    return this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7';
   }
 
   get textColor(): string {
@@ -89,7 +89,11 @@ export struct ShareScrollCard {
   }
 
   build() {
-    Column() {
+    Stack() {
+      Rect({ width: 286, height: this.cardHeight })
+        .fill(this.paperColor)
+
+      Column() {
       Column() {
         ForEach(this.days, (item: ShareDayItem, index: number) => {
           ScrollRecordNode({
@@ -134,12 +138,14 @@ export struct ShareScrollCard {
       .height(ScrollLayoutMetrics.SHARE_FOOTER_HEIGHT)
       .justifyContent(FlexAlign.Center)
       .alignItems(HorizontalAlign.Center)
+      }
+      .width(286)
+      .height(this.cardHeight)
+      .alignItems(HorizontalAlign.Center)
     }
     .width(286)
     .height(this.cardHeight)
-    .backgroundColor(this.paperColor)
     .border({ width: 1, color: this.paperId === 'plain_ash_dev' ? '#E5E5E2' : '#EEE5E1' })
     .borderRadius(2)
-    .alignItems(HorizontalAlign.Center)
   }
 }

@@ -14,7 +14,7 @@ export struct ShareSingleCard {
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
   get paperColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#FFFFFF' : '#FFFCFB';
+    return this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7';
   }
 
   get textColor(): string {
@@ -38,7 +38,11 @@ export struct ShareSingleCard {
   }
 
   build() {
-    Column() {
+    Stack() {
+      Rect({ width: 286, height: 440 })
+        .fill(this.paperColor)
+
+      Column() {
       Text(this.dateFormatter.compactLabel(this.localDate))
         .fontSize(12)
         .fontFamily('serif')
@@ -169,12 +173,14 @@ export struct ShareSingleCard {
       }
       .margin({ bottom: 32 })
       .alignItems(VerticalAlign.Center)
+      }
+      .width(286)
+      .height(440)
+      .alignItems(HorizontalAlign.Center)
     }
     .width(286)
     .height(440)
-    .backgroundColor(this.paperColor)
     .border({ width: 1, color: this.paperId === 'plain_ash_dev' ? '#E5E5E2' : '#EEE5E1' })
     .borderRadius(2)
-    .alignItems(HorizontalAlign.Center)
   }
 }
