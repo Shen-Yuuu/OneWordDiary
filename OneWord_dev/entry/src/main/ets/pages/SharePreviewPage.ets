@@ -12,7 +12,6 @@ import { SHARE_CARD_COMPONENT_ID, ShareImageService } from '../service/ShareImag
 import { SystemClock } from '../utils/Clock';
 import { DiaryDateFormatter } from '../utils/DiaryDateFormatter';
 import { SystemLocalTimeResolver } from '../utils/LocalTimeResolver';
-import { RgbColor } from '../utils/OpaquePixelComposer';
 import { ShareViewModel } from '../viewmodel/ShareViewModel';
 
 @Component
@@ -58,11 +57,15 @@ export struct SharePreviewPage {
         this.getUIContext(),
         AppServiceContainer.getAbilityContext(),
         SHARE_CARD_COMPONENT_ID,
-        fileName,
-        this.shareBackgroundColor
+        fileName
       );
       this.viewModel.finishRendering();
     } catch (error) {
+      if (error instanceof Error) {
+        console.error(`SharePreviewPage shareCurrentCard failed: ${error.message}`);
+      } else {
+        console.error('SharePreviewPage shareCurrentCard failed');
+      }
       this.viewModel.failRendering();
     }
   }
@@ -72,11 +75,6 @@ export struct SharePreviewPage {
       return this.viewModel.singleData.paperId;
     }
     return this.viewModel.sevenPaperId;
-  }
-
-  get shareBackgroundColor(): RgbColor {
-    return this.activePaperId === 'plain_ash_dev' ?
-      new RgbColor(247, 247, 245) : new RgbColor(253, 248, 247);
   }
 
   private async loadShareData(): Promise<void> {
@@ -161,6 +159,11 @@ export struct SharePreviewPage {
   @Builder
   private shareCard() {
     Stack() {
+      Rect()
+        .width('100%')
+        .height('100%')
+        .fill(this.activePaperColor)
+
       ForEach([this.renderRevision], (revision: number) => {
         this.shareCardContent()
       }, (revision: number): string => `${this.selectedMode}-${revision}`)

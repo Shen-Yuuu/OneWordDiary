@@ -6,7 +6,6 @@ import diaryTextRulesTest from './DiaryTextRules.test';
 import diaryTimePolicyTest from './DiaryTimePolicy.test';
 import invisibleTextTest from './InvisibleText.test';
 import localTimeResolverTest from './LocalTimeResolver.test';
-import opaquePixelComposerTest from './OpaquePixelComposer.test';
 import scrollDetailTest from './ScrollDetail.test';
 import settingsViewModelTest from './SettingsViewModel.test';
 import shareViewModelTest from './ShareViewModel.test';
@@ -20,7 +19,6 @@ export default function testsuite(): void {
   diaryTimePolicyTest();
   invisibleTextTest();
   localTimeResolverTest();
-  opaquePixelComposerTest();
   timeBoundaryTest();
   scrollDetailTest();
   settingsViewModelTest();

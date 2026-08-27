@@ -48,7 +48,6 @@ export struct ScrollRecordNode {
   @Prop item: ScrollDisplayItem = new ScrollDisplayItem(
     '', '', '', false, '', '', RecordType.BLANK, '', 0, '', '', ScrollItemSide.CENTER
   );
-  @Prop noteText: string = '';
   @Prop isInteractive: boolean = true;
   onOpen: (localDate: string) => void = (localDate: string) => {
   };
@@ -98,11 +97,11 @@ export struct ScrollRecordNode {
   }
 
   get visibleNote(): string {
-    return this.noteText;
+    return this.item.note;
   }
 
   get shouldShowNote(): boolean {
-    return this.noteText.length > 0;
+    return this.item.showNote && this.item.note.length > 0;
   }
 
   get nodeHeight(): number {

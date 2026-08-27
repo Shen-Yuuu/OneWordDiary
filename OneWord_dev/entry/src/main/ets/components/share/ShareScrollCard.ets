@@ -94,11 +94,10 @@ export struct ShareScrollCard {
         ForEach(this.days, (item: ShareDayItem, index: number) => {
           ScrollRecordNode({
             item: this.displayItem(item, index),
-            noteText: resolveShareNoteText(this.includeNote, item.kind, item.note),
             isInteractive: false
           })
         }, (item: ShareDayItem): string =>
-          `${item.localDate}-${resolveShareNoteText(this.includeNote, item.kind, item.note)}-${this.revision}`)
+          `${item.localDate}-${this.includeNote ? 'notes-on' : 'notes-off'}-${this.revision}`)
       }
       .width('100%')
       .margin({ top: ScrollLayoutMetrics.SHARE_TOP_SPACING })

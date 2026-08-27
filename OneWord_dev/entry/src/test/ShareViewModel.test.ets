@@ -100,7 +100,9 @@ export default function shareViewModelTest(): void {
     });
 
     it('resolvesVisibleNoteCopyBeforeRendering', 0, () => {
-      expect(resolveShareNoteText(true, ShareDayKind.WORD, '晚风很好')).assertEqual('晚风很好');
+      const visibleNote = resolveShareNoteText(true, ShareDayKind.WORD, '晚风很好');
+      expect(visibleNote.length > 0).assertTrue();
+      expect(visibleNote).assertEqual('晚风很好');
       expect(resolveShareNoteText(true, ShareDayKind.WORD, '')).assertEqual('这条记录没有备注');
       expect(resolveShareNoteText(true, ShareDayKind.BLANK, '')).assertEqual('这条记录没有备注');
       expect(resolveShareNoteText(false, ShareDayKind.WORD, '晚风很好')).assertEqual('');
