@@ -4,13 +4,15 @@ import { DiaryPrimaryButton } from '../components/common/DiaryPrimaryButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { ShareScrollCard } from '../components/share/ShareScrollCard';
 import { ShareSingleCard } from '../components/share/ShareSingleCard';
-import { DiaryShareMode } from '../model/ShareModel';
+import { RecordType } from '../model/DailyRecord';
+import { DiaryShareMode, resolveShareNoteText, ShareDayKind } from '../model/ShareModel';
 import { ShareUiState } from '../model/ShareUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SHARE_CARD_COMPONENT_ID, ShareImageService } from '../service/ShareImageService';
 import { SystemClock } from '../utils/Clock';
 import { DiaryDateFormatter } from '../utils/DiaryDateFormatter';
 import { SystemLocalTimeResolver } from '../utils/LocalTimeResolver';
+import { RgbColor } from '../utils/OpaquePixelComposer';
 import { ShareViewModel } from '../viewmodel/ShareViewModel';
 
 @Component
@@ -56,7 +58,8 @@ export struct SharePreviewPage {
         this.getUIContext(),
         AppServiceContainer.getAbilityContext(),
         SHARE_CARD_COMPONENT_ID,
-        fileName
+        fileName,
+        this.shareBackgroundColor
       );
       this.viewModel.finishRendering();
     } catch (error) {
@@ -71,6 +74,11 @@ export struct SharePreviewPage {
     return this.viewModel.sevenPaperId;
   }
 
+  get shareBackgroundColor(): RgbColor {
+    return this.activePaperId === 'plain_ash_dev' ?
+      new RgbColor(247, 247, 245) : new RgbColor(253, 248, 247);
+  }
+
   private async loadShareData(): Promise<void> {
     await this.viewModel.load(this.initialMode, this.preferredSingleDate);
     this.selectedMode = this.viewModel.mode;
@@ -83,6 +91,15 @@ export struct SharePreviewPage {
       this.selectedMode = mode;
       this.renderRevision += 1;
     }
+  }
+
+  private resolveSingleDisplayNote(includeNote: boolean): string {
+    if (this.viewModel.singleData === null) {
+      return '';
+    }
+    const kind = this.viewModel.singleData.recordType === RecordType.WORD ?
+      ShareDayKind.WORD : ShareDayKind.BLANK;
+    return resolveShareNoteText(includeNote, kind, this.viewModel.singleData.note);
   }
 
   @Builder
@@ -106,8 +123,7 @@ export struct SharePreviewPage {
           localDate: this.viewModel.singleData.localDate,
           recordType: this.viewModel.singleData.recordType,
           content: this.viewModel.singleData.content,
-          note: this.viewModel.singleData.note,
-          showNote: true,
+          displayNote: this.resolveSingleDisplayNote(true),
           fontId: this.viewModel.singleData.fontId,
           paperId: this.viewModel.singleData.paperId
         })
@@ -116,8 +132,7 @@ export struct SharePreviewPage {
           localDate: this.viewModel.singleData.localDate,
           recordType: this.viewModel.singleData.recordType,
           content: this.viewModel.singleData.content,
-          note: '',
-          showNote: false,
+          displayNote: '',
           fontId: this.viewModel.singleData.fontId,
           paperId: this.viewModel.singleData.paperId
         })

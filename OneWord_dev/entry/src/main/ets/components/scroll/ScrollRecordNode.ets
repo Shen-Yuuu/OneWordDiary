@@ -48,7 +48,6 @@ export struct ScrollRecordNode {
   @Prop item: ScrollDisplayItem = new ScrollDisplayItem(
     '', '', '', false, '', '', RecordType.BLANK, '', 0, '', '', ScrollItemSide.CENTER
   );
-  @Prop noteVisible: boolean = false;
   @Prop noteText: string = '';
   @Prop isInteractive: boolean = true;
   onOpen: (localDate: string) => void = (localDate: string) => {
@@ -99,17 +98,21 @@ export struct ScrollRecordNode {
   }
 
   get visibleNote(): string {
-    return this.noteText.length > 0 ? this.noteText : '这条记录没有备注';
+    return this.noteText;
+  }
+
+  get shouldShowNote(): boolean {
+    return this.noteText.length > 0;
   }
 
   get nodeHeight(): number {
-    return ScrollLayoutMetrics.nodeHeight(this.item.isMissing, this.noteVisible);
+    return ScrollLayoutMetrics.nodeHeight(this.item.isMissing, this.shouldShowNote);
   }
 
   get totalHeight(): number {
     return ScrollLayoutMetrics.totalHeight(
       this.item.isMissing,
-      this.noteVisible,
+      this.shouldShowNote,
       this.item.showMonthHeader
     );
   }
@@ -148,7 +151,7 @@ export struct ScrollRecordNode {
         .maxFontScale(1)
         .maxLines(1)
 
-      if (this.noteVisible) {
+      if (this.shouldShowNote) {
         this.noteContent(this.item.side === ScrollItemSide.LEFT ? TextAlign.End : TextAlign.Start)
       }
 
@@ -174,7 +177,7 @@ export struct ScrollRecordNode {
 
       Blank()
 
-      if (this.noteVisible) {
+      if (this.shouldShowNote) {
         this.noteContent(TextAlign.End)
       }
     }
@@ -269,7 +272,7 @@ export struct ScrollRecordNode {
         `${this.item.localDate}，没有记录` :
         this.item.recordType === RecordType.BLANK ?
           `${this.item.localDate}，正式留白` :
-          `${this.item.localDate}，${this.item.content}${this.noteVisible ? `，备注，${this.visibleNote}` : ''}`)
+          `${this.item.localDate}，${this.item.content}${this.shouldShowNote ? `，备注，${this.visibleNote}` : ''}`)
     }
     .width('100%')
     .height(this.totalHeight)

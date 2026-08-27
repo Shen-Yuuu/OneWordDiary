@@ -1,7 +1,7 @@
 import { ScrollRecordNode } from '../scroll/ScrollRecordNode';
 import { RecordType } from '../../model/DailyRecord';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
-import { ShareDayItem, ShareDayKind, shouldShowShareDayNote } from '../../model/ShareModel';
+import { resolveShareNoteText, ShareDayItem, ShareDayKind } from '../../model/ShareModel';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 
@@ -49,8 +49,8 @@ export struct ShareScrollCard {
 
   private displayItem(item: ShareDayItem, index: number): ScrollDisplayItem {
     const recordType = item.kind === ShareDayKind.WORD ? RecordType.WORD : RecordType.BLANK;
-    const showNote = shouldShowShareDayNote(this.includeNote, item.kind);
-    const note = showNote ? item.note : '';
+    const note = resolveShareNoteText(this.includeNote, item.kind, item.note);
+    const showNote = note.length > 0;
     return new ScrollDisplayItem(
       item.localDate,
       item.monthLabel,
@@ -73,9 +73,10 @@ export struct ShareScrollCard {
   get timelineHeight(): number {
     let height = 0;
     for (const item of this.days) {
+      const displayNote = resolveShareNoteText(this.includeNote, item.kind, item.note);
       height += ScrollLayoutMetrics.totalHeight(
         item.kind === ShareDayKind.MISSING,
-        shouldShowShareDayNote(this.includeNote, item.kind),
+        displayNote.length > 0,
         item.showMonthHeader
       );
     }
@@ -93,12 +94,11 @@ export struct ShareScrollCard {
         ForEach(this.days, (item: ShareDayItem, index: number) => {
           ScrollRecordNode({
             item: this.displayItem(item, index),
-            noteVisible: shouldShowShareDayNote(this.includeNote, item.kind),
-            noteText: item.note,
+            noteText: resolveShareNoteText(this.includeNote, item.kind, item.note),
             isInteractive: false
           })
         }, (item: ShareDayItem): string =>
-          `${item.localDate}-${this.includeNote ? 'notes-on' : 'notes-off'}-${this.revision}`)
+          `${item.localDate}-${resolveShareNoteText(this.includeNote, item.kind, item.note)}-${this.revision}`)
       }
       .width('100%')
       .margin({ top: ScrollLayoutMetrics.SHARE_TOP_SPACING })

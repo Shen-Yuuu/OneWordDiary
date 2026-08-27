@@ -7,8 +7,7 @@ export struct ShareSingleCard {
   @Prop localDate: string = '';
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop content: string = '';
-  @Prop note: string = '';
-  @Prop showNote: boolean = false;
+  @Prop displayNote: string = '';
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
@@ -87,7 +86,7 @@ export struct ShareSingleCard {
             }
           }
           .width('100%')
-          .height(this.showNote ? 224 : 292)
+          .height(this.displayNote.length > 0 ? 224 : 292)
         } else {
           Column({ space: 14 }) {
             Stack({ alignContent: Alignment.Center }) {
@@ -112,19 +111,19 @@ export struct ShareSingleCard {
               .minFontScale(1)
               .maxFontScale(1)
           }
-          .height(this.showNote ? 224 : 292)
+          .height(this.displayNote.length > 0 ? 224 : 292)
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
         }
 
-        if (this.showNote) {
+        if (this.displayNote.length > 0) {
           Column({ space: 6 }) {
             Row()
               .width(28)
               .height(1)
               .backgroundColor(this.secondaryColor)
 
-            Text(this.note.length > 0 ? this.note : '这条记录没有备注')
+            Text(this.displayNote)
               .width(238)
               .fontSize(12)
               .lineHeight(18)

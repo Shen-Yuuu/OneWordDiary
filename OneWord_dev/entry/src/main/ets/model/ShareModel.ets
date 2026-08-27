@@ -15,6 +15,13 @@ export function shouldShowShareDayNote(includeNote: boolean, kind: ShareDayKind)
   return includeNote && kind !== ShareDayKind.MISSING;
 }
 
+export function resolveShareNoteText(includeNote: boolean, kind: ShareDayKind, note: string): string {
+  if (!includeNote || kind === ShareDayKind.MISSING) {
+    return '';
+  }
+  return note.length > 0 ? note : '这条记录没有备注';
+}
+
 export interface ShareSingleData {
   localDate: string;
   recordType: RecordType;
