@@ -20,10 +20,6 @@ export class ShareImageService {
       scale: 3,
       waitUntilRenderFinished: true
     });
-    const thumbnailPixelMap = await uiContext.getComponentSnapshot().get(componentId, {
-      scale: 0.5,
-      waitUntilRenderFinished: true
-    });
     const filePath = `${context.cacheDir}/${fileName}`;
     this.currentFilePath = filePath;
     const file = fileIo.openSync(
@@ -31,32 +27,22 @@ export class ShareImageService {
       fileIo.OpenMode.CREATE | fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.TRUNC
     );
     const packer = image.createImagePacker();
-    const thumbnailPacker = image.createImagePacker();
-    let thumbnail: Uint8Array = new Uint8Array();
     try {
       await packer.packToFile(pixelMap, file.fd, {
         format: 'image/png',
         quality: 100
       });
-      const thumbnailBuffer = await thumbnailPacker.packToData(thumbnailPixelMap, {
-        format: 'image/jpeg',
-        quality: 45
-      });
-      thumbnail = new Uint8Array(thumbnailBuffer);
     } finally {
       fileIo.closeSync(file);
       await packer.release();
-      await thumbnailPacker.release();
       await pixelMap.release();
-      await thumbnailPixelMap.release();
     }
     const imageUtd = utd.getUniformDataTypeByFilenameExtension('.png', utd.UniformDataType.IMAGE);
     const sharedData = new systemShare.SharedData({
       utd: imageUtd,
       uri: fileUri.getUriFromPath(filePath),
       title: '一字日记',
-      description: '一天一字，一年成诗。',
-      thumbnail: thumbnail
+      description: '一天一字，一年成诗。'
     });
     const controller = new systemShare.ShareController(sharedData);
     await controller.show(context, {

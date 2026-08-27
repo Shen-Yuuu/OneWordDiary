@@ -48,6 +48,8 @@ export struct ScrollRecordNode {
   @Prop item: ScrollDisplayItem = new ScrollDisplayItem(
     '', '', '', false, '', '', RecordType.BLANK, '', 0, '', '', ScrollItemSide.CENTER
   );
+  @Prop noteVisible: boolean = false;
+  @Prop noteText: string = '';
   @Prop isInteractive: boolean = true;
   onOpen: (localDate: string) => void = (localDate: string) => {
   };
@@ -97,19 +99,34 @@ export struct ScrollRecordNode {
   }
 
   get visibleNote(): string {
-    return this.item.note.length > 0 ? this.item.note : '这条记录没有备注';
+    return this.noteText.length > 0 ? this.noteText : '这条记录没有备注';
   }
 
   get nodeHeight(): number {
-    return ScrollLayoutMetrics.nodeHeight(this.item.isMissing, this.item.showNote);
+    return ScrollLayoutMetrics.nodeHeight(this.item.isMissing, this.noteVisible);
   }
 
   get totalHeight(): number {
     return ScrollLayoutMetrics.totalHeight(
       this.item.isMissing,
-      this.item.showNote,
+      this.noteVisible,
       this.item.showMonthHeader
     );
+  }
+
+  @Builder
+  private noteContent(textAlign: TextAlign) {
+    Text(this.visibleNote)
+      .width(104)
+      .height(28)
+      .fontSize(10)
+      .lineHeight(14)
+      .fontFamily(this.recordFontFamily)
+      .fontColor(this.secondaryColor)
+      .maxLines(2)
+      .textAlign(textAlign)
+      .minFontScale(1)
+      .maxFontScale(1)
   }
 
   @Builder
@@ -131,15 +148,8 @@ export struct ScrollRecordNode {
         .maxFontScale(1)
         .maxLines(1)
 
-      if (this.item.showNote) {
-        Text(this.visibleNote)
-          .width('100%')
-          .fontSize(10)
-          .lineHeight(14)
-          .fontFamily(this.recordFontFamily)
-          .fontColor(this.secondaryColor)
-          .maxLines(2)
-          .textAlign(this.item.side === ScrollItemSide.LEFT ? TextAlign.End : TextAlign.Start)
+      if (this.noteVisible) {
+        this.noteContent(this.item.side === ScrollItemSide.LEFT ? TextAlign.End : TextAlign.Start)
       }
 
       Row()
@@ -164,15 +174,8 @@ export struct ScrollRecordNode {
 
       Blank()
 
-      if (this.item.showNote) {
-        Text(this.visibleNote)
-          .width(150)
-          .fontSize(10)
-          .lineHeight(14)
-          .fontFamily(this.recordFontFamily)
-          .fontColor(this.secondaryColor)
-          .maxLines(2)
-          .textAlign(TextAlign.Center)
+      if (this.noteVisible) {
+        this.noteContent(TextAlign.End)
       }
     }
     .layoutWeight(1)
@@ -266,7 +269,7 @@ export struct ScrollRecordNode {
         `${this.item.localDate}，没有记录` :
         this.item.recordType === RecordType.BLANK ?
           `${this.item.localDate}，正式留白` :
-          `${this.item.localDate}，${this.item.content}${this.item.showNote ? `，备注，${this.visibleNote}` : ''}`)
+          `${this.item.localDate}，${this.item.content}${this.noteVisible ? `，备注，${this.visibleNote}` : ''}`)
     }
     .width('100%')
     .height(this.totalHeight)

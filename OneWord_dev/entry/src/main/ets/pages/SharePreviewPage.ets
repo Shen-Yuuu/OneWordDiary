@@ -123,13 +123,23 @@ export struct SharePreviewPage {
         })
       }
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
-      ShareScrollCard({
-        days: this.viewModel.sevenDays,
-        includeNote: this.showNote,
-        revision: this.renderRevision,
-        fontId: this.viewModel.sevenFontId,
-        paperId: this.viewModel.sevenPaperId
-      })
+      if (this.showNote) {
+        ShareScrollCard({
+          days: this.viewModel.sevenDays,
+          includeNote: true,
+          revision: this.renderRevision,
+          fontId: this.viewModel.sevenFontId,
+          paperId: this.viewModel.sevenPaperId
+        })
+      } else {
+        ShareScrollCard({
+          days: this.viewModel.sevenDays,
+          includeNote: false,
+          revision: this.renderRevision,
+          fontId: this.viewModel.sevenFontId,
+          paperId: this.viewModel.sevenPaperId
+        })
+      }
     }
   }
 

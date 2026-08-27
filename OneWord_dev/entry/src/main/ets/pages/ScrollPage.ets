@@ -128,6 +128,8 @@ export struct ScrollPage {
                 ListItem() {
                   ScrollRecordNode({
                     item: item,
+                    noteVisible: item.showNote,
+                    noteText: item.note,
                     onOpen: (localDate: string) => this.onOpenDetail(localDate)
                   })
                 }
