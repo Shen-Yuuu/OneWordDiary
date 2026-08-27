@@ -11,6 +11,10 @@ export enum ShareDayKind {
   MISSING = 'MISSING'
 }
 
+export function shouldShowShareDayNote(includeNote: boolean, kind: ShareDayKind): boolean {
+  return includeNote && kind !== ShareDayKind.MISSING;
+}
+
 export interface ShareSingleData {
   localDate: string;
   recordType: RecordType;

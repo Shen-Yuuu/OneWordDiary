@@ -76,10 +76,6 @@ export struct ScrollRecordNode {
     return this.item.contentCount === 3 ? 40 : 36;
   }
 
-  get paperColor(): string {
-    return this.item.paperId === 'plain_ash_dev' ? '#FFFFFF' : '#FFFCFB';
-  }
-
   get textColor(): string {
     return this.item.paperId === 'plain_ash_dev' ? '#242424' : '#282622';
   }
@@ -165,8 +161,6 @@ export struct ScrollRecordNode {
         .fontSize(11)
         .fontColor(this.secondaryColor)
         .letterSpacing(1)
-        .backgroundColor(this.paperColor)
-        .padding({ left: 8, right: 8 })
 
       Blank()
 
@@ -194,8 +188,6 @@ export struct ScrollRecordNode {
         .fontSize(11)
         .fontColor(this.faintColor)
         .letterSpacing(1)
-        .backgroundColor(this.paperColor)
-        .padding({ left: 8, right: 8 })
 
       Blank()
     }

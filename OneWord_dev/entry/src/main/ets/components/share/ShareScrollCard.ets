@@ -1,7 +1,7 @@
 import { ScrollRecordNode } from '../scroll/ScrollRecordNode';
 import { RecordType } from '../../model/DailyRecord';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
-import { ShareDayItem, ShareDayKind } from '../../model/ShareModel';
+import { ShareDayItem, ShareDayKind, shouldShowShareDayNote } from '../../model/ShareModel';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 
@@ -49,7 +49,8 @@ export struct ShareScrollCard {
 
   private displayItem(item: ShareDayItem, index: number): ScrollDisplayItem {
     const recordType = item.kind === ShareDayKind.WORD ? RecordType.WORD : RecordType.BLANK;
-    const note = this.includeNote ? item.note : '';
+    const showNote = shouldShowShareDayNote(this.includeNote, item.kind);
+    const note = showNote ? item.note : '';
     return new ScrollDisplayItem(
       item.localDate,
       item.monthLabel,
@@ -64,7 +65,7 @@ export struct ShareScrollCard {
       this.paperId,
       this.sideFor(item, index),
       note,
-      note.length > 0,
+      showNote,
       item.kind === ShareDayKind.MISSING
     );
   }
@@ -74,7 +75,7 @@ export struct ShareScrollCard {
     for (const item of this.days) {
       height += ScrollLayoutMetrics.totalHeight(
         item.kind === ShareDayKind.MISSING,
-        this.includeNote && item.note.length > 0,
+        shouldShowShareDayNote(this.includeNote, item.kind),
         item.showMonthHeader
       );
     }

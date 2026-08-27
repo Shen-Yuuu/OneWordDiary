@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
 import { DailyRecord, RecordType } from '../main/ets/model/DailyRecord';
-import { ShareDayKind, DiaryShareMode } from '../main/ets/model/ShareModel';
+import { DiaryShareMode, ShareDayKind, shouldShowShareDayNote } from '../main/ets/model/ShareModel';
 import { ShareUiState } from '../main/ets/model/ShareUiState';
 import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../main/ets/model/Settings';
 import { InMemoryDiaryRepository } from '../main/ets/repository/DiaryRepository';
@@ -87,6 +87,13 @@ class ShareFixture {
 
 export default function shareViewModelTest(): void {
   describe('ShareViewModel', () => {
+    it('showsNoteAreaForRecordedDaysOnlyWhenEnabled', 0, () => {
+      expect(shouldShowShareDayNote(true, ShareDayKind.WORD)).assertTrue();
+      expect(shouldShowShareDayNote(true, ShareDayKind.BLANK)).assertTrue();
+      expect(shouldShowShareDayNote(true, ShareDayKind.MISSING)).assertFalse();
+      expect(shouldShowShareDayNote(false, ShareDayKind.WORD)).assertFalse();
+    });
+
     it('usesHistoricalContentAndStyleForSingleShare', 0, async () => {
       const fixture = new ShareFixture();
       await fixture.repository.insert(createShareRecord(
