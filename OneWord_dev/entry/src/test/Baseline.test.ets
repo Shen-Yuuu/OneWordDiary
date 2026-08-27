@@ -16,12 +16,16 @@ export default function baselineTest(): void {
 
     it('definesCompactScrollMetrics', 0, () => {
       expect(ScrollLayoutMetrics.MONTH_HEADER_HEIGHT).assertEqual(48);
-      expect(ScrollLayoutMetrics.nodeHeight(false, false)).assertEqual(88);
-      expect(ScrollLayoutMetrics.nodeHeight(false, true)).assertEqual(116);
-      expect(ScrollLayoutMetrics.nodeHeight(true, true)).assertEqual(48);
-      expect(ScrollLayoutMetrics.WORD_NODE_SIZE).assertEqual(10);
+      expect(ScrollLayoutMetrics.nodeHeight(false, false)).assertEqual(104);
+      expect(ScrollLayoutMetrics.nodeHeight(false, true)).assertEqual(128);
+      expect(ScrollLayoutMetrics.nodeHeight(true, true)).assertEqual(56);
+      expect(ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE).assertEqual(32);
+      expect(ScrollLayoutMetrics.WORD_NODE_SIZE).assertEqual(12);
       expect(ScrollLayoutMetrics.BLANK_NODE_SIZE).assertEqual(24);
       expect(ScrollLayoutMetrics.MISSING_NODE_SIZE).assertEqual(14);
+      expect(ScrollLayoutMetrics.totalHeight(false, false, true)).assertEqual(152);
+      expect(ScrollLayoutMetrics.totalHeight(false, true, false)).assertEqual(128);
+      expect(ScrollLayoutMetrics.totalHeight(true, false, false)).assertEqual(56);
     });
 
     it('definesTwoCompleteStylePresets', 0, () => {

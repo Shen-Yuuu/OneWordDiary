@@ -3,6 +3,47 @@ import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem
 import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 
 @Component
+struct ScrollAxisNode {
+  @Prop recordType: RecordType = RecordType.WORD;
+  @Prop isMissing: boolean = false;
+  @Prop nodeHeight: number = ScrollLayoutMetrics.RECORD_HEIGHT;
+  @Prop lineColor: string = '#D8C7C0';
+
+  build() {
+    Column() {
+      Divider()
+        .vertical(true)
+        .height((this.nodeHeight - ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE) / 2)
+        .strokeWidth(1)
+        .color(this.lineColor)
+
+      if (this.isMissing) {
+        Image($r('app.media.timeline_missing_node'))
+          .width(ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE)
+          .height(ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE)
+      } else if (this.recordType === RecordType.BLANK) {
+        Image($r('app.media.timeline_blank_node'))
+          .width(ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE)
+          .height(ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE)
+      } else {
+        Image($r('app.media.timeline_word_node'))
+          .width(ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE)
+          .height(ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE)
+      }
+
+      Divider()
+        .vertical(true)
+        .height((this.nodeHeight - ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE) / 2)
+        .strokeWidth(1)
+        .color(this.lineColor)
+    }
+    .width(ScrollLayoutMetrics.AXIS_MARKER_BOX_SIZE)
+    .height(this.nodeHeight)
+    .alignItems(HorizontalAlign.Center)
+  }
+}
+
+@Component
 export struct ScrollRecordNode {
   @Prop item: ScrollDisplayItem = new ScrollDisplayItem(
     '', '', '', false, '', '', RecordType.BLANK, '', 0, '', '', ScrollItemSide.CENTER
@@ -15,24 +56,24 @@ export struct ScrollRecordNode {
     return this.item.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
   }
 
-  get recordFontSize(): string {
+  get recordFontSize(): number {
     if (this.item.contentCount <= 1) {
-      return '42vp';
+      return 42;
     }
     if (this.item.contentCount === 2) {
-      return '36vp';
+      return 36;
     }
-    return this.item.contentCount === 3 ? '32vp' : '28vp';
+    return this.item.contentCount === 3 ? 32 : 28;
   }
 
-  get recordLineHeight(): string {
+  get recordLineHeight(): number {
     if (this.item.contentCount <= 1) {
-      return '48vp';
+      return 48;
     }
     if (this.item.contentCount === 2) {
-      return '44vp';
+      return 44;
     }
-    return this.item.contentCount === 3 ? '40vp' : '36vp';
+    return this.item.contentCount === 3 ? 40 : 36;
   }
 
   get paperColor(): string {
@@ -52,7 +93,7 @@ export struct ScrollRecordNode {
   }
 
   get lineColor(): string {
-    return this.item.paperId === 'plain_ash_dev' ? '#D8D8D4' : '#E0D5D0';
+    return this.item.paperId === 'plain_ash_dev' ? '#CFCFCA' : '#D8C7C0';
   }
 
   get accentColor(): string {
@@ -68,8 +109,11 @@ export struct ScrollRecordNode {
   }
 
   get totalHeight(): number {
-    return this.nodeHeight +
-      (this.item.showMonthHeader ? ScrollLayoutMetrics.MONTH_HEADER_HEIGHT : 0);
+    return ScrollLayoutMetrics.totalHeight(
+      this.item.isMissing,
+      this.item.showNote,
+      this.item.showMonthHeader
+    );
   }
 
   @Builder
@@ -108,7 +152,7 @@ export struct ScrollRecordNode {
         .backgroundColor(this.lineColor)
     }
     .layoutWeight(1)
-    .height('100%')
+    .height(this.nodeHeight)
     .padding({ left: 12, right: 12, top: 4, bottom: 4 })
     .justifyContent(FlexAlign.Center)
     .alignItems(this.item.side === ScrollItemSide.LEFT ? HorizontalAlign.End : HorizontalAlign.Start)
@@ -137,11 +181,10 @@ export struct ScrollRecordNode {
           .textAlign(TextAlign.Center)
       }
     }
-    .width(176)
-    .height('100%')
-    .padding({ top: 6, bottom: 6 })
-    .alignItems(HorizontalAlign.Center)
-    .zIndex(1)
+    .layoutWeight(1)
+    .height(this.nodeHeight)
+    .padding({ left: 12, right: 12, top: 6, bottom: 6 })
+    .alignItems(HorizontalAlign.End)
   }
 
   @Builder
@@ -156,55 +199,10 @@ export struct ScrollRecordNode {
 
       Blank()
     }
-    .width(176)
-    .height('100%')
-    .padding({ top: 6, bottom: 6 })
-    .alignItems(HorizontalAlign.Center)
-    .zIndex(1)
-  }
-
-  @Builder
-  private axisMarker() {
-    if (this.item.isMissing) {
-      Row()
-        .width(ScrollLayoutMetrics.MISSING_NODE_SIZE)
-        .height(ScrollLayoutMetrics.MISSING_NODE_SIZE)
-        .backgroundColor(this.paperColor)
-        .border({ width: 1, color: this.faintColor })
-        .borderRadius(ScrollLayoutMetrics.MISSING_NODE_SIZE / 2)
-        .zIndex(3)
-    } else if (this.item.recordType === RecordType.BLANK) {
-      Stack({ alignContent: Alignment.Center }) {
-        Row()
-          .width(ScrollLayoutMetrics.BLANK_NODE_SIZE)
-          .height(ScrollLayoutMetrics.BLANK_NODE_SIZE)
-          .backgroundColor(this.paperColor)
-          .border({ width: 2, color: this.accentColor })
-          .borderRadius(ScrollLayoutMetrics.BLANK_NODE_SIZE / 2)
-
-        Row()
-          .width(4)
-          .height(4)
-          .backgroundColor(this.accentColor)
-          .borderRadius(2)
-      }
-      .zIndex(3)
-    } else {
-      Stack({ alignContent: Alignment.Center }) {
-        Row()
-          .width(ScrollLayoutMetrics.WORD_NODE_SIZE + 4)
-          .height(ScrollLayoutMetrics.WORD_NODE_SIZE + 4)
-          .backgroundColor(this.paperColor)
-          .borderRadius((ScrollLayoutMetrics.WORD_NODE_SIZE + 4) / 2)
-
-        Row()
-          .width(ScrollLayoutMetrics.WORD_NODE_SIZE)
-          .height(ScrollLayoutMetrics.WORD_NODE_SIZE)
-          .backgroundColor(this.accentColor)
-          .borderRadius(ScrollLayoutMetrics.WORD_NODE_SIZE / 2)
-      }
-      .zIndex(3)
-    }
+    .layoutWeight(1)
+    .height(this.nodeHeight)
+    .padding({ left: 12, right: 12, top: 6, bottom: 6 })
+    .alignItems(HorizontalAlign.End)
   }
 
   build() {
@@ -222,47 +220,50 @@ export struct ScrollRecordNode {
           .accessibilityLevel('yes')
       }
 
-      Stack({ alignContent: Alignment.Center }) {
-        Row() {
-          Blank()
-            .layoutWeight(1)
-
-          Divider()
-            .vertical(true)
-            .height(this.nodeHeight)
-            .strokeWidth(1)
-            .color(this.lineColor)
-            .zIndex(0)
-
-          Blank()
-            .layoutWeight(1)
-        }
-        .width('100%')
-
+      Row() {
         if (this.item.isMissing) {
           this.missingContent()
+          ScrollAxisNode({
+            recordType: this.item.recordType,
+            isMissing: true,
+            nodeHeight: this.nodeHeight,
+            lineColor: this.lineColor
+          })
+          Blank().layoutWeight(1)
         } else if (this.item.recordType === RecordType.BLANK) {
           this.blankContent()
+          ScrollAxisNode({
+            recordType: this.item.recordType,
+            isMissing: false,
+            nodeHeight: this.nodeHeight,
+            lineColor: this.lineColor
+          })
+          Blank().layoutWeight(1)
         } else {
-          Row() {
-            if (this.item.side === ScrollItemSide.LEFT) {
-              this.wordContent()
-              Blank().layoutWeight(1)
-            } else {
-              Blank().layoutWeight(1)
-              this.wordContent()
-            }
+          if (this.item.side === ScrollItemSide.LEFT) {
+            this.wordContent()
+            ScrollAxisNode({
+              recordType: this.item.recordType,
+              isMissing: false,
+              nodeHeight: this.nodeHeight,
+              lineColor: this.lineColor
+            })
+            Blank().layoutWeight(1)
+          } else {
+            Blank().layoutWeight(1)
+            ScrollAxisNode({
+              recordType: this.item.recordType,
+              isMissing: false,
+              nodeHeight: this.nodeHeight,
+              lineColor: this.lineColor
+            })
+            this.wordContent()
           }
-          .width('100%')
-          .height('100%')
-          .zIndex(1)
         }
-
-        this.axisMarker()
       }
       .width('100%')
       .height(this.nodeHeight)
-      .clip(false)
+      .alignItems(VerticalAlign.Center)
       .onClick(() => {
         if (this.isInteractive && !this.item.isMissing) {
           this.onOpen(this.item.localDate);

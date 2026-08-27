@@ -3,6 +3,7 @@ import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { ScrollFooter } from '../components/scroll/ScrollFooter';
 import { ScrollRecordNode } from '../components/scroll/ScrollRecordNode';
+import { ScrollLayoutMetrics } from '../constants/ScrollLayoutMetrics';
 import { ScrollDisplayItem } from '../model/ScrollDisplayItem';
 import { ScrollUiState } from '../model/ScrollUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
@@ -130,6 +131,11 @@ export struct ScrollPage {
                     onOpen: (localDate: string) => this.onOpenDetail(localDate)
                   })
                 }
+                .height(ScrollLayoutMetrics.totalHeight(
+                  item.isMissing,
+                  item.showNote,
+                  item.showMonthHeader
+                ))
               }, (item: ScrollDisplayItem): string => item.localDate)
 
               ListItem() {

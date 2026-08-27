@@ -69,20 +69,14 @@ export struct ShareScrollCard {
     );
   }
 
-  private nodeHeight(item: ShareDayItem): number {
-    return ScrollLayoutMetrics.nodeHeight(
-      item.kind === ShareDayKind.MISSING,
-      this.includeNote && item.note.length > 0
-    );
-  }
-
   get timelineHeight(): number {
     let height = 0;
     for (const item of this.days) {
-      height += this.nodeHeight(item);
-      if (item.showMonthHeader) {
-        height += ScrollLayoutMetrics.MONTH_HEADER_HEIGHT;
-      }
+      height += ScrollLayoutMetrics.totalHeight(
+        item.kind === ShareDayKind.MISSING,
+        this.includeNote && item.note.length > 0,
+        item.showMonthHeader
+      );
     }
     return height;
   }
