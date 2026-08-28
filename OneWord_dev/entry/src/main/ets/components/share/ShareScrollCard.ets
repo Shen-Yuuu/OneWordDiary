@@ -8,14 +8,14 @@ import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 @Component
 export struct ShareScrollCard {
   @Prop days: ShareDayItem[] = [];
-  @Prop includeNote: boolean = false;
-  @Prop revision: number = 0;
+  @Link includeNote: boolean;
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
-  get paperColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7';
+  get paperBackground(): Resource {
+    return this.paperId === 'plain_ash_dev' ?
+      $r('app.media.share_bg_plain') : $r('app.media.share_bg_warm');
   }
 
   get textColor(): string {
@@ -90,8 +90,10 @@ export struct ShareScrollCard {
 
   build() {
     Stack() {
-      Rect({ width: 286, height: this.cardHeight })
-        .fill(this.paperColor)
+      Image(this.paperBackground)
+        .width(286)
+        .height(this.cardHeight)
+        .objectFit(ImageFit.Fill)
 
       Column() {
       Column() {
@@ -101,7 +103,7 @@ export struct ShareScrollCard {
             isInteractive: false
           })
         }, (item: ShareDayItem): string =>
-          `${item.localDate}-${this.includeNote ? 'notes-on' : 'notes-off'}-${this.revision}`)
+          `${item.localDate}-${this.includeNote ? 'notes-on' : 'notes-off'}`)
       }
       .width('100%')
       .margin({ top: ScrollLayoutMetrics.SHARE_TOP_SPACING })

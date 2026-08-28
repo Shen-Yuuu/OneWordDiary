@@ -4,8 +4,7 @@ import { DiaryPrimaryButton } from '../components/common/DiaryPrimaryButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { ShareScrollCard } from '../components/share/ShareScrollCard';
 import { ShareSingleCard } from '../components/share/ShareSingleCard';
-import { RecordType } from '../model/DailyRecord';
-import { DiaryShareMode, resolveShareNoteText, ShareDayKind } from '../model/ShareModel';
+import { DiaryShareMode } from '../model/ShareModel';
 import { ShareUiState } from '../model/ShareUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SHARE_CARD_COMPONENT_ID, ShareImageService } from '../service/ShareImageService';
@@ -20,7 +19,6 @@ export struct SharePreviewPage {
   @Prop preferredSingleDate: string | null = null;
   @State private selectedMode: DiaryShareMode = DiaryShareMode.SINGLE;
   @State private showNote: boolean = false;
-  @State private renderRevision: number = 0;
   @State private viewModel: ShareViewModel = new ShareViewModel(
     AppServiceContainer.getDiaryService(),
     AppServiceContainer.getSettingsRepository(),
@@ -80,24 +78,13 @@ export struct SharePreviewPage {
   private async loadShareData(): Promise<void> {
     await this.viewModel.load(this.initialMode, this.preferredSingleDate);
     this.selectedMode = this.viewModel.mode;
-    this.renderRevision += 1;
   }
 
   private selectMode(mode: DiaryShareMode): void {
     this.viewModel.selectMode(mode);
     if (this.viewModel.mode === mode) {
       this.selectedMode = mode;
-      this.renderRevision += 1;
     }
-  }
-
-  private resolveSingleDisplayNote(includeNote: boolean): string {
-    if (this.viewModel.singleData === null) {
-      return '';
-    }
-    const kind = this.viewModel.singleData.recordType === RecordType.WORD ?
-      ShareDayKind.WORD : ShareDayKind.BLANK;
-    return resolveShareNoteText(includeNote, kind, this.viewModel.singleData.note);
   }
 
   @Builder
@@ -116,52 +103,29 @@ export struct SharePreviewPage {
   @Builder
   private shareCardContent() {
     if (this.selectedMode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
-      if (this.showNote) {
-        ShareSingleCard({
-          localDate: this.viewModel.singleData.localDate,
-          recordType: this.viewModel.singleData.recordType,
-          content: this.viewModel.singleData.content,
-          displayNote: this.resolveSingleDisplayNote(true),
-          fontId: this.viewModel.singleData.fontId,
-          paperId: this.viewModel.singleData.paperId
-        })
-      } else {
-        ShareSingleCard({
-          localDate: this.viewModel.singleData.localDate,
-          recordType: this.viewModel.singleData.recordType,
-          content: this.viewModel.singleData.content,
-          displayNote: '',
-          fontId: this.viewModel.singleData.fontId,
-          paperId: this.viewModel.singleData.paperId
-        })
-      }
+      ShareSingleCard({
+        includeNote: $showNote,
+        localDate: this.viewModel.singleData.localDate,
+        recordType: this.viewModel.singleData.recordType,
+        content: this.viewModel.singleData.content,
+        note: this.viewModel.singleData.note,
+        fontId: this.viewModel.singleData.fontId,
+        paperId: this.viewModel.singleData.paperId
+      })
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
-      if (this.showNote) {
-        ShareScrollCard({
-          days: this.viewModel.sevenDays,
-          includeNote: true,
-          revision: this.renderRevision,
-          fontId: this.viewModel.sevenFontId,
-          paperId: this.viewModel.sevenPaperId
-        })
-      } else {
-        ShareScrollCard({
-          days: this.viewModel.sevenDays,
-          includeNote: false,
-          revision: this.renderRevision,
-          fontId: this.viewModel.sevenFontId,
-          paperId: this.viewModel.sevenPaperId
-        })
-      }
+      ShareScrollCard({
+        days: this.viewModel.sevenDays,
+        includeNote: $showNote,
+        fontId: this.viewModel.sevenFontId,
+        paperId: this.viewModel.sevenPaperId
+      })
     }
   }
 
   @Builder
   private shareCard() {
     Stack() {
-      ForEach([this.renderRevision], (revision: number) => {
-        this.shareCardContent()
-      }, (revision: number): string => `${this.selectedMode}-${revision}`)
+      this.shareCardContent()
     }
     .id(SHARE_CARD_COMPONENT_ID)
     .backgroundColor(this.activePaperColor)
@@ -240,7 +204,6 @@ export struct SharePreviewPage {
                     .enabled(!this.viewModel.isBusy)
                     .onChange((isOn: boolean) => {
                       this.showNote = isOn;
-                      this.renderRevision += 1;
                     })
                 }
                 .width(286)

@@ -1,20 +1,23 @@
 import { RecordType } from '../../model/DailyRecord';
+import { resolveShareNoteText, ShareDayKind } from '../../model/ShareModel';
 import { DiaryDateFormatter } from '../../utils/DiaryDateFormatter';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 
 @Component
 export struct ShareSingleCard {
+  @Link includeNote: boolean;
   @Prop localDate: string = '';
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop content: string = '';
-  @Prop displayNote: string = '';
+  @Prop note: string = '';
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
-  get paperColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7';
+  get paperBackground(): Resource {
+    return this.paperId === 'plain_ash_dev' ?
+      $r('app.media.share_bg_plain') : $r('app.media.share_bg_warm');
   }
 
   get textColor(): string {
@@ -37,10 +40,17 @@ export struct ShareSingleCard {
     return this.graphemeCounter.count(this.content);
   }
 
+  get visibleNote(): string {
+    const kind = this.recordType === RecordType.WORD ? ShareDayKind.WORD : ShareDayKind.BLANK;
+    return resolveShareNoteText(this.includeNote, kind, this.note);
+  }
+
   build() {
     Stack() {
-      Rect({ width: 286, height: 440 })
-        .fill(this.paperColor)
+      Image(this.paperBackground)
+        .width(286)
+        .height(440)
+        .objectFit(ImageFit.Fill)
 
       Column() {
       Text(this.dateFormatter.compactLabel(this.localDate))
@@ -90,7 +100,7 @@ export struct ShareSingleCard {
             }
           }
           .width('100%')
-          .height(this.displayNote.length > 0 ? 224 : 292)
+          .height(this.visibleNote.length > 0 ? 224 : 292)
         } else {
           Column({ space: 14 }) {
             Stack({ alignContent: Alignment.Center }) {
@@ -115,19 +125,19 @@ export struct ShareSingleCard {
               .minFontScale(1)
               .maxFontScale(1)
           }
-          .height(this.displayNote.length > 0 ? 224 : 292)
+          .height(this.visibleNote.length > 0 ? 224 : 292)
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
         }
 
-        if (this.displayNote.length > 0) {
+        if (this.visibleNote.length > 0) {
           Column({ space: 6 }) {
             Row()
               .width(28)
               .height(1)
               .backgroundColor(this.secondaryColor)
 
-            Text(this.displayNote)
+            Text(this.visibleNote)
               .width(238)
               .fontSize(12)
               .lineHeight(18)
