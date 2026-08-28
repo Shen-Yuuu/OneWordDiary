@@ -104,7 +104,7 @@ export struct SharePreviewPage {
   private shareCardContent() {
     if (this.selectedMode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
       ShareSingleCard({
-        includeNote: this.showNote,
+        includeNote: $showNote,
         localDate: this.viewModel.singleData.localDate,
         recordType: this.viewModel.singleData.recordType,
         content: this.viewModel.singleData.content,
@@ -115,7 +115,7 @@ export struct SharePreviewPage {
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
       ShareScrollCard({
         days: this.viewModel.sevenDays,
-        includeNote: this.showNote,
+        includeNote: $showNote,
         fontId: this.viewModel.sevenFontId,
         paperId: this.viewModel.sevenPaperId
       })
@@ -203,6 +203,9 @@ export struct SharePreviewPage {
                     .selectedColor($r('app.color.accent_vermilion'))
                     .enabled(!this.viewModel.isBusy)
                     .onChange((isOn: boolean) => {
+                      console.info(
+                        `SharePreviewPage note toggle: mode=${this.selectedMode}, before=${this.showNote}, after=${isOn}`
+                      );
                       this.showNote = isOn;
                     })
                 }

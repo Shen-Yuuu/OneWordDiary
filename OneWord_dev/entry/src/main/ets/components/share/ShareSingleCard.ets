@@ -5,11 +5,11 @@ import { GraphemeCounter } from '../../utils/GraphemeCounter';
 
 @Component
 export struct ShareSingleCard {
-  @Prop includeNote: boolean = false;
+  @Link includeNote: boolean;
   @Prop localDate: string = '';
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop content: string = '';
-  @Prop note: string = '';
+  @Prop note: string | null | undefined = '';
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
@@ -45,8 +45,27 @@ export struct ShareSingleCard {
     return resolveShareNoteText(this.includeNote, kind, this.note);
   }
 
+  get rawNoteLength(): number {
+    if (this.note === null || this.note === undefined) {
+      return 0;
+    }
+    return this.note.length;
+  }
+
   get shouldShowNote(): boolean {
-    return this.includeNote === true;
+    const displayLength = this.visibleNote.length;
+    const shouldShow = displayLength > 0;
+    console.info(
+      `ShareSingleCard note state: includeNote=${this.includeNote}, rawLength=${this.rawNoteLength}, ` +
+      `displayLength=${displayLength}, shouldShow=${shouldShow}`
+    );
+    return shouldShow;
+  }
+
+  aboutToAppear(): void {
+    console.info(
+      `ShareSingleCard appear: includeNote=${this.includeNote}, rawLength=${this.rawNoteLength}, localDate=${this.localDate}`
+    );
   }
 
   build() {
