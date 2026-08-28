@@ -104,7 +104,7 @@ export struct SharePreviewPage {
   private shareCardContent() {
     if (this.selectedMode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
       ShareSingleCard({
-        includeNote: $showNote,
+        includeNote: this.showNote,
         localDate: this.viewModel.singleData.localDate,
         recordType: this.viewModel.singleData.recordType,
         content: this.viewModel.singleData.content,
@@ -115,7 +115,7 @@ export struct SharePreviewPage {
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
       ShareScrollCard({
         days: this.viewModel.sevenDays,
-        includeNote: $showNote,
+        includeNote: this.showNote,
         fontId: this.viewModel.sevenFontId,
         paperId: this.viewModel.sevenPaperId
       })

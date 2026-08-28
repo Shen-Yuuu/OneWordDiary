@@ -8,7 +8,7 @@ import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 @Component
 export struct ShareScrollCard {
   @Prop days: ShareDayItem[] = [];
-  @Link includeNote: boolean;
+  @Prop includeNote: boolean = false;
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();

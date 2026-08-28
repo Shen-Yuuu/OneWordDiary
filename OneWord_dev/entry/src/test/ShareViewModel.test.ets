@@ -105,6 +105,8 @@ export default function shareViewModelTest(): void {
       expect(visibleNote).assertEqual('晚风很好');
       expect(resolveShareNoteText(true, ShareDayKind.WORD, '')).assertEqual('这条记录没有备注');
       expect(resolveShareNoteText(true, ShareDayKind.BLANK, '')).assertEqual('这条记录没有备注');
+      expect(resolveShareNoteText(true, ShareDayKind.WORD, null)).assertEqual('这条记录没有备注');
+      expect(resolveShareNoteText(true, ShareDayKind.WORD, undefined)).assertEqual('这条记录没有备注');
       expect(resolveShareNoteText(false, ShareDayKind.WORD, '晚风很好')).assertEqual('');
       expect(resolveShareNoteText(true, ShareDayKind.MISSING, 'ignored')).assertEqual('');
     });

@@ -5,7 +5,7 @@ import { GraphemeCounter } from '../../utils/GraphemeCounter';
 
 @Component
 export struct ShareSingleCard {
-  @Link includeNote: boolean;
+  @Prop includeNote: boolean = false;
   @Prop localDate: string = '';
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop content: string = '';
@@ -43,6 +43,10 @@ export struct ShareSingleCard {
   get visibleNote(): string {
     const kind = this.recordType === RecordType.WORD ? ShareDayKind.WORD : ShareDayKind.BLANK;
     return resolveShareNoteText(this.includeNote, kind, this.note);
+  }
+
+  get shouldShowNote(): boolean {
+    return this.includeNote === true;
   }
 
   build() {
@@ -100,7 +104,7 @@ export struct ShareSingleCard {
             }
           }
           .width('100%')
-          .height(this.visibleNote.length > 0 ? 224 : 292)
+          .height(this.shouldShowNote ? 224 : 292)
         } else {
           Column({ space: 14 }) {
             Stack({ alignContent: Alignment.Center }) {
@@ -125,12 +129,12 @@ export struct ShareSingleCard {
               .minFontScale(1)
               .maxFontScale(1)
           }
-          .height(this.visibleNote.length > 0 ? 224 : 292)
+          .height(this.shouldShowNote ? 224 : 292)
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
         }
 
-        if (this.visibleNote.length > 0) {
+        if (this.shouldShowNote) {
           Column({ space: 6 }) {
             Row()
               .width(28)
