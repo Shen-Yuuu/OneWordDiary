@@ -1,14 +1,13 @@
 import { ScrollRecordNode } from '../scroll/ScrollRecordNode';
 import { RecordType } from '../../model/DailyRecord';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
-import { resolveShareNoteText, ShareDayItem, ShareDayKind } from '../../model/ShareModel';
+import { ShareDayItem, ShareDayKind } from '../../model/ShareModel';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 
 @Component
 export struct ShareScrollCard {
   @Prop days: ShareDayItem[] = [];
-  @Link includeNote: boolean;
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
@@ -48,21 +47,7 @@ export struct ShareScrollCard {
   }
 
   private displayItem(item: ShareDayItem, index: number): ScrollDisplayItem {
-    if (index === 0) {
-      let recordedDayCount = 0;
-      for (const day of this.days) {
-        if (day.kind !== ShareDayKind.MISSING) {
-          recordedDayCount += 1;
-        }
-      }
-      console.info(
-        `ShareScrollCard note state: includeNote=${this.includeNote}, days=${this.days.length}, ` +
-        `recordedDays=${recordedDayCount}`
-      );
-    }
     const recordType = item.kind === ShareDayKind.WORD ? RecordType.WORD : RecordType.BLANK;
-    const note = resolveShareNoteText(this.includeNote, item.kind, item.note);
-    const showNote = note.length > 0;
     return new ScrollDisplayItem(
       item.localDate,
       item.monthLabel,
@@ -76,8 +61,8 @@ export struct ShareScrollCard {
       this.fontId,
       this.paperId,
       this.sideFor(item, index),
-      note,
-      showNote,
+      '',
+      false,
       item.kind === ShareDayKind.MISSING
     );
   }
@@ -85,10 +70,9 @@ export struct ShareScrollCard {
   get timelineHeight(): number {
     let height = 0;
     for (const item of this.days) {
-      const displayNote = resolveShareNoteText(this.includeNote, item.kind, item.note);
       height += ScrollLayoutMetrics.totalHeight(
         item.kind === ShareDayKind.MISSING,
-        displayNote.length > 0,
+        false,
         item.showMonthHeader
       );
     }
@@ -114,8 +98,7 @@ export struct ShareScrollCard {
             item: this.displayItem(item, index),
             isInteractive: false
           })
-        }, (item: ShareDayItem): string =>
-          `${item.localDate}-${this.includeNote ? 'notes-on' : 'notes-off'}`)
+        }, (item: ShareDayItem): string => item.localDate)
       }
       .width('100%')
       .margin({ top: ScrollLayoutMetrics.SHARE_TOP_SPACING })
@@ -159,6 +142,7 @@ export struct ShareScrollCard {
     }
     .width(286)
     .height(this.cardHeight)
+    .backgroundColor(this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7')
     .border({ width: 1, color: this.paperId === 'plain_ash_dev' ? '#E5E5E2' : '#EEE5E1' })
     .borderRadius(2)
   }

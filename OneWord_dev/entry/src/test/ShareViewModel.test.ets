@@ -1,12 +1,7 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
 import { DailyRecord, RecordType } from '../main/ets/model/DailyRecord';
-import {
-  DiaryShareMode,
-  resolveShareNoteText,
-  ShareDayKind,
-  shouldShowShareDayNote
-} from '../main/ets/model/ShareModel';
+import { DiaryShareMode, ShareDayKind } from '../main/ets/model/ShareModel';
 import { ShareUiState } from '../main/ets/model/ShareUiState';
 import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../main/ets/model/Settings';
 import { InMemoryDiaryRepository } from '../main/ets/repository/DiaryRepository';
@@ -92,25 +87,6 @@ class ShareFixture {
 
 export default function shareViewModelTest(): void {
   describe('ShareViewModel', () => {
-    it('showsNoteAreaForRecordedDaysOnlyWhenEnabled', 0, () => {
-      expect(shouldShowShareDayNote(true, ShareDayKind.WORD)).assertTrue();
-      expect(shouldShowShareDayNote(true, ShareDayKind.BLANK)).assertTrue();
-      expect(shouldShowShareDayNote(true, ShareDayKind.MISSING)).assertFalse();
-      expect(shouldShowShareDayNote(false, ShareDayKind.WORD)).assertFalse();
-    });
-
-    it('resolvesVisibleNoteCopyBeforeRendering', 0, () => {
-      const visibleNote = resolveShareNoteText(true, ShareDayKind.WORD, '晚风很好');
-      expect(visibleNote.length > 0).assertTrue();
-      expect(visibleNote).assertEqual('晚风很好');
-      expect(resolveShareNoteText(true, ShareDayKind.WORD, '')).assertEqual('这条记录没有备注');
-      expect(resolveShareNoteText(true, ShareDayKind.BLANK, '')).assertEqual('这条记录没有备注');
-      expect(resolveShareNoteText(true, ShareDayKind.WORD, null)).assertEqual('这条记录没有备注');
-      expect(resolveShareNoteText(true, ShareDayKind.WORD, undefined)).assertEqual('这条记录没有备注');
-      expect(resolveShareNoteText(false, ShareDayKind.WORD, '晚风很好')).assertEqual('');
-      expect(resolveShareNoteText(true, ShareDayKind.MISSING, 'ignored')).assertEqual('');
-    });
-
     it('usesHistoricalContentAndStyleForSingleShare', 0, async () => {
       const fixture = new ShareFixture();
       await fixture.repository.insert(createShareRecord(

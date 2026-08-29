@@ -11,22 +11,6 @@ export enum ShareDayKind {
   MISSING = 'MISSING'
 }
 
-export function shouldShowShareDayNote(includeNote: boolean, kind: ShareDayKind): boolean {
-  return includeNote && kind !== ShareDayKind.MISSING;
-}
-
-export function resolveShareNoteText(
-  includeNote: boolean,
-  kind: ShareDayKind,
-  note: string | null | undefined
-): string {
-  if (!includeNote || kind === ShareDayKind.MISSING) {
-    return '';
-  }
-  return note === null || note === undefined || note.length === 0 ?
-    '这条记录没有备注' : note;
-}
-
 export interface ShareSingleData {
   localDate: string;
   recordType: RecordType;

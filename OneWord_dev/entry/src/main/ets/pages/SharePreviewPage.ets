@@ -18,7 +18,6 @@ export struct SharePreviewPage {
   @Prop initialMode: DiaryShareMode = DiaryShareMode.SINGLE;
   @Prop preferredSingleDate: string | null = null;
   @State private selectedMode: DiaryShareMode = DiaryShareMode.SINGLE;
-  @State private showNote: boolean = false;
   @State private viewModel: ShareViewModel = new ShareViewModel(
     AppServiceContainer.getDiaryService(),
     AppServiceContainer.getSettingsRepository(),
@@ -45,24 +44,32 @@ export struct SharePreviewPage {
   }
 
   private async shareCurrentCard(): Promise<void> {
+    console.info(`SharePreviewPage shareCurrentCard: start, mode=${this.selectedMode}`);
+
     if (!this.viewModel.beginRendering()) {
+      console.warn('SharePreviewPage shareCurrentCard: beginRendering returned false, aborting');
       return;
     }
+
     try {
       const fileName = this.selectedMode === DiaryShareMode.SINGLE ?
         'oneword-single-share.png' : 'oneword-seven-days-share.png';
+      console.info(`SharePreviewPage shareCurrentCard: calling imageService.shareCard, fileName=${fileName}, componentId=${SHARE_CARD_COMPONENT_ID}`);
+
       await this.imageService.shareCard(
         this.getUIContext(),
         AppServiceContainer.getAbilityContext(),
         SHARE_CARD_COMPONENT_ID,
         fileName
       );
+
+      console.info('SharePreviewPage shareCurrentCard: shareCard completed successfully');
       this.viewModel.finishRendering();
     } catch (error) {
       if (error instanceof Error) {
-        console.error(`SharePreviewPage shareCurrentCard failed: ${error.message}`);
+        console.error(`SharePreviewPage shareCurrentCard failed: ${error.message}, stack: ${error.stack}`);
       } else {
-        console.error('SharePreviewPage shareCurrentCard failed');
+        console.error(`SharePreviewPage shareCurrentCard failed: ${JSON.stringify(error)}`);
       }
       this.viewModel.failRendering();
     }
@@ -104,18 +111,15 @@ export struct SharePreviewPage {
   private shareCardContent() {
     if (this.selectedMode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
       ShareSingleCard({
-        includeNote: $showNote,
         localDate: this.viewModel.singleData.localDate,
         recordType: this.viewModel.singleData.recordType,
         content: this.viewModel.singleData.content,
-        note: this.viewModel.singleData.note,
         fontId: this.viewModel.singleData.fontId,
         paperId: this.viewModel.singleData.paperId
       })
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
       ShareScrollCard({
         days: this.viewModel.sevenDays,
-        includeNote: $showNote,
         fontId: this.viewModel.sevenFontId,
         paperId: this.viewModel.sevenPaperId
       })
@@ -187,41 +191,10 @@ export struct SharePreviewPage {
                 .border({ width: 1, color: $r('app.color.outline_soft') })
                 .borderRadius(20)
 
-                Row() {
-                  Column({ space: 3 }) {
-                    Text('展示备注')
-                      .fontSize(14)
-                      .fontColor($r('app.color.text_primary'))
-
-                    Text('仅影响本次预览与分享图')
-                      .fontSize(11)
-                      .fontColor($r('app.color.text_tertiary'))
-                  }
-                  .alignItems(HorizontalAlign.Start)
-
-                  Toggle({ type: ToggleType.Switch, isOn: this.showNote })
-                    .selectedColor($r('app.color.accent_vermilion'))
-                    .enabled(!this.viewModel.isBusy)
-                    .onChange((isOn: boolean) => {
-                      console.info(
-                        `SharePreviewPage note toggle: mode=${this.selectedMode}, before=${this.showNote}, after=${isOn}`
-                      );
-                      this.showNote = isOn;
-                    })
-                }
-                .width(286)
-                .justifyContent(FlexAlign.SpaceBetween)
-                .alignItems(VerticalAlign.Center)
-
                 Stack() {
                   this.shareCard()
                 }
                 .shadow({ radius: 22, color: '#16000000', offsetX: 0, offsetY: 10 })
-
-                Text(this.showNote ? '分享图已展示备注' : '分享图不展示备注')
-                  .fontSize(12)
-                  .fontColor($r('app.color.text_tertiary'))
-                  .letterSpacing(1)
 
                 if (this.viewModel.errorMessage.length > 0) {
                   Text(this.viewModel.errorMessage)

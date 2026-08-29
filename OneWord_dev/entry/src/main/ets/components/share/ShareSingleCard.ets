@@ -1,15 +1,12 @@
 import { RecordType } from '../../model/DailyRecord';
-import { resolveShareNoteText, ShareDayKind } from '../../model/ShareModel';
 import { DiaryDateFormatter } from '../../utils/DiaryDateFormatter';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 
 @Component
 export struct ShareSingleCard {
-  @Link includeNote: boolean;
   @Prop localDate: string = '';
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop content: string = '';
-  @Prop note: string | null | undefined = '';
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
@@ -38,34 +35,6 @@ export struct ShareSingleCard {
 
   get contentCount(): number {
     return this.graphemeCounter.count(this.content);
-  }
-
-  get visibleNote(): string {
-    const kind = this.recordType === RecordType.WORD ? ShareDayKind.WORD : ShareDayKind.BLANK;
-    return resolveShareNoteText(this.includeNote, kind, this.note);
-  }
-
-  get rawNoteLength(): number {
-    if (this.note === null || this.note === undefined) {
-      return 0;
-    }
-    return this.note.length;
-  }
-
-  get shouldShowNote(): boolean {
-    const displayLength = this.visibleNote.length;
-    const shouldShow = displayLength > 0;
-    console.info(
-      `ShareSingleCard note state: includeNote=${this.includeNote}, rawLength=${this.rawNoteLength}, ` +
-      `displayLength=${displayLength}, shouldShow=${shouldShow}`
-    );
-    return shouldShow;
-  }
-
-  aboutToAppear(): void {
-    console.info(
-      `ShareSingleCard appear: includeNote=${this.includeNote}, rawLength=${this.rawNoteLength}, localDate=${this.localDate}`
-    );
   }
 
   build() {
@@ -123,7 +92,7 @@ export struct ShareSingleCard {
             }
           }
           .width('100%')
-          .height(this.shouldShowNote ? 224 : 292)
+          .height(292)
         } else {
           Column({ space: 14 }) {
             Stack({ alignContent: Alignment.Center }) {
@@ -148,31 +117,8 @@ export struct ShareSingleCard {
               .minFontScale(1)
               .maxFontScale(1)
           }
-          .height(this.shouldShowNote ? 224 : 292)
+          .height(292)
           .justifyContent(FlexAlign.Center)
-          .alignItems(HorizontalAlign.Center)
-        }
-
-        if (this.shouldShowNote) {
-          Column({ space: 6 }) {
-            Row()
-              .width(28)
-              .height(1)
-              .backgroundColor(this.secondaryColor)
-
-            Text(this.visibleNote)
-              .width(238)
-              .fontSize(12)
-              .lineHeight(18)
-              .fontFamily(this.fontFamily)
-              .fontColor(this.secondaryColor)
-              .letterSpacing(0.5)
-              .textAlign(TextAlign.Center)
-              .maxLines(3)
-              .minFontScale(1)
-              .maxFontScale(1)
-          }
-          .height(68)
           .alignItems(HorizontalAlign.Center)
         }
       }
@@ -213,6 +159,7 @@ export struct ShareSingleCard {
     }
     .width(286)
     .height(440)
+    .backgroundColor(this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7')
     .border({ width: 1, color: this.paperId === 'plain_ash_dev' ? '#E5E5E2' : '#EEE5E1' })
     .borderRadius(2)
   }
