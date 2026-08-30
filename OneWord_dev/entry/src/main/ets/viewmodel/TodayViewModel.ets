@@ -7,6 +7,7 @@ import { CompletionFeedback } from '../service/CompletionFeedback';
 import { DiaryService } from '../service/DiaryService';
 import { DiaryTextRules } from '../service/DiaryTextRules';
 import { Clock } from '../utils/Clock';
+import { AppLogger } from '../utils/AppLogger';
 import { LocalTimeResolver } from '../utils/LocalTimeResolver';
 
 @Observed
@@ -129,6 +130,9 @@ export class TodayViewModel {
       this.localDate = snapshot.localDate;
       this.weekday = this.formatWeekday(new Date(timestamp).getDay());
       this.stylePresetId = settings.stylePresetId;
+      AppStorage.setOrCreate('currentPaperId',
+        settings.stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev');
+      AppLogger.info(`style.today_load preset=${settings.stylePresetId}`);
       this.record = record;
       this.syncRecordPresentation(record);
       this.recordCount = recordCount;

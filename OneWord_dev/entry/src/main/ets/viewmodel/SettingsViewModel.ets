@@ -4,6 +4,7 @@ import { SettingsUiState } from '../model/SettingsUiState';
 import { SettingsRepository } from '../repository/SettingsRepository';
 import { AppResetService } from '../service/AppResetService';
 import { ReminderScheduler } from '../service/ReminderScheduler';
+import { AppLogger } from '../utils/AppLogger';
 
 @Observed
 export class SettingsViewModel {
@@ -58,6 +59,8 @@ export class SettingsViewModel {
     try {
       const settings = await this.settingsRepository.load();
       this.stylePresetId = settings.stylePresetId;
+      this.syncPaperStorage(settings.stylePresetId);
+      AppLogger.info(`style.settings_load preset=${settings.stylePresetId}`);
       this.reminder = SettingsViewModel.cloneReminder(settings.reminder);
       await this.refreshReminderState();
     } catch (error) {
@@ -74,12 +77,21 @@ export class SettingsViewModel {
     this.stylePresetId = stylePresetId;
     try {
       await this.settingsRepository.saveStylePresetId(stylePresetId);
+      this.syncPaperStorage(stylePresetId);
+      AppLogger.info(`style.select id=${stylePresetId} save=ok`);
       await this.refreshReminderState();
     } catch (error) {
+      AppLogger.error(`style.select id=${stylePresetId} save=fail`);
       this.stylePresetId = previous;
+      this.syncPaperStorage(previous);
       this.uiState = SettingsUiState.SAVE_ERROR;
       this.errorMessage = '风格未能保存，请重试';
     }
+  }
+
+  private syncPaperStorage(stylePresetId: StylePresetId): void {
+    AppStorage.setOrCreate('currentPaperId',
+      stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev');
   }
 
   async enableReminder(): Promise<void> {

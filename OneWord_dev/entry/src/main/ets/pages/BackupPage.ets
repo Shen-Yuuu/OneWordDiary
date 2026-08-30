@@ -135,7 +135,7 @@ export struct BackupPage {
     }
     .width('100%')
     .padding(18)
-    .backgroundColor('#66FFFFFF')
+    .backgroundColor($r('app.color.card_overlay'))
     .border({ width: 1, color: $r('app.color.divider_subtle') })
     .borderRadius(12)
     .alignItems(VerticalAlign.Center)
@@ -159,7 +159,7 @@ export struct BackupPage {
 
             Text('备份与恢复')
               .fontSize(22)
-              .fontFamily('serif')
+              .fontFamily('oneword_wenkai, serif')
               .fontColor($r('app.color.text_primary'))
               .letterSpacing(3)
 
@@ -176,7 +176,7 @@ export struct BackupPage {
             Column({ space: 8 }) {
               Text('只在你主动选择时读写文件')
                 .fontSize(18)
-                .fontFamily('serif')
+                .fontFamily('oneword_wenkai, serif')
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(1.4)
 
@@ -255,7 +255,7 @@ export struct BackupPage {
           .height('100%')
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
-          .backgroundColor('#E6FDF8F7')
+          .backgroundColor($r('app.color.scrim_paper'))
         }
       }
       .width('100%')

@@ -7,7 +7,7 @@ struct ScrollAxisNode {
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop isMissing: boolean = false;
   @Prop nodeHeight: number = ScrollLayoutMetrics.RECORD_HEIGHT;
-  @Prop lineColor: string = '#D8C7C0';
+  @Prop lineColor: ResourceColor = $r('app.color.scroll_line_warm');
 
   build() {
     Column() {
@@ -53,7 +53,7 @@ export struct ScrollRecordNode {
   };
 
   get recordFontFamily(): string {
-    return this.item.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
+    return 'oneword_wenkai, serif';
   }
 
   get recordFontSize(): number {
@@ -76,24 +76,29 @@ export struct ScrollRecordNode {
     return this.item.contentCount === 3 ? 40 : 36;
   }
 
-  get textColor(): string {
-    return this.item.paperId === 'plain_ash_dev' ? '#242424' : '#282622';
+  get textColor(): ResourceColor {
+    return this.item.paperId === 'plain_ash_dev' ?
+      $r('app.color.scroll_text_plain') : $r('app.color.scroll_text_warm');
   }
 
-  get secondaryColor(): string {
-    return this.item.paperId === 'plain_ash_dev' ? '#777775' : '#8C8783';
+  get secondaryColor(): ResourceColor {
+    return this.item.paperId === 'plain_ash_dev' ?
+      $r('app.color.scroll_secondary_plain') : $r('app.color.scroll_secondary_warm');
   }
 
-  get faintColor(): string {
-    return this.item.paperId === 'plain_ash_dev' ? '#AFAFAC' : '#B8ADA7';
+  get faintColor(): ResourceColor {
+    return this.item.paperId === 'plain_ash_dev' ?
+      $r('app.color.scroll_faint_plain') : $r('app.color.scroll_faint_warm');
   }
 
-  get lineColor(): string {
-    return this.item.paperId === 'plain_ash_dev' ? '#CFCFCA' : '#D8C7C0';
+  get lineColor(): ResourceColor {
+    return this.item.paperId === 'plain_ash_dev' ?
+      $r('app.color.scroll_line_plain') : $r('app.color.scroll_line_warm');
   }
 
-  get accentColor(): string {
-    return this.item.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
+  get accentColor(): ResourceColor {
+    return this.item.paperId === 'plain_ash_dev' ?
+      $r('app.color.scroll_accent_plain') : $r('app.color.scroll_accent_warm');
   }
 
   get visibleNote(): string {
@@ -209,7 +214,7 @@ export struct ScrollRecordNode {
           .width('100%')
           .height(ScrollLayoutMetrics.MONTH_HEADER_HEIGHT)
           .fontSize(18)
-          .fontFamily('serif')
+          .fontFamily('oneword_wenkai_medium, serif')
           .fontWeight(FontWeight.Medium)
           .fontColor(this.textColor)
           .letterSpacing(2.8)

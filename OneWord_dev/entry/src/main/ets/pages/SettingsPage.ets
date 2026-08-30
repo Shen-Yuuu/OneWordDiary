@@ -22,14 +22,7 @@ export struct SettingsPage {
   onClearComplete: () => void = () => {
   };
 
-  get activePaperId(): string {
-    return this.viewModel.stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev';
-  }
-
-  get activePaperColor(): ResourceColor {
-    return this.activePaperId === 'plain_ash_dev' ?
-      $r('app.color.paper_plain') : $r('app.color.paper_warm');
-  }
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
 
   aboutToAppear(): void {
     this.viewModel.load();
@@ -106,7 +99,7 @@ export struct SettingsPage {
       },
       secondaryButton: {
         value: '确认清空',
-        fontColor: '#BA1A1A',
+        fontColor: $r('app.color.error_danger'),
         action: () => this.performClear()
       }
     });
@@ -147,7 +140,7 @@ export struct SettingsPage {
 
         Text(sample)
           .fontSize(27)
-          .fontFamily(stylePresetId === StylePresetId.PAPER_INK ? 'serif' : 'sans-serif')
+          .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_primary'))
       }
 
@@ -191,7 +184,7 @@ export struct SettingsPage {
   build() {
     NavDestination() {
       Stack() {
-        PaperBackdrop({ paperId: this.activePaperId })
+        PaperBackdrop({ paperId: this.paperId })
 
         if (this.viewModel.uiState === SettingsUiState.LOADING) {
           AppLoadingPanel()
@@ -213,7 +206,7 @@ export struct SettingsPage {
 
               Text('设置')
                 .fontSize(22)
-                .fontFamily('serif')
+                .fontFamily('oneword_wenkai, serif')
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(3)
 
@@ -281,8 +274,8 @@ export struct SettingsPage {
                 Divider().color($r('app.color.divider_subtle'))
 
                 this.sectionTitle('关于数据')
-                this.navigationRow('备份与恢复', '', () => this.onOpenBackup(this.activePaperId))
-                this.navigationRow('隐私说明', '', () => this.onOpenPrivacy(this.activePaperId))
+                this.navigationRow('备份与恢复', '', () => this.onOpenBackup(this.paperId))
+                this.navigationRow('隐私说明', '', () => this.onOpenPrivacy(this.paperId))
 
                 Divider().color($r('app.color.divider_subtle'))
 
@@ -291,7 +284,7 @@ export struct SettingsPage {
                   .width('100%')
                   .height(58)
                   .fontSize(17)
-                  .fontColor('#BA1A1A')
+                  .fontColor($r('app.color.error_danger'))
                   .textAlign(TextAlign.Start)
                   .onClick(() => this.showFirstClearConfirmation())
                   .accessibilityText('清空全部数据，危险操作')
@@ -331,14 +324,14 @@ export struct SettingsPage {
           .height('100%')
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
-          .backgroundColor('#E6FDF8F7')
+          .backgroundColor($r('app.color.scrim_paper'))
         }
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.activePaperColor)
+      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
     }
     .hideTitleBar(true)
-    .backgroundColor(this.activePaperColor)
+    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
   }
 }

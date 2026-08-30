@@ -1,5 +1,6 @@
 import { ScrollRecordNode } from '../scroll/ScrollRecordNode';
 import { RecordType } from '../../model/DailyRecord';
+import { AppLogger } from '../../utils/AppLogger';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
 import { ShareDayItem, ShareDayKind } from '../../model/ShareModel';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
@@ -29,8 +30,12 @@ export struct ShareScrollCard {
     return this.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
   }
 
-  get fontFamily(): string {
-    return this.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
+  recordFontFamily(): string {
+    return 'oneword_wenkai, serif';
+  }
+
+  aboutToAppear(): void {
+    AppLogger.info(`style.share_scroll_card paperId=${this.paperId}`);
   }
 
   private sideFor(item: ShareDayItem, index: number): ScrollItemSide {
@@ -106,7 +111,7 @@ export struct ShareScrollCard {
       Column({ space: 10 }) {
         Text('卷尾')
           .fontSize(13)
-          .fontFamily(this.fontFamily)
+          .fontFamily(this.recordFontFamily())
           .fontColor(this.secondaryColor)
           .letterSpacing(2)
 
@@ -120,13 +125,13 @@ export struct ShareScrollCard {
 
             Text('字')
               .fontSize(9)
-              .fontFamily('serif')
+              .fontFamily('oneword_wenkai, serif')
               .fontColor('#FFFFFF')
           }
 
           Text('一字日记')
             .fontSize(11)
-            .fontFamily(this.fontFamily)
+            .fontFamily(this.recordFontFamily())
             .fontColor(this.textColor)
             .letterSpacing(2.4)
         }

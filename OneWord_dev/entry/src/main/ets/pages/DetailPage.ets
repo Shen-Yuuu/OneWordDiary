@@ -15,6 +15,7 @@ export struct DetailPage {
     AppServiceContainer.getDiaryService(),
     new DiaryDateFormatter()
   );
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   onBack: () => void = () => {
   };
   onShare: () => void = () => {
@@ -28,7 +29,7 @@ export struct DetailPage {
   build() {
     NavDestination() {
       Stack() {
-        PaperBackdrop({ paperId: this.viewModel.paperId })
+        PaperBackdrop({ paperId: this.paperId })
 
         Column() {
           Row() {
@@ -40,7 +41,7 @@ export struct DetailPage {
 
             Text('一字日记')
               .fontSize(22)
-              .fontFamily('serif')
+              .fontFamily('oneword_wenkai, serif')
               .fontColor($r('app.color.text_primary'))
               .letterSpacing(2.6)
 
@@ -82,7 +83,7 @@ export struct DetailPage {
 
               Text('这一天没有记录')
                 .fontSize(22)
-                .fontFamily('serif')
+                .fontFamily('oneword_wenkai, serif')
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(3)
 
@@ -95,7 +96,7 @@ export struct DetailPage {
                 .width($r('app.float.primary_button_width'))
                 .height($r('app.float.primary_button_height'))
                 .fontSize(14)
-                .fontColor('#FFFFFF')
+                .fontColor($r('app.color.on_ink_button'))
                 .backgroundColor($r('app.color.ink_button'))
                 .borderRadius(26)
                 .onClick(() => this.onBack())

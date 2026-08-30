@@ -1,6 +1,16 @@
+import { AppLogger } from '../../utils/AppLogger';
+
 @Component
 export struct PaperBackdrop {
-  @Prop paperId: string = 'warm_paper_dev';
+  @Prop @Watch('onPaperChanged') paperId: string = 'warm_paper_dev';
+
+  aboutToAppear(): void {
+    AppLogger.info(`style.backdrop paperId=${this.paperId}`);
+  }
+
+  onPaperChanged(): void {
+    AppLogger.info(`style.backdrop_change paperId=${this.paperId}`);
+  }
 
   get paperColor(): ResourceColor {
     return this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm');

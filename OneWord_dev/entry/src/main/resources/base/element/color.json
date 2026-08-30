@@ -38,7 +38,7 @@
     },
     {
       "name": "paper_plain",
-      "value": "#F7F7F5"
+      "value": "#EFEFEA"
     },
     {
       "name": "text_tertiary",
@@ -51,6 +51,62 @@
     {
       "name": "ink_button",
       "value": "#282622"
+    },
+    {
+      "name": "on_ink_button",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "error_danger",
+      "value": "#BA1A1A"
+    },
+    {
+      "name": "scrim_paper",
+      "value": "#E6FDF8F7"
+    },
+    {
+      "name": "card_overlay",
+      "value": "#66FFFFFF"
+    },
+    {
+      "name": "scroll_text_warm",
+      "value": "#282622"
+    },
+    {
+      "name": "scroll_text_plain",
+      "value": "#242424"
+    },
+    {
+      "name": "scroll_secondary_warm",
+      "value": "#8C8783"
+    },
+    {
+      "name": "scroll_secondary_plain",
+      "value": "#777775"
+    },
+    {
+      "name": "scroll_faint_warm",
+      "value": "#B8ADA7"
+    },
+    {
+      "name": "scroll_faint_plain",
+      "value": "#AFAFAC"
+    },
+    {
+      "name": "scroll_line_warm",
+      "value": "#D8C7C0"
+    },
+    {
+      "name": "scroll_line_plain",
+      "value": "#CFCFCA"
+    },
+    {
+      "name": "scroll_accent_warm",
+      "value": "#A65C4D"
+    },
+    {
+      "name": "scroll_accent_plain",
+      "value": "#626260"
     }
   ]
 }

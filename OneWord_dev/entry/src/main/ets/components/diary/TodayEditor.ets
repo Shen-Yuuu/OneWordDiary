@@ -50,7 +50,7 @@ export struct TodayEditor {
           .height(140)
           .fontSize(this.contentFontSize)
           .fontWeight(FontWeight.Medium)
-          .fontFamily('serif')
+          .fontFamily('oneword_wenkai_medium, serif')
           .fontColor($r('app.color.text_primary'))
           .placeholderColor($r('app.color.outline_soft'))
           .placeholderFont({ size: 28, weight: FontWeight.Lighter })
@@ -63,13 +63,13 @@ export struct TodayEditor {
 
         Text(`${this.contentCount} / 4`)
           .fontSize(13)
-          .fontColor(this.contentError.length > 0 ? '#BA1A1A' : $r('app.color.text_tertiary'))
+          .fontColor(this.contentError.length > 0 ? $r('app.color.error_danger') : $r('app.color.text_tertiary'))
           .letterSpacing(1.4)
 
         if (this.contentError.length > 0) {
           Text(this.contentError)
             .fontSize(13)
-            .fontColor('#BA1A1A')
+            .fontColor($r('app.color.error_danger'))
             .textAlign(TextAlign.Center)
             .accessibilityLevel('yes')
         }
@@ -87,7 +87,7 @@ export struct TodayEditor {
 
           Text(`${this.noteCount} / 30`)
             .fontSize(13)
-            .fontColor(this.noteError.length > 0 ? '#BA1A1A' : $r('app.color.text_tertiary'))
+            .fontColor(this.noteError.length > 0 ? $r('app.color.error_danger') : $r('app.color.text_tertiary'))
         }
         .width('100%')
 
@@ -107,7 +107,7 @@ export struct TodayEditor {
         if (this.noteError.length > 0) {
           Text(this.noteError)
             .fontSize(13)
-            .fontColor('#BA1A1A')
+            .fontColor($r('app.color.error_danger'))
             .textAlign(TextAlign.Start)
             .accessibilityLevel('yes')
         }

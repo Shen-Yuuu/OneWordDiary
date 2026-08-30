@@ -13,7 +13,6 @@ import {
   SettingsRouteParam,
   ShareRouteParam
 } from '../model/AppRoute';
-import { StylePresetId } from '../constants/StyleTokens';
 import { DiaryShareMode } from '../model/ShareModel';
 import { TodayUiState } from '../model/TodayUiState';
 import { BackupPage } from './BackupPage';
@@ -44,17 +43,7 @@ struct Index {
     new SystemCompletionFeedback()
   );
 
-  get activePaperId(): string {
-    if (this.viewModel.isRecordedState) {
-      return this.viewModel.recordPaperId;
-    }
-    return this.viewModel.stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev';
-  }
-
-  get activePaperColor(): ResourceColor {
-    return this.activePaperId === 'plain_ash_dev' ?
-      $r('app.color.paper_plain') : $r('app.color.paper_warm');
-  }
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
 
   get recordCanRevise(): boolean {
     return this.viewModel.uiState === TodayUiState.TODAY_RECORDED_WORD_EDITABLE ||
@@ -189,7 +178,7 @@ struct Index {
   build() {
     Navigation(this.navPathStack) {
       Stack() {
-        PaperBackdrop({ paperId: this.activePaperId })
+        PaperBackdrop({ paperId: this.paperId })
 
         if (this.viewModel.uiState === TodayUiState.APP_INITIALIZING) {
           AppLoadingPanel()
@@ -205,7 +194,7 @@ struct Index {
             content: this.viewModel.draftContent,
             contentCount: this.viewModel.contentCount,
             note: this.viewModel.draftNote,
-            paperId: this.activePaperId,
+            paperId: this.paperId,
             isRevision: this.viewModel.isRevisionDraft,
             isBusy: this.viewModel.isBusy,
             errorMessage: this.viewModel.errorMessage,
@@ -268,19 +257,19 @@ struct Index {
             left: $r('app.float.page_horizontal_margin'),
             right: $r('app.float.page_horizontal_margin')
           })
-          .backgroundColor(this.activePaperColor)
+          .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
 
         }
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.activePaperColor)
+      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
     }
     .width('100%')
     .height('100%')
     .navDestination(this.routeBuilder)
     .hideTitleBar(true)
     .mode(NavigationMode.Stack)
-    .backgroundColor(this.activePaperColor)
+    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
   }
 }

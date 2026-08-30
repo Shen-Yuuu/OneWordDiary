@@ -10,7 +10,7 @@ export struct DiaryPrimaryButton {
       Text(this.label)
         .fontSize(15)
         .fontWeight(FontWeight.Medium)
-        .fontColor('#FFFFFF')
+        .fontColor($r('app.color.on_ink_button'))
         .letterSpacing(0.8)
     }
     .width($r('app.float.primary_button_width'))

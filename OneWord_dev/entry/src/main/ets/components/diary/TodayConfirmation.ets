@@ -80,7 +80,7 @@ export struct TodayConfirmation {
 
             Text('把今天留给空白')
               .fontSize(26)
-              .fontFamily('serif')
+              .fontFamily('oneword_wenkai_medium, serif')
               .fontWeight(FontWeight.Medium)
               .fontColor($r('app.color.text_primary'))
               .letterSpacing(4)
@@ -106,7 +106,7 @@ export struct TodayConfirmation {
 
             Text('「 见字如面 」')
               .fontSize(14)
-              .fontFamily('serif')
+              .fontFamily('oneword_wenkai, serif')
               .fontColor($r('app.color.text_tertiary'))
               .letterSpacing(3)
 
@@ -131,7 +131,7 @@ export struct TodayConfirmation {
           if (this.errorMessage.length > 0) {
             Text(this.errorMessage)
               .fontSize(14)
-              .fontColor('#BA1A1A')
+              .fontColor($r('app.color.error_danger'))
               .textAlign(TextAlign.Center)
               .accessibilityLevel('yes')
           }

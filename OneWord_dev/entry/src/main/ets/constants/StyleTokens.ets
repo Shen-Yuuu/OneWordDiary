@@ -1,3 +1,12 @@
+// 注册于 EntryAbility（@ohos.font.registerFont）；逗号链保证缺字时回退系统衬线。
+// 用 class 静态成员而非 export const：后者跨模块活绑定在 struct 生成代码中真机复现为 undefined
+export class FontFamilies {
+  static readonly SERIF: string = 'oneword_wenkai, serif';
+  static readonly SERIF_HEAVY: string = 'oneword_wenkai_medium, serif';
+  private constructor() {
+  }
+}
+
 export enum StylePresetId {
   PAPER_INK = 'paper_ink',
   PLAIN_ASH = 'plain_ash'
@@ -25,7 +34,7 @@ export const PAPER_INK_STYLE: StyleTokens = {
   id: StylePresetId.PAPER_INK,
   fontId: 'system_serif_dev',
   paperId: 'warm_paper_dev',
-  fontFamily: 'serif',
+  fontFamily: FontFamilies.SERIF,
   light: {
     background: '#FDF8F7',
     surface: '#FFFCFB',

@@ -43,7 +43,7 @@ export struct PrivacyPage {
 
             Text('隐私说明')
               .fontSize(22)
-              .fontFamily('serif')
+              .fontFamily('oneword_wenkai, serif')
               .fontColor($r('app.color.text_primary'))
               .letterSpacing(2.6)
 
@@ -61,7 +61,7 @@ export struct PrivacyPage {
               Text('你的文字，只属于你。')
                 .width('100%')
                 .fontSize(27)
-                .fontFamily('serif')
+                .fontFamily('oneword_wenkai, serif')
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(2)
                 .margin({ top: 24, bottom: 18 })

@@ -1,11 +1,17 @@
+import { AppLogger } from '../../utils/AppLogger';
+
 @Component
 export struct DiaryWordDisplay {
   @Prop content: string = '';
   @Prop contentCount: number = 0;
-  @Prop fontFamily: string = 'serif';
+  @Prop fontFamily: string = 'oneword_wenkai, serif';
   @Prop stageHeight: number = 160;
   @Prop isHero: boolean = false;
   @Prop accessibilityPrefix: string = '正文';
+
+  aboutToAppear(): void {
+    AppLogger.info(`font.word_display family=${this.fontFamily} hero=${this.isHero}`);
+  }
 
   get contentFontSize(): number {
     if (this.isHero) {

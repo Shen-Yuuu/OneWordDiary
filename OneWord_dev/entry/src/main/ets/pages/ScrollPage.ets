@@ -17,6 +17,7 @@ export struct ScrollPage {
     30,
     new DiaryDateFormatter()
   );
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   onBack: () => void = () => {
   };
   onOpenDetail: (localDate: string) => void = (localDate: string) => {
@@ -33,7 +34,7 @@ export struct ScrollPage {
   build() {
     NavDestination() {
       Stack() {
-        PaperBackdrop()
+        PaperBackdrop({ paperId: this.paperId })
 
         Column() {
           Row() {
@@ -46,7 +47,7 @@ export struct ScrollPage {
             Column({ space: 2 }) {
               Text('文字长卷')
                 .fontSize(22)
-                .fontFamily('serif')
+                .fontFamily('oneword_wenkai_medium, serif')
                 .fontWeight(FontWeight.Medium)
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(2.6)
@@ -98,7 +99,7 @@ export struct ScrollPage {
 
               Text('长卷尚空')
                 .fontSize(22)
-                .fontFamily('serif')
+                .fontFamily('oneword_wenkai, serif')
                 .fontColor($r('app.color.text_primary'))
                 .letterSpacing(4)
 
@@ -111,7 +112,7 @@ export struct ScrollPage {
                 .width($r('app.float.primary_button_width'))
                 .height($r('app.float.primary_button_height'))
                 .fontSize(14)
-                .fontColor('#FFFFFF')
+                .fontColor($r('app.color.on_ink_button'))
                 .backgroundColor($r('app.color.ink_button'))
                 .borderRadius(26)
                 .onClick(() => this.onBack())
@@ -158,13 +159,13 @@ export struct ScrollPage {
         }
         .width('100%')
         .height('100%')
-        .backgroundColor($r('app.color.paper_warm'))
+        .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
       }
       .width('100%')
       .height('100%')
-      .backgroundColor($r('app.color.paper_warm'))
+      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
     }
     .hideTitleBar(true)
-    .backgroundColor($r('app.color.paper_warm'))
+    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
   }
 }

@@ -1,3 +1,4 @@
+
 @Component
 export struct AppLoadingPanel {
   build() {
@@ -52,7 +53,7 @@ export struct AppErrorPanel {
 
       Text(this.title)
         .fontSize(24)
-        .fontFamily('serif')
+        .fontFamily('oneword_wenkai, serif')
         .fontColor($r('app.color.text_primary'))
         .letterSpacing(2)
 
@@ -65,7 +66,7 @@ export struct AppErrorPanel {
         .width($r('app.float.primary_button_width'))
         .height($r('app.float.primary_button_height'))
         .fontSize(14)
-        .fontColor('#FFFFFF')
+        .fontColor($r('app.color.on_ink_button'))
         .backgroundColor($r('app.color.ink_button'))
         .borderRadius(26)
         .onClick(() => this.onRetry())

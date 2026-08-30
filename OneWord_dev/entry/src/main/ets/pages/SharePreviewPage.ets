@@ -26,13 +26,9 @@ export struct SharePreviewPage {
     new DiaryDateFormatter()
   );
   private readonly imageService: ShareImageService = new ShareImageService();
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   onBack: () => void = () => {
   };
-
-  get activePaperColor(): ResourceColor {
-    return this.activePaperId === 'plain_ash_dev' ?
-      $r('app.color.paper_plain') : $r('app.color.paper_warm');
-  }
 
   aboutToAppear(): void {
     this.selectedMode = this.initialMode;
@@ -75,13 +71,6 @@ export struct SharePreviewPage {
     }
   }
 
-  get activePaperId(): string {
-    if (this.selectedMode === DiaryShareMode.SINGLE && this.viewModel.singleData !== null) {
-      return this.viewModel.singleData.paperId;
-    }
-    return this.viewModel.sevenPaperId;
-  }
-
   private async loadShareData(): Promise<void> {
     await this.viewModel.load(this.initialMode, this.preferredSingleDate);
     this.selectedMode = this.viewModel.mode;
@@ -100,7 +89,7 @@ export struct SharePreviewPage {
       .height(34)
       .padding({ left: 22, right: 22 })
       .fontSize(13)
-      .fontColor(this.selectedMode === mode ? '#FFFFFF' : $r('app.color.text_secondary'))
+      .fontColor(this.selectedMode === mode ? $r('app.color.on_ink_button') : $r('app.color.text_secondary'))
       .backgroundColor(this.selectedMode === mode ? $r('app.color.ink_button') : Color.Transparent)
       .borderRadius(17)
       .enabled(!this.viewModel.isBusy)
@@ -115,13 +104,13 @@ export struct SharePreviewPage {
         recordType: this.viewModel.singleData.recordType,
         content: this.viewModel.singleData.content,
         fontId: this.viewModel.singleData.fontId,
-        paperId: this.viewModel.singleData.paperId
+        paperId: this.paperId
       })
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
       ShareScrollCard({
         days: this.viewModel.sevenDays,
         fontId: this.viewModel.sevenFontId,
-        paperId: this.viewModel.sevenPaperId
+        paperId: this.paperId
       })
     }
   }
@@ -132,13 +121,13 @@ export struct SharePreviewPage {
       this.shareCardContent()
     }
     .id(SHARE_CARD_COMPONENT_ID)
-    .backgroundColor(this.activePaperColor)
+    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
   }
 
   build() {
     NavDestination() {
       Stack() {
-        PaperBackdrop({ paperId: this.activePaperId })
+        PaperBackdrop({ paperId: this.paperId })
 
         Column() {
           Row() {
@@ -150,7 +139,7 @@ export struct SharePreviewPage {
 
             Text('分享预览')
               .fontSize(22)
-              .fontFamily('serif')
+              .fontFamily('oneword_wenkai, serif')
               .fontColor($r('app.color.text_primary'))
               .letterSpacing(3)
 
@@ -225,9 +214,9 @@ export struct SharePreviewPage {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.activePaperColor)
+      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
     }
     .hideTitleBar(true)
-    .backgroundColor(this.activePaperColor)
+    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
   }
 }

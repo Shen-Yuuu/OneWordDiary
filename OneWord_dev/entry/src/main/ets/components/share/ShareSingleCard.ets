@@ -1,4 +1,5 @@
 import { RecordType } from '../../model/DailyRecord';
+import { AppLogger } from '../../utils/AppLogger';
 import { DiaryDateFormatter } from '../../utils/DiaryDateFormatter';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 
@@ -29,8 +30,12 @@ export struct ShareSingleCard {
     return this.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
   }
 
-  get fontFamily(): string {
-    return this.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
+  recordFontFamily(): string {
+    return 'oneword_wenkai, serif';
+  }
+
+  aboutToAppear(): void {
+    AppLogger.info(`style.share_card paperId=${this.paperId} fontId=${this.fontId}`);
   }
 
   get contentCount(): number {
@@ -47,7 +52,7 @@ export struct ShareSingleCard {
       Column() {
       Text(this.dateFormatter.compactLabel(this.localDate))
         .fontSize(12)
-        .fontFamily('serif')
+        .fontFamily('oneword_wenkai, serif')
         .fontWeight(FontWeight.Lighter)
         .fontColor(this.secondaryColor)
         .letterSpacing(2.4)
@@ -61,14 +66,14 @@ export struct ShareSingleCard {
             if (this.contentCount <= 1) {
               Text(this.content)
                 .fontSize(96)
-                .fontFamily(this.fontFamily)
+                .fontFamily(this.recordFontFamily())
                 .fontWeight(FontWeight.Normal)
                 .fontColor(this.textColor)
                 .textAlign(TextAlign.Center)
             } else if (this.contentCount === 2) {
               Text(this.content)
                 .fontSize(78)
-                .fontFamily(this.fontFamily)
+                .fontFamily(this.recordFontFamily())
                 .fontWeight(FontWeight.Normal)
                 .fontColor(this.textColor)
                 .letterSpacing(3)
@@ -76,7 +81,7 @@ export struct ShareSingleCard {
             } else if (this.contentCount === 3) {
               Text(this.content)
                 .fontSize(62)
-                .fontFamily(this.fontFamily)
+                .fontFamily(this.recordFontFamily())
                 .fontWeight(FontWeight.Normal)
                 .fontColor(this.textColor)
                 .letterSpacing(3)
@@ -84,7 +89,7 @@ export struct ShareSingleCard {
             } else {
               Text(this.content)
                 .fontSize(52)
-                .fontFamily(this.fontFamily)
+                .fontFamily(this.recordFontFamily())
                 .fontWeight(FontWeight.Normal)
                 .fontColor(this.textColor)
                 .letterSpacing(3)
@@ -111,7 +116,7 @@ export struct ShareSingleCard {
 
             Text('留白')
               .fontSize(14)
-              .fontFamily(this.fontFamily)
+              .fontFamily(this.recordFontFamily())
               .fontColor(this.secondaryColor)
               .letterSpacing(4)
               .minFontScale(1)
@@ -136,7 +141,7 @@ export struct ShareSingleCard {
 
           Text('字')
             .fontSize(10)
-            .fontFamily('serif')
+            .fontFamily('oneword_wenkai, serif')
             .fontColor('#FFFFFF')
             .minFontScale(1)
             .maxFontScale(1)
@@ -144,7 +149,7 @@ export struct ShareSingleCard {
 
         Text('一字日记')
           .fontSize(13)
-          .fontFamily(this.fontFamily)
+          .fontFamily(this.recordFontFamily())
           .fontColor(this.textColor)
           .letterSpacing(3)
           .minFontScale(1)

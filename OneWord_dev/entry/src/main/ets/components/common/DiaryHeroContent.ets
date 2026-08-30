@@ -1,4 +1,6 @@
+import { FontFamilies } from '../../constants/StyleTokens';
 import { RecordType } from '../../model/DailyRecord';
+import { AppLogger } from '../../utils/AppLogger';
 
 @Component
 export struct DiaryHeroContent {
@@ -9,8 +11,18 @@ export struct DiaryHeroContent {
   @Prop fontId: string = 'system_serif_dev';
   @Prop accessibilityPrefix: string = '日记正文';
 
-  get fontFamily(): string {
-    return this.fontId === 'system_sans_dev' ? 'sans-serif' : 'serif';
+  aboutToAppear(): void {
+    let staticRead = 'threw';
+    try {
+      staticRead = `ok(${String(FontFamilies.SERIF)})`;
+    } catch (err) {
+      staticRead = `threw(${(err as Error).message})`;
+    }
+    AppLogger.info(`font.hero_v4 staticRead=${staticRead} family=${this.recordFontFamily()}`);
+  }
+
+  recordFontFamily(): string {
+    return 'oneword_wenkai, serif';
   }
 
   @Builder
@@ -18,7 +30,7 @@ export struct DiaryHeroContent {
     if (this.contentCount <= 1) {
       Text(this.content)
         .fontSize(136)
-        .fontFamily(this.fontFamily)
+        .fontFamily(this.recordFontFamily())
         .fontWeight(FontWeight.Normal)
         .fontColor($r('app.color.text_primary'))
         .textAlign(TextAlign.Center)
@@ -26,7 +38,7 @@ export struct DiaryHeroContent {
     } else if (this.contentCount === 2) {
       Text(this.content)
         .fontSize(76)
-        .fontFamily(this.fontFamily)
+        .fontFamily(this.recordFontFamily())
         .fontWeight(FontWeight.Normal)
         .fontColor($r('app.color.text_primary'))
         .letterSpacing(3)
@@ -35,7 +47,7 @@ export struct DiaryHeroContent {
     } else if (this.contentCount === 3) {
       Text(this.content)
         .fontSize(56)
-        .fontFamily(this.fontFamily)
+        .fontFamily(this.recordFontFamily())
         .fontWeight(FontWeight.Normal)
         .fontColor($r('app.color.text_primary'))
         .letterSpacing(3)
@@ -44,7 +56,7 @@ export struct DiaryHeroContent {
     } else {
       Text(this.content)
         .fontSize(44)
-        .fontFamily(this.fontFamily)
+        .fontFamily(this.recordFontFamily())
         .fontWeight(FontWeight.Normal)
         .fontColor($r('app.color.text_primary'))
         .letterSpacing(3)
@@ -72,7 +84,7 @@ export struct DiaryHeroContent {
 
       Text('今日留白')
         .fontSize(24)
-        .fontFamily('serif')
+        .fontFamily(FontFamilies.SERIF)
         .fontColor($r('app.color.text_primary'))
         .letterSpacing(4)
     }
@@ -95,7 +107,7 @@ export struct DiaryHeroContent {
             .width(40)
             .height(40)
             .fontSize(20)
-            .fontFamily('serif')
+            .fontFamily(FontFamilies.SERIF_HEAVY)
             .fontWeight(FontWeight.Bold)
             .fontColor('#FFFFFF')
             .backgroundColor($r('app.color.accent_vermilion'))
@@ -114,7 +126,7 @@ export struct DiaryHeroContent {
       if (this.recordType === RecordType.WORD) {
         Text('「 见字如面 」')
           .fontSize(14)
-          .fontFamily('serif')
+          .fontFamily(FontFamilies.SERIF)
           .fontColor($r('app.color.text_tertiary'))
           .letterSpacing(3)
       }
@@ -124,7 +136,7 @@ export struct DiaryHeroContent {
           .width(280)
           .fontSize(14)
           .lineHeight(22)
-          .fontFamily(this.fontFamily)
+          .fontFamily(this.recordFontFamily())
           .fontColor($r('app.color.text_secondary'))
           .letterSpacing(0.6)
           .textAlign(TextAlign.Center)
