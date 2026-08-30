@@ -13,20 +13,20 @@ export struct ShareScrollCard {
   @Prop paperId: string = 'warm_paper_dev';
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
-  get paperBackground(): Resource {
+  paperBackground(): Resource {
     return this.paperId === 'plain_ash_dev' ?
       $r('app.media.share_bg_plain') : $r('app.media.share_bg_warm');
   }
 
-  get textColor(): string {
+  textColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#242424' : '#282622';
   }
 
-  get secondaryColor(): string {
+  secondaryColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#777775' : '#8C8783';
   }
 
-  get accentColor(): string {
+  accentColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
   }
 
@@ -72,7 +72,7 @@ export struct ShareScrollCard {
     );
   }
 
-  get timelineHeight(): number {
+  timelineHeight(): number {
     let height = 0;
     for (const item of this.days) {
       height += ScrollLayoutMetrics.totalHeight(
@@ -84,16 +84,16 @@ export struct ShareScrollCard {
     return height;
   }
 
-  get cardHeight(): number {
-    return this.timelineHeight + ScrollLayoutMetrics.SHARE_TOP_SPACING +
+  cardHeight(): number {
+    return this.timelineHeight() + ScrollLayoutMetrics.SHARE_TOP_SPACING +
       ScrollLayoutMetrics.SHARE_FOOTER_HEIGHT;
   }
 
   build() {
     Stack() {
-      Image(this.paperBackground)
+      Image(this.paperBackground())
         .width(286)
-        .height(this.cardHeight)
+        .height(this.cardHeight())
         .objectFit(ImageFit.Fill)
 
       Column() {
@@ -112,7 +112,7 @@ export struct ShareScrollCard {
         Text('卷尾')
           .fontSize(13)
           .fontFamily(this.recordFontFamily())
-          .fontColor(this.secondaryColor)
+          .fontColor(this.secondaryColor())
           .letterSpacing(2)
 
         Row({ space: 8 }) {
@@ -120,7 +120,7 @@ export struct ShareScrollCard {
             Row()
               .width(19)
               .height(19)
-              .backgroundColor(this.accentColor)
+              .backgroundColor(this.accentColor())
               .borderRadius(2)
 
             Text('字')
@@ -132,7 +132,7 @@ export struct ShareScrollCard {
           Text('一字日记')
             .fontSize(11)
             .fontFamily(this.recordFontFamily())
-            .fontColor(this.textColor)
+            .fontColor(this.textColor())
             .letterSpacing(2.4)
         }
         .alignItems(VerticalAlign.Center)
@@ -142,11 +142,11 @@ export struct ShareScrollCard {
       .alignItems(HorizontalAlign.Center)
       }
       .width(286)
-      .height(this.cardHeight)
+      .height(this.cardHeight())
       .alignItems(HorizontalAlign.Center)
     }
     .width(286)
-    .height(this.cardHeight)
+    .height(this.cardHeight())
     .backgroundColor(this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7')
     .border({ width: 1, color: this.paperId === 'plain_ash_dev' ? '#E5E5E2' : '#EEE5E1' })
     .borderRadius(2)

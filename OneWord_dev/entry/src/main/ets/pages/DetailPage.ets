@@ -16,6 +16,8 @@ export struct DetailPage {
     new DiaryDateFormatter()
   );
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
+  @State private contentShown: boolean = false;
+  private revealTimer: number = -1;
   onBack: () => void = () => {
   };
   onShare: () => void = () => {
@@ -23,7 +25,18 @@ export struct DetailPage {
 
 
   aboutToAppear(): void {
+    this.revealTimer = setTimeout(() => {
+      this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+        this.contentShown = true;
+      });
+    }, 30);
     this.viewModel.load(this.localDate);
+  }
+
+  aboutToDisappear(): void {
+    if (this.revealTimer !== -1) {
+      clearTimeout(this.revealTimer);
+    }
   }
 
   build() {
@@ -124,6 +137,8 @@ export struct DetailPage {
         .width('100%')
         .height('100%')
         .backgroundColor(Color.Transparent)
+        .opacity(this.contentShown ? 1 : 0)
+        .translate({ y: this.contentShown ? 0 : 14 })
       }
       .width('100%')
       .height('100%')

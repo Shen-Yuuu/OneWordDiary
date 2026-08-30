@@ -23,9 +23,22 @@ export struct SettingsPage {
   };
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
+  @State private contentShown: boolean = false;
+  private revealTimer: number = -1;
 
   aboutToAppear(): void {
+    this.revealTimer = setTimeout(() => {
+      this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+        this.contentShown = true;
+      });
+    }, 30);
     this.viewModel.load();
+  }
+
+  aboutToDisappear(): void {
+    if (this.revealTimer !== -1) {
+      clearTimeout(this.revealTimer);
+    }
   }
 
   onPageShow(): void {
@@ -137,11 +150,17 @@ export struct SettingsPage {
               $r('app.color.text_primary') : $r('app.color.outline_soft')
           })
           .borderRadius(3)
+          .animation({ duration: 220, curve: Curve.EaseOut })
 
         Text(sample)
           .fontSize(27)
           .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_primary'))
+          .scale({
+            x: this.viewModel.stylePresetId === stylePresetId ? 1.08 : 1,
+            y: this.viewModel.stylePresetId === stylePresetId ? 1.08 : 1
+          })
+          .animation({ duration: 220, curve: Curve.EaseOut })
       }
 
       Text(label)
@@ -308,6 +327,8 @@ export struct SettingsPage {
           .width('100%')
           .height('100%')
           .padding({ left: 24, right: 24 })
+          .opacity(this.contentShown ? 1 : 0)
+          .translate({ y: this.contentShown ? 0 : 14 })
         }
 
         if (this.viewModel.uiState === SettingsUiState.CLEARING) {

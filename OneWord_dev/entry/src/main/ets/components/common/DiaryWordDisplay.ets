@@ -1,4 +1,4 @@
-import { AppLogger } from '../../utils/AppLogger';
+import { FallingChar, splitChars } from './FallingChar';
 
 @Component
 export struct DiaryWordDisplay {
@@ -9,63 +9,23 @@ export struct DiaryWordDisplay {
   @Prop isHero: boolean = false;
   @Prop accessibilityPrefix: string = '正文';
 
-  aboutToAppear(): void {
-    AppLogger.info(`font.word_display family=${this.fontFamily} hero=${this.isHero}`);
-  }
-
-  get contentFontSize(): number {
-    if (this.isHero) {
-      if (this.contentCount <= 1) {
-        return 210;
-      }
-      if (this.contentCount === 2) {
-        return 136;
-      }
-      return this.contentCount === 3 ? 92 : 66;
-    }
-    if (this.contentCount <= 1) {
-      return 88;
-    }
-    if (this.contentCount === 2) {
-      return 72;
-    }
-    return this.contentCount === 3 ? 58 : 48;
-  }
-
-  get contentLineHeight(): number {
-    if (this.isHero) {
-      if (this.contentCount <= 1) {
-        return 246;
-      }
-      if (this.contentCount === 2) {
-        return 164;
-      }
-      return this.contentCount === 3 ? 116 : 90;
-    }
-    if (this.contentCount <= 1) {
-      return 104;
-    }
-    if (this.contentCount === 2) {
-      return 88;
-    }
-    return this.contentCount === 3 ? 74 : 64;
-  }
-
   build() {
     Stack({ alignContent: Alignment.Center }) {
-      Text(this.content)
-        .width('100%')
-        .fontSize(this.contentFontSize)
-        .lineHeight(this.contentLineHeight)
-        .minFontScale(1)
-        .maxFontScale(1)
-        .fontFamily(this.fontFamily)
-        .fontWeight(FontWeight.Normal)
-        .fontColor($r('app.color.text_primary'))
-        .letterSpacing(this.contentCount > 1 ? 3 : 0)
-        .textAlign(TextAlign.Center)
-        .maxLines(1)
-        .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
+      Row({ space: this.contentCount > 1 ? 4 : 0 }) {
+        ForEach(splitChars(this.content), (char: string, index: number) => {
+          FallingChar({
+            char: char,
+            // 注意：字号必须内联三元（struct getter 传入子组件参数会得到 undefined）
+            charSize: this.isHero ?
+              (this.contentCount <= 1 ? 210 : this.contentCount === 2 ? 136 : this.contentCount === 3 ? 92 : 66) :
+              (this.contentCount <= 1 ? 88 : this.contentCount === 2 ? 72 : this.contentCount === 3 ? 58 : 48),
+            fontFamily: this.fontFamily,
+            delay: index * 70
+          })
+        })
+      }
+      .justifyContent(FlexAlign.Center)
+      .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
     }
     .width('100%')
     .height(this.stageHeight)

@@ -13,20 +13,20 @@ export struct ShareSingleCard {
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
-  get paperBackground(): Resource {
+  paperBackground(): Resource {
     return this.paperId === 'plain_ash_dev' ?
       $r('app.media.share_bg_plain') : $r('app.media.share_bg_warm');
   }
 
-  get textColor(): string {
+  textColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#242424' : '#282622';
   }
 
-  get secondaryColor(): string {
+  secondaryColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#777775' : '#8C8783';
   }
 
-  get accentColor(): string {
+  accentColor(): string {
     return this.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
   }
 
@@ -38,13 +38,13 @@ export struct ShareSingleCard {
     AppLogger.info(`style.share_card paperId=${this.paperId} fontId=${this.fontId}`);
   }
 
-  get contentCount(): number {
+  contentCount(): number {
     return this.graphemeCounter.count(this.content);
   }
 
   build() {
     Stack() {
-      Image(this.paperBackground)
+      Image(this.paperBackground())
         .width(286)
         .height(440)
         .objectFit(ImageFit.Fill)
@@ -54,7 +54,7 @@ export struct ShareSingleCard {
         .fontSize(12)
         .fontFamily('oneword_wenkai, serif')
         .fontWeight(FontWeight.Lighter)
-        .fontColor(this.secondaryColor)
+        .fontColor(this.secondaryColor())
         .letterSpacing(2.4)
         .minFontScale(1)
         .maxFontScale(1)
@@ -63,27 +63,27 @@ export struct ShareSingleCard {
       Column() {
         if (this.recordType === RecordType.WORD) {
           Stack({ alignContent: Alignment.Center }) {
-            if (this.contentCount <= 1) {
+            if (this.contentCount() <= 1) {
               Text(this.content)
                 .fontSize(96)
                 .fontFamily(this.recordFontFamily())
                 .fontWeight(FontWeight.Normal)
-                .fontColor(this.textColor)
+                .fontColor(this.textColor())
                 .textAlign(TextAlign.Center)
-            } else if (this.contentCount === 2) {
+            } else if (this.contentCount() === 2) {
               Text(this.content)
                 .fontSize(78)
                 .fontFamily(this.recordFontFamily())
                 .fontWeight(FontWeight.Normal)
-                .fontColor(this.textColor)
+                .fontColor(this.textColor())
                 .letterSpacing(3)
                 .textAlign(TextAlign.Center)
-            } else if (this.contentCount === 3) {
+            } else if (this.contentCount() === 3) {
               Text(this.content)
                 .fontSize(62)
                 .fontFamily(this.recordFontFamily())
                 .fontWeight(FontWeight.Normal)
-                .fontColor(this.textColor)
+                .fontColor(this.textColor())
                 .letterSpacing(3)
                 .textAlign(TextAlign.Center)
             } else {
@@ -91,7 +91,7 @@ export struct ShareSingleCard {
                 .fontSize(52)
                 .fontFamily(this.recordFontFamily())
                 .fontWeight(FontWeight.Normal)
-                .fontColor(this.textColor)
+                .fontColor(this.textColor())
                 .letterSpacing(3)
                 .textAlign(TextAlign.Center)
             }
@@ -104,20 +104,20 @@ export struct ShareSingleCard {
               Row()
                 .width(70)
                 .height(70)
-                .border({ width: 1, color: this.secondaryColor })
+                .border({ width: 1, color: this.secondaryColor() })
                 .borderRadius(35)
 
               Row()
                 .width(5)
                 .height(5)
-                .backgroundColor(this.accentColor)
+                .backgroundColor(this.accentColor())
                 .borderRadius(2.5)
             }
 
             Text('留白')
               .fontSize(14)
               .fontFamily(this.recordFontFamily())
-              .fontColor(this.secondaryColor)
+              .fontColor(this.secondaryColor())
               .letterSpacing(4)
               .minFontScale(1)
               .maxFontScale(1)
@@ -136,7 +136,7 @@ export struct ShareSingleCard {
           Row()
             .width(22)
             .height(22)
-            .backgroundColor(this.accentColor)
+            .backgroundColor(this.accentColor())
             .borderRadius(2)
 
           Text('字')
@@ -150,7 +150,7 @@ export struct ShareSingleCard {
         Text('一字日记')
           .fontSize(13)
           .fontFamily(this.recordFontFamily())
-          .fontColor(this.textColor)
+          .fontColor(this.textColor())
           .letterSpacing(3)
           .minFontScale(1)
           .maxFontScale(1)

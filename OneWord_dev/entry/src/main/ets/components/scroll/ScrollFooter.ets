@@ -20,15 +20,18 @@ export struct ScrollFooter {
 
         Text('长卷仍在展开…')
           .fontSize(13)
+          .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_secondary'))
       } else if (this.errorMessage.length > 0) {
         Text(this.errorMessage)
           .fontSize(14)
+          .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_secondary'))
 
         Button('重试')
           .height($r('app.float.touch_target_min'))
           .fontSize(14)
+          .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_primary'))
           .backgroundColor(Color.Transparent)
           .onClick(() => this.onRetry())
@@ -40,6 +43,7 @@ export struct ScrollFooter {
 
         Text('卷尾')
           .fontSize(13)
+          .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_secondary'))
           .letterSpacing(3)
       }

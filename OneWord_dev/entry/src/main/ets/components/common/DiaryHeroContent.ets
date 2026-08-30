@@ -1,6 +1,10 @@
+import { curves } from '@kit.ArkUI';
+import { FallingChar, splitChars } from './FallingChar';
+import { InkSeal } from './InkSeal';
 import { FontFamilies } from '../../constants/StyleTokens';
 import { RecordType } from '../../model/DailyRecord';
-import { AppLogger } from '../../utils/AppLogger';
+
+const CHAR_STAGGER_MS: number = 80;
 
 @Component
 export struct DiaryHeroContent {
@@ -10,58 +14,98 @@ export struct DiaryHeroContent {
   @Prop note: string = '';
   @Prop fontId: string = 'system_serif_dev';
   @Prop accessibilityPrefix: string = '日记正文';
+  @State private washPlayed: boolean = false;
+  @State private washGone: boolean = false;
+  private washTimer: number = -1;
+  private washClearTimer: number = -1;
 
   aboutToAppear(): void {
-    let staticRead = 'threw';
-    try {
-      staticRead = `ok(${String(FontFamilies.SERIF)})`;
-    } catch (err) {
-      staticRead = `threw(${(err as Error).message})`;
+    if (this.recordType !== RecordType.WORD) {
+      return;
     }
-    AppLogger.info(`font.hero_v4 staticRead=${staticRead} family=${this.recordFontFamily()}`);
+    this.washTimer = setTimeout(() => {
+      // 从一个小点快速放大变浅：墨在纸上迅速晕开
+      this.getUIContext().animateTo({ duration: 500, curve: Curve.EaseOut }, () => {
+        this.washPlayed = true;
+      });
+    }, 60);
+    this.washClearTimer = setTimeout(() => {
+      this.washGone = true;
+    }, 650);
+  }
+
+  aboutToDisappear(): void {
+    if (this.washTimer !== -1) {
+      clearTimeout(this.washTimer);
+    }
+    if (this.washClearTimer !== -1) {
+      clearTimeout(this.washClearTimer);
+    }
   }
 
   recordFontFamily(): string {
     return 'oneword_wenkai, serif';
   }
 
+  heroCharSize(): number {
+    if (this.contentCount <= 1) {
+      return 136;
+    }
+    if (this.contentCount === 2) {
+      return 76;
+    }
+    return this.contentCount === 3 ? 56 : 44;
+  }
+
+  charGap(): number {
+    return this.contentCount > 1 ? 5 : 0;
+  }
+
+  sealDelay(): number {
+    return 190 + this.contentCount * CHAR_STAGGER_MS + 80;
+  }
+
+  @Builder
+  private inkWash() {
+    if (this.recordType === RecordType.WORD && !this.washGone) {
+      Column()
+        .width(300)
+        .height(300)
+        .borderRadius(150)
+        .backgroundColor('#1C1814')
+        .scale({ x: this.washPlayed ? 1.25 : 0.06, y: this.washPlayed ? 1.25 : 0.06 })
+        .opacity(this.washPlayed ? 0 : 0.9)
+    }
+  }
+
   @Builder
   private recordedWord() {
-    if (this.contentCount <= 1) {
-      Text(this.content)
-        .fontSize(136)
-        .fontFamily(this.recordFontFamily())
-        .fontWeight(FontWeight.Normal)
-        .fontColor($r('app.color.text_primary'))
-        .textAlign(TextAlign.Center)
-        .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
-    } else if (this.contentCount === 2) {
-      Text(this.content)
-        .fontSize(76)
-        .fontFamily(this.recordFontFamily())
-        .fontWeight(FontWeight.Normal)
-        .fontColor($r('app.color.text_primary'))
-        .letterSpacing(3)
-        .textAlign(TextAlign.Center)
-        .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
-    } else if (this.contentCount === 3) {
-      Text(this.content)
-        .fontSize(56)
-        .fontFamily(this.recordFontFamily())
-        .fontWeight(FontWeight.Normal)
-        .fontColor($r('app.color.text_primary'))
-        .letterSpacing(3)
-        .textAlign(TextAlign.Center)
-        .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
+    if (this.contentCount <= 2) {
+      Column({ space: this.contentCount > 1 ? 10 : 0 }) {
+        ForEach(splitChars(this.content), (char: string, index: number) => {
+          FallingChar({
+            char: char,
+            charSize: this.heroCharSize(),
+            fontFamily: this.recordFontFamily(),
+            delay: 60 + index * CHAR_STAGGER_MS
+          })
+        })
+      }
+      .justifyContent(FlexAlign.Center)
+      .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
     } else {
-      Text(this.content)
-        .fontSize(44)
-        .fontFamily(this.recordFontFamily())
-        .fontWeight(FontWeight.Normal)
-        .fontColor($r('app.color.text_primary'))
-        .letterSpacing(3)
-        .textAlign(TextAlign.Center)
-        .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
+      Row({ space: this.charGap() }) {
+        ForEach(splitChars(this.content), (char: string, index: number) => {
+          FallingChar({
+            char: char,
+            charSize: this.heroCharSize(),
+            fontFamily: this.recordFontFamily(),
+            delay: 60 + index * CHAR_STAGGER_MS
+          })
+        })
+      }
+      .justifyContent(FlexAlign.Center)
+      .accessibilityText(`${this.accessibilityPrefix}，${this.content}`)
     }
   }
 
@@ -94,6 +138,8 @@ export struct DiaryHeroContent {
   build() {
     Column({ space: 10 }) {
       Stack({ alignContent: Alignment.Center }) {
+        this.inkWash()
+
         if (this.recordType === RecordType.BLANK) {
           this.recordedBlank()
         } else {
@@ -103,17 +149,7 @@ export struct DiaryHeroContent {
         Row() {
           Blank()
 
-          Text('已')
-            .width(40)
-            .height(40)
-            .fontSize(20)
-            .fontFamily(FontFamilies.SERIF_HEAVY)
-            .fontWeight(FontWeight.Bold)
-            .fontColor('#FFFFFF')
-            .backgroundColor($r('app.color.accent_vermilion'))
-            .textAlign(TextAlign.Center)
-            .borderRadius(3)
-            .accessibilityText('已收入长卷')
+          InkSeal({ delay: this.sealDelay() })
         }
         .width(260)
         .height(300)

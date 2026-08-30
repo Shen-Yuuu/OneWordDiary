@@ -3,6 +3,7 @@ export struct DiaryIconButton {
   @Prop icon: Resource = $r('app.media.ic_back');
   @Prop accessibilityLabel: string = '';
   @Prop bordered: boolean = false;
+  @State private pressed: boolean = false;
   onTap: () => void = () => {
   };
 
@@ -20,6 +21,16 @@ export struct DiaryIconButton {
     .border({
       width: this.bordered ? 1 : 0,
       color: $r('app.color.outline_soft')
+    })
+    .scale({ x: this.pressed ? 0.92 : 1, y: this.pressed ? 0.92 : 1 })
+    .opacity(this.pressed ? 0.7 : 1)
+    .animation({ duration: 120, curve: Curve.EaseOut })
+    .onTouch((event: TouchEvent) => {
+      if (event.type === TouchType.Down) {
+        this.pressed = true;
+      } else if (event.type === TouchType.Up || event.type === TouchType.Cancel) {
+        this.pressed = false;
+      }
     })
     .accessibilityText(this.accessibilityLabel)
     .onClick(() => this.onTap())

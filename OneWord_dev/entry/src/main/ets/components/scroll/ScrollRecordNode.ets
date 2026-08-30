@@ -52,84 +52,85 @@ export struct ScrollRecordNode {
   onOpen: (localDate: string) => void = (localDate: string) => {
   };
 
-  get recordFontFamily(): string {
+  recordFontFamily(): string {
     return 'oneword_wenkai, serif';
   }
 
-  get recordFontSize(): number {
+  recordFontSize(): number {
     if (this.item.contentCount <= 1) {
-      return 42;
+      return 27;
     }
     if (this.item.contentCount === 2) {
-      return 36;
+      return 22;
     }
-    return this.item.contentCount === 3 ? 32 : 28;
+    return this.item.contentCount === 3 ? 19 : 15;
   }
 
-  get recordLineHeight(): number {
+  recordLineHeight(): number {
     if (this.item.contentCount <= 1) {
-      return 48;
+      return 30;
     }
     if (this.item.contentCount === 2) {
-      return 44;
+      return 27;
     }
-    return this.item.contentCount === 3 ? 40 : 36;
+    return this.item.contentCount === 3 ? 24 : 20;
   }
 
-  get textColor(): ResourceColor {
+  textColor(): ResourceColor {
     return this.item.paperId === 'plain_ash_dev' ?
       $r('app.color.scroll_text_plain') : $r('app.color.scroll_text_warm');
   }
 
-  get secondaryColor(): ResourceColor {
+  secondaryColor(): ResourceColor {
     return this.item.paperId === 'plain_ash_dev' ?
       $r('app.color.scroll_secondary_plain') : $r('app.color.scroll_secondary_warm');
   }
 
-  get faintColor(): ResourceColor {
+  faintColor(): ResourceColor {
     return this.item.paperId === 'plain_ash_dev' ?
       $r('app.color.scroll_faint_plain') : $r('app.color.scroll_faint_warm');
   }
 
-  get lineColor(): ResourceColor {
+  lineColor(): ResourceColor {
     return this.item.paperId === 'plain_ash_dev' ?
       $r('app.color.scroll_line_plain') : $r('app.color.scroll_line_warm');
   }
 
-  get accentColor(): ResourceColor {
+
+  accentColor(): ResourceColor {
     return this.item.paperId === 'plain_ash_dev' ?
       $r('app.color.scroll_accent_plain') : $r('app.color.scroll_accent_warm');
   }
 
-  get visibleNote(): string {
+  visibleNote(): string {
     return this.item.note;
   }
 
-  get shouldShowNote(): boolean {
+  shouldShowNote(): boolean {
     return this.item.showNote && this.item.note.length > 0;
   }
 
-  get nodeHeight(): number {
-    return ScrollLayoutMetrics.nodeHeight(this.item.isMissing, this.shouldShowNote);
+  nodeHeight(): number {
+    return ScrollLayoutMetrics.nodeHeight(this.item.isMissing, this.shouldShowNote());
   }
 
-  get totalHeight(): number {
+  totalHeight(): number {
     return ScrollLayoutMetrics.totalHeight(
       this.item.isMissing,
-      this.shouldShowNote,
+      this.shouldShowNote(),
       this.item.showMonthHeader
     );
   }
 
   @Builder
   private noteContent(textAlign: TextAlign) {
-    Text(this.visibleNote)
+    Text(this.visibleNote())
       .width(104)
       .height(28)
       .fontSize(10)
       .lineHeight(14)
-      .fontFamily(this.recordFontFamily)
-      .fontColor(this.secondaryColor)
+      .fontFamily(this.recordFontFamily())
+      .fontColor(this.secondaryColor())
       .maxLines(2)
       .textAlign(textAlign)
       .minFontScale(1)
@@ -141,31 +142,32 @@ export struct ScrollRecordNode {
     Column({ space: 4 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(11)
-        .fontColor(this.secondaryColor)
+        .fontFamily(this.recordFontFamily())
+        .fontColor(this.secondaryColor())
         .letterSpacing(1)
 
       Text(this.item.content)
-        .fontSize(this.recordFontSize)
-        .lineHeight(this.recordLineHeight)
-        .fontFamily(this.recordFontFamily)
+        .fontSize(this.recordFontSize())
+        .lineHeight(this.recordLineHeight())
+        .fontFamily(this.recordFontFamily())
         .fontWeight(FontWeight.Normal)
-        .fontColor(this.textColor)
+        .fontColor(this.textColor())
         .letterSpacing(this.item.contentCount > 1 ? 2 : 0)
         .minFontScale(1)
         .maxFontScale(1)
         .maxLines(1)
 
-      if (this.shouldShowNote) {
+      if (this.shouldShowNote()) {
         this.noteContent(this.item.side === ScrollItemSide.LEFT ? TextAlign.End : TextAlign.Start)
       }
 
       Row()
         .width(32)
         .height(1)
-        .backgroundColor(this.lineColor)
+        .backgroundColor(this.lineColor())
     }
     .layoutWeight(1)
-    .height(this.nodeHeight)
+    .height(this.nodeHeight())
     .padding({ left: 12, right: 12, top: 4, bottom: 4 })
     .justifyContent(FlexAlign.Center)
     .alignItems(this.item.side === ScrollItemSide.LEFT ? HorizontalAlign.End : HorizontalAlign.Start)
@@ -176,17 +178,18 @@ export struct ScrollRecordNode {
     Column() {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(11)
-        .fontColor(this.secondaryColor)
+        .fontFamily(this.recordFontFamily())
+        .fontColor(this.secondaryColor())
         .letterSpacing(1)
 
       Blank()
 
-      if (this.shouldShowNote) {
+      if (this.shouldShowNote()) {
         this.noteContent(TextAlign.End)
       }
     }
     .layoutWeight(1)
-    .height(this.nodeHeight)
+    .height(this.nodeHeight())
     .padding({ left: 12, right: 12, top: 6, bottom: 6 })
     .alignItems(HorizontalAlign.End)
   }
@@ -196,13 +199,14 @@ export struct ScrollRecordNode {
     Column() {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(11)
-        .fontColor(this.faintColor)
+        .fontFamily(this.recordFontFamily())
+        .fontColor(this.faintColor())
         .letterSpacing(1)
 
       Blank()
     }
     .layoutWeight(1)
-    .height(this.nodeHeight)
+    .height(this.nodeHeight())
     .padding({ left: 12, right: 12, top: 6, bottom: 6 })
     .alignItems(HorizontalAlign.End)
   }
@@ -216,7 +220,7 @@ export struct ScrollRecordNode {
           .fontSize(18)
           .fontFamily('oneword_wenkai_medium, serif')
           .fontWeight(FontWeight.Medium)
-          .fontColor(this.textColor)
+          .fontColor(this.textColor())
           .letterSpacing(2.8)
           .textAlign(TextAlign.Center)
           .accessibilityLevel('yes')
@@ -228,8 +232,8 @@ export struct ScrollRecordNode {
           ScrollAxisNode({
             recordType: this.item.recordType,
             isMissing: true,
-            nodeHeight: this.nodeHeight,
-            lineColor: this.lineColor
+            nodeHeight: this.nodeHeight(),
+            lineColor: this.lineColor()
           })
           Blank().layoutWeight(1)
         } else if (this.item.recordType === RecordType.BLANK) {
@@ -237,8 +241,8 @@ export struct ScrollRecordNode {
           ScrollAxisNode({
             recordType: this.item.recordType,
             isMissing: false,
-            nodeHeight: this.nodeHeight,
-            lineColor: this.lineColor
+            nodeHeight: this.nodeHeight(),
+            lineColor: this.lineColor()
           })
           Blank().layoutWeight(1)
         } else {
@@ -247,8 +251,8 @@ export struct ScrollRecordNode {
             ScrollAxisNode({
               recordType: this.item.recordType,
               isMissing: false,
-              nodeHeight: this.nodeHeight,
-              lineColor: this.lineColor
+              nodeHeight: this.nodeHeight(),
+              lineColor: this.lineColor()
             })
             Blank().layoutWeight(1)
           } else {
@@ -256,15 +260,15 @@ export struct ScrollRecordNode {
             ScrollAxisNode({
               recordType: this.item.recordType,
               isMissing: false,
-              nodeHeight: this.nodeHeight,
-              lineColor: this.lineColor
+              nodeHeight: this.nodeHeight(),
+              lineColor: this.lineColor()
             })
             this.wordContent()
           }
         }
       }
       .width('100%')
-      .height(this.nodeHeight)
+      .height(this.nodeHeight())
       .alignItems(VerticalAlign.Center)
       .onClick(() => {
         if (this.isInteractive && !this.item.isMissing) {
@@ -276,9 +280,9 @@ export struct ScrollRecordNode {
         `${this.item.localDate}，没有记录` :
         this.item.recordType === RecordType.BLANK ?
           `${this.item.localDate}，正式留白` :
-          `${this.item.localDate}，${this.item.content}${this.shouldShowNote ? `，备注，${this.visibleNote}` : ''}`)
+          `${this.item.localDate}，${this.item.content}${this.shouldShowNote() ? `，备注，${this.visibleNote()}` : ''}`)
     }
     .width('100%')
-    .height(this.totalHeight)
+    .height(this.totalHeight())
   }
 }

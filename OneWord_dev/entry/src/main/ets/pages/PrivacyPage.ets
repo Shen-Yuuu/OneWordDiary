@@ -4,8 +4,24 @@ import { PaperBackdrop } from '../components/common/PaperBackdrop';
 @Component
 export struct PrivacyPage {
   @Prop paperId: string = 'warm_paper_dev';
+  @State private contentShown: boolean = false;
+  private revealTimer: number = -1;
   onBack: () => void = () => {
   };
+
+  aboutToAppear(): void {
+    this.revealTimer = setTimeout(() => {
+      this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+        this.contentShown = true;
+      });
+    }, 30);
+  }
+
+  aboutToDisappear(): void {
+    if (this.revealTimer !== -1) {
+      clearTimeout(this.revealTimer);
+    }
+  }
 
   @Builder
   private privacyItem(title: string, content: string) {
@@ -86,6 +102,8 @@ export struct PrivacyPage {
         .width('100%')
         .height('100%')
         .padding({ left: 24, right: 24 })
+        .opacity(this.contentShown ? 1 : 0)
+        .translate({ y: this.contentShown ? 0 : 14 })
       }
       .width('100%')
       .height('100%')

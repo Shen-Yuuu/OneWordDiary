@@ -27,15 +27,25 @@ export struct SharePreviewPage {
   );
   private readonly imageService: ShareImageService = new ShareImageService();
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
+  @State private contentShown: boolean = false;
+  private revealTimer: number = -1;
   onBack: () => void = () => {
   };
 
   aboutToAppear(): void {
+    this.revealTimer = setTimeout(() => {
+      this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+        this.contentShown = true;
+      });
+    }, 30);
     this.selectedMode = this.initialMode;
     this.loadShareData();
   }
 
   aboutToDisappear(): void {
+    if (this.revealTimer !== -1) {
+      clearTimeout(this.revealTimer);
+    }
     this.imageService.cleanup();
   }
 
@@ -79,7 +89,9 @@ export struct SharePreviewPage {
   private selectMode(mode: DiaryShareMode): void {
     this.viewModel.selectMode(mode);
     if (this.viewModel.mode === mode) {
-      this.selectedMode = mode;
+      this.getUIContext().animateTo({ duration: 240, curve: Curve.EaseOut }, () => {
+        this.selectedMode = mode;
+      });
     }
   }
 
@@ -92,6 +104,7 @@ export struct SharePreviewPage {
       .fontColor(this.selectedMode === mode ? $r('app.color.on_ink_button') : $r('app.color.text_secondary'))
       .backgroundColor(this.selectedMode === mode ? $r('app.color.ink_button') : Color.Transparent)
       .borderRadius(17)
+      .animation({ duration: 220, curve: Curve.EaseOut })
       .enabled(!this.viewModel.isBusy)
       .onClick(() => this.selectMode(mode))
   }
@@ -106,12 +119,14 @@ export struct SharePreviewPage {
         fontId: this.viewModel.singleData.fontId,
         paperId: this.paperId
       })
+        .transition(TransitionEffect.OPACITY.animation({ duration: 240, curve: Curve.EaseOut }))
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
       ShareScrollCard({
         days: this.viewModel.sevenDays,
         fontId: this.viewModel.sevenFontId,
         paperId: this.paperId
       })
+        .transition(TransitionEffect.OPACITY.animation({ duration: 240, curve: Curve.EaseOut }))
     }
   }
 
@@ -211,6 +226,8 @@ export struct SharePreviewPage {
         .width('100%')
         .height('100%')
         .padding({ left: 24, right: 24 })
+        .opacity(this.contentShown ? 1 : 0)
+        .translate({ y: this.contentShown ? 0 : 14 })
       }
       .width('100%')
       .height('100%')

@@ -18,6 +18,8 @@ export struct ScrollPage {
     new DiaryDateFormatter()
   );
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
+  @State private contentShown: boolean = false;
+  private revealTimer: number = -1;
   onBack: () => void = () => {
   };
   onOpenDetail: (localDate: string) => void = (localDate: string) => {
@@ -26,9 +28,36 @@ export struct ScrollPage {
   };
 
   aboutToAppear(): void {
+    this.revealTimer = setTimeout(() => {
+      this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+        this.contentShown = true;
+      });
+    }, 30);
     if (this.viewModel.uiState === ScrollUiState.INITIAL_LOADING && this.viewModel.dataSource.totalCount() === 0) {
       this.viewModel.load();
     }
+  }
+
+  aboutToDisappear(): void {
+    if (this.revealTimer !== -1) {
+      clearTimeout(this.revealTimer);
+    }
+  }
+
+  @Builder
+  private edgeFade(top: boolean) {
+    Row()
+      .width('100%')
+      .height(26)
+      .linearGradient({
+        angle: top ? 90 : 270,
+        // 注意：8 位 hex 在 ArkUI 中是 #AARRGGBB（透明度在前），用 rgba() 规避歧义
+        colors: [
+          [this.paperId === 'plain_ash_dev' ? 'rgba(239, 239, 234, 1)' : 'rgba(253, 248, 247, 1)', 0],
+          [this.paperId === 'plain_ash_dev' ? 'rgba(239, 239, 234, 0)' : 'rgba(253, 248, 247, 0)', 1]
+        ]
+      })
+      .hitTestBehavior(HitTestMode.None)
   }
 
   build() {
@@ -54,6 +83,7 @@ export struct ScrollPage {
 
               Text(`已留下 ${this.viewModel.totalCount} 天`)
                 .fontSize(11)
+                .fontFamily('oneword_wenkai, serif')
                 .fontColor($r('app.color.text_tertiary'))
                 .letterSpacing(1.2)
             }
@@ -105,6 +135,7 @@ export struct ScrollPage {
 
               Text('今天落下的字，会从这里慢慢展开。')
                 .fontSize(14)
+                .fontFamily('oneword_wenkai, serif')
                 .fontColor($r('app.color.text_secondary'))
                 .textAlign(TextAlign.Center)
 
@@ -112,6 +143,7 @@ export struct ScrollPage {
                 .width($r('app.float.primary_button_width'))
                 .height($r('app.float.primary_button_height'))
                 .fontSize(14)
+                .fontFamily('oneword_wenkai, serif')
                 .fontColor($r('app.color.on_ink_button'))
                 .backgroundColor($r('app.color.ink_button'))
                 .borderRadius(26)
@@ -155,11 +187,15 @@ export struct ScrollPage {
             .scrollBar(BarState.Off)
             .edgeEffect(EdgeEffect.Spring)
             .onReachEnd(() => this.viewModel.loadMore())
+            .overlay(this.edgeFade(true), { align: Alignment.Top })
+            .overlay(this.edgeFade(false), { align: Alignment.Bottom })
           }
         }
         .width('100%')
         .height('100%')
         .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+        .opacity(this.contentShown ? 1 : 0)
+        .translate({ y: this.contentShown ? 0 : 14 })
       }
       .width('100%')
       .height('100%')

@@ -1,3 +1,4 @@
+import { HapticFeedback } from '../../utils/HapticFeedback';
 import { DiaryIconButton } from '../common/DiaryIconButton';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
 import { DiaryWordDisplay } from '../common/DiaryWordDisplay';
@@ -19,16 +20,6 @@ export struct TodayConfirmation {
   };
   onCancel: () => void = () => {
   };
-
-  get primaryLabel(): string {
-    if (this.errorMessage.length > 0) {
-      return '重新保存';
-    }
-    if (this.isRevision) {
-      return '确认定稿';
-    }
-    return this.draftType === RecordType.BLANK ? '确认留白' : '收入长卷';
-  }
 
 
   build() {
@@ -155,9 +146,14 @@ export struct TodayConfirmation {
         }
 
         DiaryPrimaryButton({
-          label: this.primaryLabel,
+          // 注意：按钮文案必须内联三元（struct getter 传入子组件参数会得到 undefined）
+          label: this.errorMessage.length > 0 ? '重新保存' :
+            (this.isRevision ? '确认定稿' : (this.draftType === RecordType.BLANK ? '确认留白' : '收入长卷')),
           isEnabled: !this.isBusy,
-          onTap: () => this.onConfirm()
+          onTap: () => {
+            HapticFeedback.inkDrop();
+            this.onConfirm();
+          }
         })
 
         Button(this.errorMessage.length > 0 ? '返回修改' : '再想想')

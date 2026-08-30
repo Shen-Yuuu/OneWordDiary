@@ -45,15 +45,6 @@ struct Index {
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
 
-  get recordCanRevise(): boolean {
-    return this.viewModel.uiState === TodayUiState.TODAY_RECORDED_WORD_EDITABLE ||
-      this.viewModel.uiState === TodayUiState.TODAY_RECORDED_BLANK_EDITABLE;
-  }
-
-  get finalLabel(): string {
-    return this.viewModel.uiState === TodayUiState.TODAY_FINAL_REVISED ? '已经定稿' : '今日已定稿';
-  }
-
   aboutToAppear(): void {
     this.viewModel.load();
   }
@@ -240,9 +231,10 @@ struct Index {
                 contentCount: this.viewModel.recordDisplayContentCount,
                 note: this.viewModel.recordDisplayNote,
                 fontId: this.viewModel.recordFontId,
-                canRevise: this.recordCanRevise,
+                canRevise: this.viewModel.uiState === TodayUiState.TODAY_RECORDED_WORD_EDITABLE ||
+                  this.viewModel.uiState === TodayUiState.TODAY_RECORDED_BLANK_EDITABLE,
                 revisionDeadline: this.viewModel.revisionDeadlineLabel,
-                finalLabel: this.finalLabel,
+                finalLabel: this.viewModel.uiState === TodayUiState.TODAY_FINAL_REVISED ? '已经定稿' : '今日已定稿',
                 recordCount: this.viewModel.recordCount,
                 onRevise: () => this.viewModel.startRevision(),
                 onShare: () => this.openSingleShare(this.viewModel.localDate)

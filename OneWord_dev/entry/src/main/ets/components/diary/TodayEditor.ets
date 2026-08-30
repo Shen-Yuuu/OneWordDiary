@@ -26,14 +26,14 @@ export struct TodayEditor {
   onCancelRevision: () => void = () => {
   };
 
-  get contentFontSize(): number {
+  contentFontSize(): number {
     if (this.contentCount <= 1) {
-      return 108;
+      return 50;
     }
     if (this.contentCount === 2) {
-      return 82;
+      return 40;
     }
-    return this.contentCount === 3 ? 66 : 54;
+    return this.contentCount === 3 ? 33 : 28;
   }
 
   build() {
@@ -48,7 +48,7 @@ export struct TodayEditor {
         TextInput({ text: this.content, placeholder: '一至四字' })
           .width('100%')
           .height(140)
-          .fontSize(this.contentFontSize)
+          .fontSize(this.contentFontSize())
           .fontWeight(FontWeight.Medium)
           .fontFamily('oneword_wenkai_medium, serif')
           .fontColor($r('app.color.text_primary'))
@@ -63,6 +63,7 @@ export struct TodayEditor {
 
         Text(`${this.contentCount} / 4`)
           .fontSize(13)
+          .margin({ top: -40 })
           .fontColor(this.contentError.length > 0 ? $r('app.color.error_danger') : $r('app.color.text_tertiary'))
           .letterSpacing(1.4)
 
@@ -78,37 +79,35 @@ export struct TodayEditor {
       .alignItems(HorizontalAlign.Center)
 
       Column({ space: 4 }) {
-        Row() {
-          Text('备注（可选）')
-            .fontSize(14)
-            .fontColor($r('app.color.text_secondary'))
-
-          Blank()
-
-          Text(`${this.noteCount} / 30`)
-            .fontSize(13)
-            .fontColor(this.noteError.length > 0 ? $r('app.color.error_danger') : $r('app.color.text_tertiary'))
-        }
-        .width('100%')
-
-        TextInput({ text: this.note, placeholder: '为今天留一句注脚' })
+        TextInput({ text: this.note, placeholder: '为今天留一句注脚（可选）' })
           .width('100%')
-          .height(48)
-          .fontSize(17)
+          .height(110)
+          .fontSize(15)
+          .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_primary'))
-          .placeholderColor($r('app.color.text_tertiary'))
-          .textAlign(TextAlign.Start)
+          .placeholderColor($r('app.color.outline_soft'))
+          .placeholderFont({ size: 15, family: 'oneword_wenkai, serif' })
+          .textAlign(TextAlign.Center)
           .caretColor($r('app.color.accent_vermilion'))
           .backgroundColor(Color.Transparent)
-          .border({ width: { bottom: 1 }, color: $r('app.color.outline_soft') })
+          .border({ width: 0 })
+          .padding({ left: 0, right: 0, top: 6 })
           .accessibilityText('今日备注，可选，最多三十个字，不能换行')
           .onChange((value: string) => this.onNoteChange(value))
+
+        Text(`${this.noteCount} / 30`)
+          .fontSize(11)
+          .margin({ top: -40 })
+          .fontColor(this.noteError.length > 0 ? $r('app.color.error_danger') : $r('app.color.text_tertiary'))
+          .width('100%')
+          .textAlign(TextAlign.End)
 
         if (this.noteError.length > 0) {
           Text(this.noteError)
             .fontSize(13)
             .fontColor($r('app.color.error_danger'))
-            .textAlign(TextAlign.Start)
+            .width('100%')
+            .textAlign(TextAlign.End)
             .accessibilityLevel('yes')
         }
       }
