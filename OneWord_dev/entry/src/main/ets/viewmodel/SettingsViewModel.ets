@@ -1,4 +1,5 @@
 import { StylePresetId } from '../constants/StyleTokens';
+import { BusinessError } from '@kit.BasicServicesKit';
 import { DEFAULT_APP_SETTINGS, ReminderSettings } from '../model/Settings';
 import { SettingsUiState } from '../model/SettingsUiState';
 import { SettingsRepository } from '../repository/SettingsRepository';
@@ -98,31 +99,41 @@ export class SettingsViewModel {
     if (this.isBusy) {
       return;
     }
+    AppLogger.info('reminder.enable start enabled=' + this.reminder.enabled + ' reminderId=' + this.reminder.reminderId + ' hour=' + this.reminder.hour + ' minute=' + this.reminder.minute);
     this.uiState = SettingsUiState.REMINDER_REQUESTING_PERMISSION;
     this.errorMessage = '';
     const attempted = this.withPermissionRequested(this.reminder);
     try {
       await this.settingsRepository.saveReminder(attempted);
       this.reminder = attempted;
-      if (!await this.reminderScheduler.isNotificationEnabled()) {
+      const notificationEnabledBeforeRequest = await this.reminderScheduler.isNotificationEnabled();
+      AppLogger.info('reminder.enable notification_before_request enabled=' + notificationEnabledBeforeRequest);
+      if (!notificationEnabledBeforeRequest) {
         try {
           await this.reminderScheduler.requestNotificationPermission();
         } catch (error) {
+          const businessError = error as BusinessError;
+          AppLogger.error('reminder.enable notification_request_fail code=' + businessError.code);
           this.uiState = SettingsUiState.REMINDER_PERMISSION_DENIED;
           return;
         }
       }
-      if (!await this.reminderScheduler.isNotificationEnabled()) {
+      const notificationEnabledAfterRequest = await this.reminderScheduler.isNotificationEnabled();
+      AppLogger.info('reminder.enable notification_after_request enabled=' + notificationEnabledAfterRequest);
+      if (!notificationEnabledAfterRequest) {
         this.uiState = SettingsUiState.REMINDER_PERMISSION_DENIED;
         return;
       }
       if (this.reminder.enabled && this.reminder.reminderId >= 0 &&
         await this.reminderScheduler.hasValidReminder()) {
+        AppLogger.info('reminder.enable reuse_existing reminderId=' + this.reminder.reminderId);
         this.uiState = SettingsUiState.READY;
         return;
       }
       await this.publishAndSave(this.reminder.hour, this.reminder.minute);
     } catch (error) {
+      const businessError = error as BusinessError;
+      AppLogger.error('reminder.enable fail state=' + this.uiState + ' reminderId=' + this.reminder.reminderId + ' code=' + businessError.code);
       const pending: ReminderSettings = {
         enabled: true,
         hour: this.reminder.hour,
@@ -190,7 +201,8 @@ export class SettingsViewModel {
         await this.settingsRepository.saveReminder(changed);
         this.reminder = changed;
         this.uiState = SettingsUiState.REMINDER_DISABLED_BY_SYSTEM;
-        return;
+      AppLogger.info('reminder.refresh branch=notification_disabled');
+      return;
       }
       newReminderId = await this.reminderScheduler.publishDaily(hour, minute);
       await this.reminderScheduler.cancel(previous.reminderId);
@@ -249,6 +261,7 @@ export class SettingsViewModel {
   }
 
   private async publishAndSave(hour: number, minute: number): Promise<void> {
+    AppLogger.info('reminder.publish_and_save start hour=' + hour + ' minute=' + minute);
     const reminderId = await this.reminderScheduler.publishDaily(hour, minute);
     const enabled: ReminderSettings = {
       enabled: true,
@@ -262,28 +275,36 @@ export class SettingsViewModel {
       this.reminder = enabled;
       this.uiState = SettingsUiState.READY;
       this.errorMessage = '';
+      AppLogger.info('reminder.publish_and_save success reminderId=' + reminderId);
     } catch (error) {
+      const businessError = error as BusinessError;
+      AppLogger.error('reminder.publish_and_save persist_fail reminderId=' + reminderId + ' code=' + businessError.code);
       await this.reminderScheduler.cancel(reminderId);
       throw new Error('reminder settings persistence failed');
     }
   }
 
   private async refreshReminderState(): Promise<void> {
+    AppLogger.info('reminder.refresh start enabled=' + this.reminder.enabled + ' reminderId=' + this.reminder.reminderId);
     if (!this.reminder.enabled) {
       this.uiState = SettingsUiState.READY;
       this.errorMessage = '';
+      AppLogger.info('reminder.refresh branch=disabled_ready');
       return;
     }
     if (!await this.reminderScheduler.isNotificationEnabled()) {
       this.uiState = SettingsUiState.REMINDER_DISABLED_BY_SYSTEM;
+      AppLogger.info('reminder.refresh branch=notification_disabled');
       return;
     }
     if (!await this.reminderScheduler.hasValidReminder()) {
       this.uiState = SettingsUiState.REMINDER_SCHEDULE_ERROR;
+      AppLogger.info('reminder.refresh branch=no_valid_reminder');
       return;
     }
     this.uiState = SettingsUiState.READY;
     this.errorMessage = '';
+    AppLogger.info('reminder.refresh branch=ready');
   }
 
   private withPermissionRequested(reminder: ReminderSettings): ReminderSettings {
