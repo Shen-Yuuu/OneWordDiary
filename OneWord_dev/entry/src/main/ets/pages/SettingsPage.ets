@@ -24,6 +24,7 @@ export struct SettingsPage {
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private contentShown: boolean = false;
+  @State private reminderTimeLabel: string = '21:00';
   private revealTimer: number = -1;
 
   aboutToAppear(): void {
@@ -32,7 +33,7 @@ export struct SettingsPage {
         this.contentShown = true;
       });
     }, 30);
-    this.viewModel.load();
+    void this.loadSettings();
   }
 
   aboutToDisappear(): void {
@@ -43,8 +44,13 @@ export struct SettingsPage {
 
   onPageShow(): void {
     if (this.viewModel.uiState !== SettingsUiState.LOADING) {
-      this.viewModel.load();
+      void this.loadSettings();
     }
+  }
+
+  private async loadSettings(): Promise<void> {
+    await this.viewModel.load();
+    this.reminderTimeLabel = this.viewModel.reminderTimeLabel;
   }
 
   private toggleReminder(isOn: boolean): void {
@@ -79,9 +85,21 @@ export struct SettingsPage {
       selected: selected,
       useMilitaryTime: true,
       onAccept: (value: TimePickerResult) => {
-        this.viewModel.changeReminderTime(value.hour, value.minute);
+        void this.updateReminderTime(value.hour, value.minute);
       }
     });
+  }
+
+  private async updateReminderTime(hour: number, minute: number): Promise<void> {
+    this.reminderTimeLabel = this.formatReminderTime(hour, minute);
+    await this.viewModel.changeReminderTime(hour, minute);
+    this.reminderTimeLabel = this.viewModel.reminderTimeLabel;
+  }
+
+  private formatReminderTime(hour: number, minute: number): string {
+    const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
+    const formattedMinute = minute < 10 ? `0${minute}` : `${minute}`;
+    return `${formattedHour}:${formattedMinute}`;
   }
 
   private showFirstClearConfirmation(): void {
@@ -180,6 +198,29 @@ export struct SettingsPage {
   }
 
   @Builder
+  private reminderTimeRow() {
+    Row() {
+      Text('提醒时间')
+        .fontSize(17)
+        .fontColor($r('app.color.text_primary'))
+
+      Row({ space: 8 }) {
+        Text(this.reminderTimeLabel)
+          .fontSize(15)
+          .fontColor($r('app.color.text_secondary'))
+        Text('›')
+          .fontSize(24)
+          .fontColor($r('app.color.text_tertiary'))
+      }
+    }
+    .width('100%')
+    .height(58)
+    .justifyContent(FlexAlign.SpaceBetween)
+    .alignItems(VerticalAlign.Center)
+    .onClick(() => this.showTimePicker())
+  }
+
+  @Builder
   private navigationRow(title: string, value: string, onTap: () => void) {
     Row() {
       Text(title)
@@ -270,7 +311,7 @@ export struct SettingsPage {
                 .justifyContent(FlexAlign.SpaceBetween)
                 .alignItems(VerticalAlign.Center)
 
-                this.navigationRow('提醒时间', this.viewModel.reminderTimeLabel, () => this.showTimePicker())
+                this.reminderTimeRow()
 
                 Text(this.viewModel.reminderStatusMessage)
                   .width('100%')
