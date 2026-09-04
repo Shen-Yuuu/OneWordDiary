@@ -14,6 +14,7 @@ import { TodayViewModel } from '../main/ets/viewmodel/TodayViewModel';
 
 class MemorySettingsRepository implements SettingsRepository {
   private settings: AppSettings = DEFAULT_APP_SETTINGS;
+  privacyPolicyAcceptedVersion: string = '';
   private resetPending: boolean = false;
 
   async load(): Promise<AppSettings> {
@@ -23,19 +24,30 @@ class MemorySettingsRepository implements SettingsRepository {
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
     this.settings = {
       stylePresetId: stylePresetId,
-      reminder: this.settings.reminder
+      reminder: this.settings.reminder,
+      privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
-      reminder: reminder
+      reminder: reminder,
+      privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
   }
 
   async isResetPending(): Promise<boolean> {
     return this.resetPending;
+  }
+
+  async savePrivacyPolicyAcceptedVersion(version: string): Promise<void> {
+    this.privacyPolicyAcceptedVersion = version;
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      reminder: this.settings.reminder,
+      privacyPolicyAcceptedVersion: version
+    };
   }
 
   async markResetPending(): Promise<void> {

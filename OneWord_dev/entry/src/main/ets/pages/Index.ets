@@ -1,5 +1,7 @@
+import { common, Want } from '@kit.AbilityKit';
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
+import { PrivacyConsentGate } from '../components/privacy/PrivacyConsentGate';
 import { TodayConfirmation } from '../components/diary/TodayConfirmation';
 import { TodayEditor } from '../components/diary/TodayEditor';
 import { TodayHeader } from '../components/diary/TodayHeader';
@@ -14,6 +16,7 @@ import {
   ShareRouteParam
 } from '../model/AppRoute';
 import { DiaryShareMode } from '../model/ShareModel';
+import { PRIVACY_POLICY_URL, PRIVACY_POLICY_VERSION } from '../model/PrivacyPolicy';
 import { TodayUiState } from '../model/TodayUiState';
 import { BackupPage } from './BackupPage';
 import { DetailPage } from './DetailPage';
@@ -25,9 +28,11 @@ import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SystemCompletionFeedback } from '../service/CompletionFeedback';
 import { DiaryTextRules } from '../service/DiaryTextRules';
 import { SystemClock } from '../utils/Clock';
+import { AppLogger } from '../utils/AppLogger';
 
 import { SystemLocalTimeResolver } from '../utils/LocalTimeResolver';
 import { TodayViewModel } from '../viewmodel/TodayViewModel';
+import { PrivacyConsentViewModel } from '../viewmodel/PrivacyConsentViewModel';
 
 @Entry
 @Component
@@ -42,11 +47,16 @@ struct Index {
     new DiaryTextRules(),
     new SystemCompletionFeedback()
   );
+  @State private privacyConsentViewModel: PrivacyConsentViewModel = new PrivacyConsentViewModel(
+    AppServiceContainer.getSettingsRepository(),
+    PRIVACY_POLICY_VERSION
+  );
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
 
   aboutToAppear(): void {
     this.viewModel.load();
+    this.privacyConsentViewModel.load();
   }
 
   onPageShow(): void {
@@ -125,6 +135,37 @@ struct Index {
     this.navPathStack.pop();
   }
 
+
+  private async openOfficialPrivacyPolicy(): Promise<void> {
+    const abilityContext = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    if (abilityContext === undefined) {
+      AppLogger.error('privacy_policy.open_failed context_unavailable');
+      return;
+    }
+    const want: Want = {
+      action: 'ohos.want.action.viewData',
+      uri: PRIVACY_POLICY_URL,
+      entities: ['entity.system.browsable']
+    };
+    try {
+      await abilityContext.startAbility(want);
+    } catch (error) {
+      AppLogger.error('privacy_policy.open_failed');
+    }
+  }
+
+  private async declinePrivacyPolicy(): Promise<void> {
+    const abilityContext = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    if (abilityContext === undefined) {
+      AppLogger.error('privacy_policy.exit_failed context_unavailable');
+      return;
+    }
+    try {
+      await abilityContext.terminateSelf();
+    } catch (error) {
+      AppLogger.error('privacy_policy.exit_failed');
+    }
+  }
   @Builder
   private routeBuilder(name: string, param: Object) {
     if (name === AppRouteName.SCROLL) {
@@ -160,7 +201,8 @@ struct Index {
     } else if (name === AppRouteName.PRIVACY && param instanceof PrivacyRouteParam) {
       PrivacyPage({
         paperId: param.paperId,
-        onBack: () => this.closeDestination()
+        onBack: () => this.closeDestination(),
+        onOpenOfficialPolicy: () => this.openOfficialPrivacyPolicy()
       })
     }
   }
@@ -169,6 +211,16 @@ struct Index {
   build() {
     Navigation(this.navPathStack) {
       Stack() {
+        if (this.privacyConsentViewModel.needsConsent) {
+          PrivacyConsentGate({
+            isLoading: this.privacyConsentViewModel.isLoading,
+            isSaving: this.privacyConsentViewModel.isSaving,
+            errorMessage: this.privacyConsentViewModel.errorMessage,
+            onViewFullPolicy: () => this.openOfficialPrivacyPolicy(),
+            onDeclineAndExit: () => this.declinePrivacyPolicy(),
+            onAcceptAndContinue: () => this.privacyConsentViewModel.accept()
+          })
+        } else {
         PaperBackdrop({ paperId: this.paperId })
 
         if (this.viewModel.uiState === TodayUiState.APP_INITIALIZING) {
@@ -253,6 +305,7 @@ struct Index {
 
         }
       }
+        }
       .width('100%')
       .height('100%')
       .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))

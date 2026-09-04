@@ -12,6 +12,7 @@ import { FixedClock } from '../main/ets/utils/Clock';
 
 class MemoryBackupSettingsRepository implements SettingsRepository {
   stylePresetId: StylePresetId = StylePresetId.PAPER_INK;
+  privacyPolicyAcceptedVersion: string = '';
 
   async load(): Promise<AppSettings> {
     return {
@@ -22,7 +23,8 @@ class MemoryBackupSettingsRepository implements SettingsRepository {
         minute: DEFAULT_APP_SETTINGS.reminder.minute,
         reminderId: DEFAULT_APP_SETTINGS.reminder.reminderId,
         permissionRequested: DEFAULT_APP_SETTINGS.reminder.permissionRequested
-      }
+      },
+      privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
   }
 
@@ -31,6 +33,10 @@ class MemoryBackupSettingsRepository implements SettingsRepository {
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {
+  }
+
+  async savePrivacyPolicyAcceptedVersion(version: string): Promise<void> {
+    this.privacyPolicyAcceptedVersion = version;
   }
 
   async isResetPending(): Promise<boolean> {

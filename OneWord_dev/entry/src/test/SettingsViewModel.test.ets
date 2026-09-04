@@ -12,31 +12,44 @@ import { SettingsViewModel } from '../main/ets/viewmodel/SettingsViewModel';
 class MemorySettingsRepository implements SettingsRepository {
   settings: AppSettings = {
     stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
-    reminder: MemorySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder)
+    reminder: MemorySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder),
+    privacyPolicyAcceptedVersion: ''
   };
+  privacyPolicyAcceptedVersion: string = '';
   resetPending: boolean = false;
 
   async load(): Promise<AppSettings> {
     return {
       stylePresetId: this.settings.stylePresetId,
-      reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder)
+      reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
+      privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
   }
 
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
     this.settings = {
       stylePresetId: stylePresetId,
-      reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder)
+      reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
+      privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
-      reminder: MemorySettingsRepository.cloneReminder(reminder)
+      reminder: MemorySettingsRepository.cloneReminder(reminder),
+      privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
   }
 
+  async savePrivacyPolicyAcceptedVersion(version: string): Promise<void> {
+    this.privacyPolicyAcceptedVersion = version;
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
+      privacyPolicyAcceptedVersion: version
+    };
+  }
   async isResetPending(): Promise<boolean> {
     return this.resetPending;
   }
@@ -48,8 +61,10 @@ class MemorySettingsRepository implements SettingsRepository {
   async reset(): Promise<void> {
     this.settings = {
       stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
-      reminder: MemorySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder)
+      reminder: MemorySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder),
+      privacyPolicyAcceptedVersion: ''
     };
+    this.privacyPolicyAcceptedVersion = '';
     this.resetPending = false;
   }
 

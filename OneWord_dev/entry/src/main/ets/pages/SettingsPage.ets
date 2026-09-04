@@ -56,7 +56,7 @@ export struct SettingsPage {
   }
 
   private showReminderExplanation(): void {
-    AlertDialog.show({
+    this.getUIContext().showAlertDialog({
       title: '开启每日提醒？',
       message: '每天在设定时间轻轻提醒你回望今天。即使当天已经记录，提醒仍会出现，且不会包含日记内容。',
       primaryButton: {
@@ -75,7 +75,7 @@ export struct SettingsPage {
   private showTimePicker(): void {
     const selected = new Date();
     selected.setHours(this.viewModel.reminder.hour, this.viewModel.reminder.minute, 0, 0);
-    TimePickerDialog.show({
+    this.getUIContext().showTimePickerDialog({
       selected: selected,
       useMilitaryTime: true,
       onAccept: (value: TimePickerResult) => {
@@ -85,7 +85,7 @@ export struct SettingsPage {
   }
 
   private showFirstClearConfirmation(): void {
-    AlertDialog.show({
+    this.getUIContext().showAlertDialog({
       title: '清空全部数据？',
       message: '这会删除所有日记，并重置风格和每日提醒。',
       primaryButton: {
@@ -102,7 +102,7 @@ export struct SettingsPage {
   }
 
   private showFinalClearConfirmation(): void {
-    AlertDialog.show({
+    this.getUIContext().showAlertDialog({
       title: '确认永久清空？',
       message: '设备上的全部记录将永久删除且无法恢复。此操作无法撤销。',
       primaryButton: {
@@ -120,7 +120,11 @@ export struct SettingsPage {
 
   private async performClear(): Promise<void> {
     if (await this.viewModel.clearAll()) {
-      this.getUIContext().getPromptAction().showToast({ message: '已回到最初的一页' });
+      try {
+        this.getUIContext().getPromptAction().showToast({ message: '已回到最初的一页' });
+      } catch (error) {
+        // 提示失败不影响清空结果
+      }
       this.onClearComplete();
     }
   }
@@ -294,7 +298,7 @@ export struct SettingsPage {
 
                 this.sectionTitle('关于数据')
                 this.navigationRow('备份与恢复', '', () => this.onOpenBackup(this.paperId))
-                this.navigationRow('隐私说明', '', () => this.onOpenPrivacy(this.paperId))
+                this.navigationRow('隐私政策', '', () => this.onOpenPrivacy(this.paperId))
 
                 Divider().color($r('app.color.divider_subtle'))
 

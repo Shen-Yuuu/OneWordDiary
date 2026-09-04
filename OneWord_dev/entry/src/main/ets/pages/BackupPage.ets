@@ -29,7 +29,7 @@ export struct BackupPage {
   }
 
   private showExportWarning(): void {
-    AlertDialog.show({
+    this.getUIContext().showAlertDialog({
       title: '导出本地备份？',
       message: '备份文件未加密，包含全部日记正文与备注。请保存到可信位置并谨慎分享。',
       primaryButton: {
@@ -88,7 +88,7 @@ export struct BackupPage {
   }
 
   private showImportConfirmation(): void {
-    AlertDialog.show({
+    this.getUIContext().showAlertDialog({
       title: '确认导入？',
       message: this.viewModel.importSummary + ' 冲突日期始终保留本机记录。',
       primaryButton: {

@@ -15,19 +15,37 @@ import { ShareViewModel } from '../main/ets/viewmodel/ShareViewModel';
 
 class ShareMemorySettingsRepository implements SettingsRepository {
   private settings: AppSettings = DEFAULT_APP_SETTINGS;
+  privacyPolicyAcceptedVersion: string = '';
 
   async load(): Promise<AppSettings> {
     return this.settings;
   }
 
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
-    this.settings = { stylePresetId: stylePresetId, reminder: this.settings.reminder };
+    this.settings = {
+      stylePresetId: stylePresetId,
+      reminder: this.settings.reminder,
+      privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
+    };
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {
-    this.settings = { stylePresetId: this.settings.stylePresetId, reminder: reminder };
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      reminder: reminder,
+      privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
+    };
   }
 
+
+  async savePrivacyPolicyAcceptedVersion(version: string): Promise<void> {
+    this.privacyPolicyAcceptedVersion = version;
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      reminder: this.settings.reminder,
+      privacyPolicyAcceptedVersion: version
+    };
+  }
   async isResetPending(): Promise<boolean> {
     return false;
   }

@@ -11,6 +11,7 @@ export interface ReminderSettings {
 export interface AppSettings {
   stylePresetId: StylePresetId;
   reminder: ReminderSettings;
+  privacyPolicyAcceptedVersion: string;
 }
 
 export const DEFAULT_REMINDER_SETTINGS: ReminderSettings = {
@@ -23,5 +24,6 @@ export const DEFAULT_REMINDER_SETTINGS: ReminderSettings = {
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   stylePresetId: StylePresetId.PAPER_INK,
-  reminder: DEFAULT_REMINDER_SETTINGS
+  reminder: DEFAULT_REMINDER_SETTINGS,
+  privacyPolicyAcceptedVersion: ''
 };

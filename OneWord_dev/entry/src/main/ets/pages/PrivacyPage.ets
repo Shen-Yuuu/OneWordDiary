@@ -8,6 +8,8 @@ export struct PrivacyPage {
   private revealTimer: number = -1;
   onBack: () => void = () => {
   };
+  onOpenOfficialPolicy: () => void = () => {
+  };
 
   aboutToAppear(): void {
     this.revealTimer = setTimeout(() => {
@@ -42,6 +44,28 @@ export struct PrivacyPage {
     .alignItems(HorizontalAlign.Start)
     .padding({ top: 18, bottom: 18 })
     .border({ width: { bottom: 1 }, color: $r('app.color.divider_subtle') })
+  }
+
+  @Builder
+  private officialPolicyEntry() {
+    Row() {
+      Text('查看完整《一字日记隐私政策》')
+        .fontSize(16)
+        .fontColor($r('app.color.text_primary'))
+
+      Text('›')
+        .fontSize(24)
+        .fontColor($r('app.color.text_secondary'))
+    }
+    .width('100%')
+    .height(56)
+    .justifyContent(FlexAlign.SpaceBetween)
+    .alignItems(VerticalAlign.Center)
+    .padding({ left: 16, right: 16 })
+    .margin({ top: 24 })
+    .borderRadius(12)
+    .backgroundColor($r('app.color.surface_primary'))
+    .onClick(() => this.onOpenOfficialPolicy())
   }
 
   build() {
@@ -87,6 +111,7 @@ export struct PrivacyPage {
               this.privacyItem('克制的提醒', '每日提醒只显示固定文案，不读取或展示你的日记正文与注解。')
               this.privacyItem('谨慎分享', '分享图片默认不包含注解；分享前始终展示完整预览。')
               this.privacyItem('主动备份', '应用未接入系统备份恢复扩展。只有你主动选择时才会导出或导入；导出的 .oneword 文件未加密，请保存到可信位置。')
+              this.officialPolicyEntry()
 
               Text('一字 1.0 · 离线优先')
                 .fontSize(13)

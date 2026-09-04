@@ -10,11 +10,13 @@ const KEY_REMINDER_MINUTE: string = 'reminder_minute';
 const KEY_REMINDER_ID: string = 'reminder_id';
 const KEY_PERMISSION_REQUESTED: string = 'reminder_permission_requested';
 const KEY_RESET_PENDING: string = 'reset_pending';
+const KEY_PRIVACY_POLICY_ACCEPTED_VERSION: string = 'privacy_policy_accepted_version';
 
 export interface SettingsRepository {
   load(): Promise<AppSettings>;
   saveStylePresetId(stylePresetId: StylePresetId): Promise<void>;
   saveReminder(reminder: ReminderSettings): Promise<void>;
+  savePrivacyPolicyAcceptedVersion(version: string): Promise<void>;
   isResetPending(): Promise<boolean>;
   markResetPending(): Promise<void>;
   reset(): Promise<void>;
@@ -42,6 +44,10 @@ export class PreferencesSettingsRepository implements SettingsRepository {
       KEY_PERMISSION_REQUESTED,
       DEFAULT_APP_SETTINGS.reminder.permissionRequested
     );
+    const privacyPolicyAcceptedVersionValue = await this.store.get(
+      KEY_PRIVACY_POLICY_ACCEPTED_VERSION,
+      DEFAULT_APP_SETTINGS.privacyPolicyAcceptedVersion
+    );
 
     const stylePresetId: StylePresetId = typeof styleValue === 'string' && this.isSupportedStyle(styleValue) ?
       this.toStylePresetId(styleValue) : DEFAULT_APP_SETTINGS.stylePresetId;
@@ -54,6 +60,8 @@ export class PreferencesSettingsRepository implements SettingsRepository {
       DEFAULT_APP_SETTINGS.reminder.reminderId;
     const permissionRequested = typeof permissionRequestedValue === 'boolean' ? permissionRequestedValue :
       DEFAULT_APP_SETTINGS.reminder.permissionRequested;
+    const privacyPolicyAcceptedVersion = typeof privacyPolicyAcceptedVersionValue === 'string' ?
+      privacyPolicyAcceptedVersionValue : DEFAULT_APP_SETTINGS.privacyPolicyAcceptedVersion;
 
     const settings: AppSettings = {
       stylePresetId: stylePresetId,
@@ -63,7 +71,8 @@ export class PreferencesSettingsRepository implements SettingsRepository {
         minute: minute,
         reminderId: reminderId,
         permissionRequested: permissionRequested
-      }
+      },
+      privacyPolicyAcceptedVersion: privacyPolicyAcceptedVersion
     };
     return settings;
   }
@@ -85,6 +94,11 @@ export class PreferencesSettingsRepository implements SettingsRepository {
     await this.store.put(KEY_REMINDER_MINUTE, reminder.minute);
     await this.store.put(KEY_REMINDER_ID, reminder.reminderId);
     await this.store.put(KEY_PERMISSION_REQUESTED, reminder.permissionRequested);
+    await this.store.flush();
+  }
+
+  async savePrivacyPolicyAcceptedVersion(version: string): Promise<void> {
+    await this.store.put(KEY_PRIVACY_POLICY_ACCEPTED_VERSION, version);
     await this.store.flush();
   }
 
