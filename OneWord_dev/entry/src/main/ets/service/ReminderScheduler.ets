@@ -45,6 +45,8 @@ export class SystemReminderScheduler implements ReminderScheduler {
       hour: hour,
       minute: minute,
       daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
+      ringDuration: 0,
+      tapDismissed: false,
       wantAgent: {
         pkgName: 'com.oneword.diary',
         abilityName: 'EntryAbility'
