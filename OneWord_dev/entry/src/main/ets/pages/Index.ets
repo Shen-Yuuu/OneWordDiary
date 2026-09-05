@@ -81,49 +81,49 @@ struct Index {
     this.navPathStack.pushPath({
       name: AppRouteName.SCROLL,
       param: new ScrollRouteParam()
-    }, false);
+    }, true);
   }
 
   private openDetail(localDate: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.DETAIL,
       param: new DetailRouteParam(localDate)
-    }, false);
+    }, true);
   }
 
   private openSingleShare(localDate: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.SHARE,
       param: new ShareRouteParam(DiaryShareMode.SINGLE, localDate)
-    }, false);
+    }, true);
   }
 
   private openSevenDayShare(): void {
     this.navPathStack.pushPath({
       name: AppRouteName.SHARE,
       param: new ShareRouteParam(DiaryShareMode.SEVEN_DAYS)
-    }, false);
+    }, true);
   }
 
   private openSettings(): void {
     this.navPathStack.pushPath({
       name: AppRouteName.SETTINGS,
       param: new SettingsRouteParam()
-    }, false);
+    }, true);
   }
 
   private openBackup(paperId: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.BACKUP,
       param: new BackupRouteParam(paperId)
-    }, false);
+    }, true);
   }
 
   private openPrivacy(paperId: string): void {
     this.navPathStack.pushPath({
       name: AppRouteName.PRIVACY,
       param: new PrivacyRouteParam(paperId)
-    }, false);
+    }, true);
   }
 
   private finishClear(): void {

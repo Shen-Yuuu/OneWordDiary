@@ -52,7 +52,7 @@ export struct TodayEditor {
           .fontWeight(FontWeight.Medium)
           .fontFamily('oneword_wenkai_medium, serif')
           .fontColor($r('app.color.text_primary'))
-          .placeholderColor($r('app.color.outline_soft'))
+          .placeholderColor($r('app.color.text_tertiary'))
           .placeholderFont({ size: 28, weight: FontWeight.Lighter })
           .textAlign(TextAlign.Center)
           .caretColor($r('app.color.accent_vermilion'))
@@ -85,7 +85,7 @@ export struct TodayEditor {
           .fontSize(15)
           .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_primary'))
-          .placeholderColor($r('app.color.outline_soft'))
+          .placeholderColor($r('app.color.text_tertiary'))
           .placeholderFont({ size: 15, family: 'oneword_wenkai, serif' })
           .textAlign(TextAlign.Center)
           .caretColor($r('app.color.accent_vermilion'))
@@ -134,7 +134,7 @@ export struct TodayEditor {
 
           Text('·')
             .fontSize(13)
-            .fontColor($r('app.color.outline_soft'))
+            .fontColor($r('app.color.text_tertiary'))
 
           Button('取消修订')
             .height($r('app.float.touch_target_min'))

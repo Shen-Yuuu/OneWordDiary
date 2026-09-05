@@ -23,7 +23,7 @@ export struct ShareSingleCard {
   }
 
   secondaryColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#777775' : '#8C8783';
+    return '#5F5B55';
   }
 
   accentColor(): string {

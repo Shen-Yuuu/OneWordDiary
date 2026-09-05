@@ -22,7 +22,7 @@
     },
     {
       "name": "accent_vermilion",
-      "value": "#A65C4D"
+      "value": "#914638"
     },
     {
       "name": "divider_subtle",
@@ -38,7 +38,7 @@
     },
     {
       "name": "text_tertiary",
-      "value": "#918D87"
+      "value": "#5F5B55"
     },
     {
       "name": "outline_soft",
@@ -74,19 +74,19 @@
     },
     {
       "name": "scroll_secondary_warm",
-      "value": "#8C8783"
+      "value": "#5F5B55"
     },
     {
       "name": "scroll_secondary_plain",
-      "value": "#777775"
+      "value": "#5F5B55"
     },
     {
       "name": "scroll_faint_warm",
-      "value": "#B8ADA7"
+      "value": "#5F5B55"
     },
     {
       "name": "scroll_faint_plain",
-      "value": "#AFAFAC"
+      "value": "#5F5B55"
     },
     {
       "name": "scroll_line_warm",

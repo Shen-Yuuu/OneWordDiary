@@ -82,11 +82,11 @@
     },
     {
       "name": "scroll_faint_warm",
-      "value": "#5C564F"
+      "value": "#8C8783"
     },
     {
       "name": "scroll_faint_plain",
-      "value": "#555553"
+      "value": "#8C8783"
     },
     {
       "name": "scroll_line_warm",

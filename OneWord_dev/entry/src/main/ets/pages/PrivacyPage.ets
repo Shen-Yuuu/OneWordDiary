@@ -123,6 +123,7 @@ export struct PrivacyPage {
           }
           .layoutWeight(1)
           .scrollBar(BarState.Off)
+          .edgeEffect(EdgeEffect.Spring)
         }
         .width('100%')
         .height('100%')

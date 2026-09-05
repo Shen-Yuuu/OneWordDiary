@@ -7,31 +7,31 @@
         "material": {
           "certpath": "E:/desktop/Code/harmony/key/oneword.cer",
           "keyAlias": "oneword",
-          "keyPassword": "0000001ABEF7D9036E91C0708530072252733349895C374E59FFE15FF545B6A2D31EF1805130ECE21156",
+          "keyPassword": "0000001ABE12524E8B6EEE0C93907CAAACDA02B3E06728D927B7ECBF7F18FAF88BD05F32B98F24570B1E",
           "profile": "E:/desktop/Code/harmony/key/onewordDebug.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "E:/desktop/Code/harmony/key/oneword.p12",
-          "storePassword": "0000001AE0D82ECCEDE80116A576F93188EDDA8B5AEF94380565AC6138BD310C9CE7464BF1DFFC6EE639"
+          "storePassword": "0000001AC4D2E4DD28D2FA24F0A9E965183CA7ED004CDE0AD92EF3B1EA9D40552EB77F30FB02D31C118A"
         }
       },
       {
         "name": "release",
         "type": "HarmonyOS",
         "material": {
-          "storeFile": "E:/desktop/Code/harmony/key/oneword.p12",
-          "storePassword": "0000001A910C4B5B5C09F486F1242D14507098ED040272408DD0322B754294930F062AC1BD9B2E2157B6",
+          "certpath": "E:/desktop/Code/harmony/key/oneword发布.cer",
           "keyAlias": "oneword",
-          "keyPassword": "0000001A5E30E7E574E9DBAD756C00CB63B13D9B97D641A58D3B177EA46B64A42485F3B36C13137E75C0",
-          "signAlg": "SHA256withECDSA",
+          "keyPassword": "0000001AEF25BBD5001C89A168ADFCB8E18493F44B175ED4836729B23B9B01CF5376D01E3F1CA7BCC507",
           "profile": "E:/desktop/Code/harmony/key/oneword发布Release.p7b",
-          "certpath": "E:/desktop/Code/harmony/key/oneword发布.cer"
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "E:/desktop/Code/harmony/key/oneword.p12",
+          "storePassword": "0000001A05AC28768D4E480E269407650A4D4209F4CEE5426CBAD58A126C0EC1A8F0C869BFFD5EACA991"
         }
       }
     ],
     "products": [
       {
         "name": "default",
-        "signingConfig": "debug",
+        "signingConfig": "release",
         "targetSdkVersion": "6.0.1(21)",
         "compatibleSdkVersion": "6.0.1(21)",
         "runtimeOS": "HarmonyOS",
