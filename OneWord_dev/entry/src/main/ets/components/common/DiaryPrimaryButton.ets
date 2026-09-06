@@ -11,15 +11,14 @@ export struct DiaryPrimaryButton {
       Text(this.label)
         .fontSize(15)
         .fontWeight(FontWeight.Medium)
-        .fontColor($r('app.color.on_ink_button'))
+        .fontColor(this.isEnabled ? $r('app.color.on_ink_button') : $r('app.color.button_disabled_text'))
         .letterSpacing(0.8)
     }
     .width($r('app.float.primary_button_width'))
     .height($r('app.float.primary_button_height'))
-    .backgroundColor($r('app.color.ink_button'))
+    .backgroundColor(this.isEnabled ? $r('app.color.ink_button') : $r('app.color.button_disabled_background'))
     .borderRadius(26)
-    .enabled(this.isEnabled)
-    .opacity(this.isEnabled ? 1 : 0.24)
+    .enabled(true)
     .scale({ x: this.pressed ? 0.96 : 1, y: this.pressed ? 0.96 : 1 })
     .animation({ duration: 160, curve: Curve.EaseOut })
     .onTouch((event: TouchEvent) => {
@@ -29,7 +28,7 @@ export struct DiaryPrimaryButton {
         this.pressed = false;
       }
     })
-    .onClick(() => this.onTap())
+    .onClick(() => { if (this.isEnabled) { this.onTap(); } })
     .accessibilityText(this.label)
   }
 }

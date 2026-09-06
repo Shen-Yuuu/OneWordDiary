@@ -53,6 +53,14 @@
       "value": "#191715"
     },
     {
+      "name": "button_disabled_background",
+      "value": "#45413C"
+    },
+    {
+      "name": "button_disabled_text",
+      "value": "#F2ECE8"
+    },
+    {
       "name": "error_danger",
       "value": "#FFB4AB"
     },

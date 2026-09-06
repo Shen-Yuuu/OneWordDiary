@@ -142,8 +142,9 @@ export struct DetailPage {
       }
       .width('100%')
       .height('100%')
+      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
     }
     .hideTitleBar(true)
-    .backgroundColor(Color.Transparent)
+    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
   }
 }
