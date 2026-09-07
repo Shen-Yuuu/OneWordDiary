@@ -119,7 +119,7 @@ export default function backupTest(): void {
       const codec = new BackupCodec(new DiaryTextRules());
       const valid = codec.encode([createRecord('2026-08-21', '静')], StylePresetId.PAPER_INK, 1000);
       expectBackupError(codec, '{broken', BackupErrorCode.INVALID_JSON);
-      expectBackupError(codec, valid.replace('"format_version":1', '"format_version":2'),
+      expectBackupError(codec, valid.replace('"format_version":1', '"format_version":99'),
         BackupErrorCode.UNSUPPORTED_VERSION);
       expectBackupError(codec, valid.replace('2026-08-21', '2026-02-30'), BackupErrorCode.INVALID_RECORD);
       expectBackupError(codec, codec.encode([

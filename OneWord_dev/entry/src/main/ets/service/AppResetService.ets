@@ -1,21 +1,25 @@
 import { DiaryRepository } from '../repository/DiaryRepository';
 import { SettingsRepository } from '../repository/SettingsRepository';
+import { BackgroundImageStore } from '../model/BackgroundImage';
 import { ReminderScheduler } from './ReminderScheduler';
 
 export class AppResetService {
   private readonly diaryRepository: DiaryRepository;
   private readonly settingsRepository: SettingsRepository;
   private readonly reminderScheduler: ReminderScheduler;
+  private readonly backgroundImageStore: BackgroundImageStore | null;
   private isResetting: boolean = false;
 
   constructor(
     diaryRepository: DiaryRepository,
     settingsRepository: SettingsRepository,
-    reminderScheduler: ReminderScheduler
+    reminderScheduler: ReminderScheduler,
+    backgroundImageStore: BackgroundImageStore | null = null
   ) {
     this.diaryRepository = diaryRepository;
     this.settingsRepository = settingsRepository;
     this.reminderScheduler = reminderScheduler;
+    this.backgroundImageStore = backgroundImageStore;
   }
 
   async resumeIfNeeded(): Promise<void> {
@@ -45,6 +49,9 @@ export class AppResetService {
     await this.diaryRepository.runInTransaction(async (): Promise<void> => {
       await this.diaryRepository.clearAll();
     });
+    if (this.backgroundImageStore !== null) {
+      this.backgroundImageStore.clearAll();
+    }
     await this.settingsRepository.reset();
   }
 }

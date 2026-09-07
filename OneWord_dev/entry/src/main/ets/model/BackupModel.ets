@@ -1,4 +1,5 @@
 import { StylePresetId } from '../constants/StyleTokens';
+import { BackgroundImageBackupData } from './BackgroundImage';
 import { DailyRecord } from './DailyRecord';
 
 export interface BackupRecordPayload {
@@ -14,6 +15,7 @@ export interface BackupRecordPayload {
   revised_at: number | null;
   revision_used: boolean;
   schema_version: number;
+  background_image?: BackgroundImageBackupData | null;
 }
 
 export interface BackupDocument {
@@ -29,19 +31,22 @@ export class BackupImportPlan {
   readonly skippedCount: number;
   readonly restoreStyle: boolean;
   readonly backupStyle: StylePresetId;
+  readonly imagesByDate: Map<string, BackgroundImageBackupData>;
 
   constructor(
     records: DailyRecord[],
     importedCount: number,
     skippedCount: number,
     restoreStyle: boolean,
-    backupStyle: StylePresetId
+    backupStyle: StylePresetId,
+    imagesByDate: Map<string, BackgroundImageBackupData> = new Map<string, BackgroundImageBackupData>()
   ) {
     this.records = records;
     this.importedCount = importedCount;
     this.skippedCount = skippedCount;
     this.restoreStyle = restoreStyle;
     this.backupStyle = backupStyle;
+    this.imagesByDate = imagesByDate;
   }
 }
 
@@ -54,6 +59,7 @@ export interface BackupImportResult {
 export interface DecodedBackup {
   records: DailyRecord[];
   stylePresetId: StylePresetId;
+  imagesByDate: Map<string, BackgroundImageBackupData>;
 }
 
 export enum BackupUiState {
@@ -65,4 +71,3 @@ export enum BackupUiState {
   RESULT = 'RESULT',
   ERROR = 'ERROR'
 }
-

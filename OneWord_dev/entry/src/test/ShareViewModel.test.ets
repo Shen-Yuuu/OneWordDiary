@@ -64,7 +64,8 @@ function createShareRecord(
   content: string | null,
   note: string | null = null,
   fontId: string = 'system_serif_dev',
-  paperId: string = 'warm_paper_dev'
+  paperId: string = 'warm_paper_dev',
+  backgroundImageId: string | null = null
 ): DailyRecord {
   return {
     localDate: localDate,
@@ -73,6 +74,7 @@ function createShareRecord(
     recordType: recordType,
     fontId: fontId,
     paperId: paperId,
+    backgroundImageId: backgroundImageId,
     submittedAt: 1000,
     submittedTimezoneOffset: 480,
     revisionDeadlineAt: 2000,
@@ -109,7 +111,7 @@ export default function shareViewModelTest(): void {
       const fixture = new ShareFixture();
       await fixture.repository.insert(createShareRecord(
         '2026-01-01', RecordType.WORD, '静', '这是今天留下的一句备注',
-        'system_sans_dev', 'plain_ash_dev'
+        'system_sans_dev', 'plain_ash_dev', 'bg-share.jpg'
       ));
 
       await fixture.viewModel.load(DiaryShareMode.SINGLE, '2026-01-01');
@@ -121,6 +123,8 @@ export default function shareViewModelTest(): void {
       expect(fixture.viewModel.singleData !== null &&
         fixture.viewModel.singleData.fontId === 'system_sans_dev').assertTrue();
       expect(fixture.viewModel.activePaperId).assertEqual('plain_ash_dev');
+      expect(fixture.viewModel.singleData !== null &&
+        fixture.viewModel.singleData.backgroundImageId === 'bg-share.jpg').assertTrue();
     });
 
     it('buildsSevenNaturalDaysAcrossYearBoundary', 0, async () => {

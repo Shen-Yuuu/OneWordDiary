@@ -16,6 +16,7 @@ export class DetailViewModel {
   note: string = '';
   fontId: string = 'system_serif_dev';
   paperId: string = 'warm_paper_dev';
+  backgroundImageId: string | null = null;
 
   private readonly diaryService: DiaryService;
   private readonly dateFormatter: DiaryDateFormatter;
@@ -36,6 +37,7 @@ export class DetailViewModel {
     this.note = '';
     this.fontId = 'system_serif_dev';
     this.paperId = 'warm_paper_dev';
+    this.backgroundImageId = null;
     this.dateLabel = this.dateFormatter.detailLabel(localDate);
     try {
       const record = await this.diaryService.getRecord(localDate);
@@ -50,6 +52,7 @@ export class DetailViewModel {
       this.note = record.note === null ? '' : record.note;
       this.fontId = record.fontId;
       this.paperId = record.paperId;
+      this.backgroundImageId = record.backgroundImageId === undefined ? null : record.backgroundImageId;
       this.uiState = record.recordType === RecordType.BLANK ? DetailUiState.BLANK : DetailUiState.WORD;
     } catch (error) {
       this.uiState = DetailUiState.LOAD_ERROR;

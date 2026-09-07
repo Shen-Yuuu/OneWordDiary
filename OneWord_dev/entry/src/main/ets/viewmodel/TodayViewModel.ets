@@ -1,4 +1,5 @@
 import { StylePresetId } from '../constants/StyleTokens';
+import { BackgroundImageStore } from '../model/BackgroundImage';
 import { DailyRecord, DiaryEntryInput, RecordType, RevisionStatus } from '../model/DailyRecord';
 import { DiaryError, DiaryErrorCode } from '../model/DiaryError';
 import { TodayUiState } from '../model/TodayUiState';
@@ -34,6 +35,9 @@ export class TodayViewModel {
   recordDisplayNote: string = '';
   recordFontId: string = 'system_serif_dev';
   recordPaperId: string = 'warm_paper_dev';
+  draftBackgroundImageId: string | null = null;
+  isPickingBackground: boolean = false;
+  backgroundError: string = '';
 
   private readonly diaryService: DiaryService;
   private readonly completionFeedback: CompletionFeedback;
@@ -41,6 +45,9 @@ export class TodayViewModel {
   private readonly clock: Clock;
   private readonly localTimeResolver: LocalTimeResolver;
   private readonly textRules: DiaryTextRules;
+  private readonly backgroundImageStore: BackgroundImageStore | null;
+  private draftOwnedBackgroundImageId: string | null = null;
+  private backgroundRequestVersion: number = 0;
   private readonly inspirations: string[] = [
     '今天，想留下些什么？',
     '此刻的心，像什么天气？',
@@ -55,7 +62,8 @@ export class TodayViewModel {
     clock: Clock,
     localTimeResolver: LocalTimeResolver,
     textRules: DiaryTextRules,
-    completionFeedback: CompletionFeedback
+    completionFeedback: CompletionFeedback,
+    backgroundImageStore?: BackgroundImageStore
   ) {
     this.diaryService = diaryService;
     this.settingsRepository = settingsRepository;
@@ -63,6 +71,7 @@ export class TodayViewModel {
     this.localTimeResolver = localTimeResolver;
     this.textRules = textRules;
     this.completionFeedback = completionFeedback;
+    this.backgroundImageStore = backgroundImageStore === undefined ? null : backgroundImageStore;
   }
 
   get inspiration(): string {
@@ -74,8 +83,18 @@ export class TodayViewModel {
   }
 
   get canConfirmWord(): boolean {
-    return this.contentError.length === 0 && this.noteError.length === 0 && this.contentCount >= 1 &&
+    return !this.isPickingBackground && this.contentError.length === 0 && this.noteError.length === 0 &&
+      this.contentCount >= 1 &&
       this.contentCount <= 4;
+  }
+
+  get backgroundImageUri(): string {
+    if (this.backgroundImageStore === null) {
+      return '';
+    }
+    const imageId = this.hasDraftContext() ? this.draftBackgroundImageId :
+      (this.record === null ? null : this.record.backgroundImageId);
+    return this.backgroundImageStore.resolveUri(imageId);
   }
 
   get isBusy(): boolean {
@@ -117,12 +136,24 @@ export class TodayViewModel {
     return `${this.padTwoDigits(deadline.getHours())}:${this.padTwoDigits(deadline.getMinutes())}`;
   }
 
-  async load(): Promise<void> {
+  async load(preserveDraft: boolean = false): Promise<void> {
+    if (this.isBusy) {
+      return;
+    }
+    const timestamp = this.clock.now();
+    const snapshot = this.localTimeResolver.resolve(timestamp);
+    if (preserveDraft && this.isPickingBackground && this.localDate === snapshot.localDate) {
+      return;
+    }
+    const previousState = this.uiState;
+    const shouldPreserveDraft = preserveDraft && this.localDate === snapshot.localDate &&
+      this.hasDraftContext();
+    if (!shouldPreserveDraft && this.hasDraftContext()) {
+      this.resetDraft(true);
+    }
     this.uiState = TodayUiState.APP_INITIALIZING;
     this.errorMessage = '';
     try {
-      const timestamp = this.clock.now();
-      const snapshot = this.localTimeResolver.resolve(timestamp);
       const settings = await this.settingsRepository.load();
       const record = await this.diaryService.getToday();
       const recordCount = await this.diaryService.getRecordCount();
@@ -136,8 +167,12 @@ export class TodayViewModel {
       this.record = record;
       this.syncRecordPresentation(record);
       this.recordCount = recordCount;
-      this.clearDraft();
-      this.deriveStateFromRecord();
+      if (shouldPreserveDraft) {
+        this.uiState = previousState;
+      } else {
+        this.resetDraft(false);
+        this.deriveStateFromRecord();
+      }
     } catch (error) {
       this.uiState = TodayUiState.APP_STORAGE_ERROR;
       this.errorMessage = '记录暂时无法打开';
@@ -145,6 +180,9 @@ export class TodayViewModel {
   }
 
   setContent(value: string): void {
+    if (this.isBusy) {
+      return;
+    }
     this.draftContent = value;
     const normalized = value.normalize('NFC').trim();
     this.contentCount = this.textRules.countGraphemes(normalized);
@@ -156,6 +194,9 @@ export class TodayViewModel {
   }
 
   setNote(value: string): void {
+    if (this.isBusy) {
+      return;
+    }
     this.draftNote = value;
     const normalized = value.normalize('NFC').trim();
     this.noteCount = this.textRules.countGraphemes(normalized);
@@ -165,6 +206,74 @@ export class TodayViewModel {
 
   nextInspiration(): void {
     this.inspirationIndex = (this.inspirationIndex + 1) % this.inspirations.length;
+  }
+
+  async selectBackgroundFromUri(uri: string): Promise<void> {
+    if (uri.length === 0) {
+      return;
+    }
+    if (this.isBusy || !this.isBackgroundDraftEditable()) {
+      return;
+    }
+    if (this.backgroundImageStore === null) {
+      this.backgroundError = '\u80cc\u666f\u56fe\u670d\u52a1\u6682\u65f6\u4e0d\u53ef\u7528';
+      return;
+    }
+
+    const requestVersion = ++this.backgroundRequestVersion;
+    const requestDate = this.localDate;
+    this.isPickingBackground = true;
+    this.backgroundError = '';
+    let importedId: string | null = null;
+    try {
+      importedId = await this.backgroundImageStore.importFromUri(uri);
+      const currentDate = this.localTimeResolver.resolve(this.clock.now()).localDate;
+      if (requestVersion !== this.backgroundRequestVersion || requestDate !== this.localDate ||
+        requestDate !== currentDate || !this.isBackgroundDraftEditable()) {
+        const shouldReloadForRollover = requestVersion === this.backgroundRequestVersion &&
+          requestDate === this.localDate && requestDate !== currentDate;
+        this.safeRemoveBackground(importedId);
+        importedId = null;
+        if (shouldReloadForRollover) {
+          this.isPickingBackground = false;
+          await this.load();
+        }
+        return;
+      }
+      const previousOwnedId = this.draftOwnedBackgroundImageId;
+      this.draftBackgroundImageId = importedId;
+      this.draftOwnedBackgroundImageId = importedId;
+      importedId = null;
+      if (previousOwnedId !== null && previousOwnedId !== this.draftOwnedBackgroundImageId) {
+        this.safeRemoveBackground(previousOwnedId);
+      }
+      this.updateEditingState();
+    } catch (error) {
+      if (requestVersion === this.backgroundRequestVersion) {
+        this.backgroundError = this.mapBackgroundError(error);
+      }
+    } finally {
+      if (importedId !== null) {
+        this.safeRemoveBackground(importedId);
+      }
+      if (requestVersion === this.backgroundRequestVersion) {
+        this.isPickingBackground = false;
+      }
+    }
+  }
+
+  removeBackgroundImage(): void {
+    if (this.isBusy) {
+      return;
+    }
+    this.backgroundRequestVersion++;
+    this.isPickingBackground = false;
+    this.backgroundError = '';
+    if (this.draftOwnedBackgroundImageId !== null) {
+      this.safeRemoveBackground(this.draftOwnedBackgroundImageId);
+    }
+    this.draftOwnedBackgroundImageId = null;
+    this.draftBackgroundImageId = null;
   }
 
   showWordConfirmation(): void {
@@ -185,7 +294,7 @@ export class TodayViewModel {
   }
 
   showBlankConfirmation(): void {
-    if (this.isBusy) {
+    if (this.isBusy || this.isPickingBackground) {
       return;
     }
     this.draftType = RecordType.BLANK;
@@ -195,30 +304,58 @@ export class TodayViewModel {
   }
 
   cancelConfirmation(): void {
+    if (this.isBusy) {
+      return;
+    }
     this.errorMessage = '';
     this.updateEditingState();
   }
 
   async confirmPending(): Promise<void> {
-    if (this.isBusy) {
+    if (this.isBusy || this.isPickingBackground) {
+      return;
+    }
+    const activeDate = this.localTimeResolver.resolve(this.clock.now()).localDate;
+    if (this.localDate !== activeDate) {
+      this.resetDraft(true);
+      await this.load();
       return;
     }
     this.errorMessage = '';
     this.uiState = this.isRevisionDraft ? TodayUiState.TODAY_REVISION_SAVING :
       TodayUiState.TODAY_SUBMITTING;
+    const input = this.createInput(this.draftType);
+    const previousBackgroundImageId = this.record === null || this.record.backgroundImageId === undefined ?
+      null : this.record.backgroundImageId;
+    let saved: DailyRecord;
     try {
-      const input = this.createInput(this.draftType);
-      const saved = this.isRevisionDraft ? await this.reviseRecord(input) :
-        await this.diaryService.submit(input);
-      this.record = saved;
-      this.syncRecordPresentation(saved);
-      this.recordCount = await this.diaryService.getRecordCount();
-      this.completionFeedback.playRecordCommitted();
-      this.clearDraft();
-      this.deriveStateFromRecord();
+      saved = this.isRevisionDraft ? await this.reviseRecord(input) : await this.diaryService.submit(input);
     } catch (error) {
       await this.handleSaveError(error);
+      return;
     }
+
+    const committedBackgroundImageId = saved.backgroundImageId === undefined ? null : saved.backgroundImageId;
+    if (this.draftOwnedBackgroundImageId === committedBackgroundImageId) {
+      this.draftOwnedBackgroundImageId = null;
+    }
+    this.record = saved;
+    this.syncRecordPresentation(saved);
+    if (previousBackgroundImageId !== null && previousBackgroundImageId !== committedBackgroundImageId) {
+      this.safeRemoveBackground(previousBackgroundImageId);
+    }
+    try {
+      this.recordCount = await this.diaryService.getRecordCount();
+    } catch (error) {
+      AppLogger.warn('today.record_count_refresh_failed_after_commit');
+    }
+    try {
+      this.completionFeedback.playRecordCommitted();
+    } catch (error) {
+      AppLogger.warn('today.completion_feedback_failed_after_commit');
+    }
+    this.resetDraft(false);
+    this.deriveStateFromRecord();
   }
 
   retrySave(): Promise<void> {
@@ -226,6 +363,9 @@ export class TodayViewModel {
   }
 
   startRevision(): void {
+    if (this.isBusy) {
+      return;
+    }
     if (this.record === null || this.diaryService.getRevisionStatus(this.record) !== RevisionStatus.AVAILABLE) {
       this.deriveStateFromRecord();
       return;
@@ -234,6 +374,10 @@ export class TodayViewModel {
     this.draftType = this.record.recordType;
     this.draftContent = this.record.content === null ? '' : this.record.content;
     this.draftNote = this.record.note === null ? '' : this.record.note;
+    this.draftBackgroundImageId = this.record.backgroundImageId === undefined ? null :
+      this.record.backgroundImageId;
+    this.draftOwnedBackgroundImageId = null;
+    this.backgroundError = '';
     this.contentCount = this.textRules.countGraphemes(this.draftContent);
     this.noteCount = this.textRules.countGraphemes(this.draftNote);
     this.contentError = '';
@@ -244,11 +388,17 @@ export class TodayViewModel {
   }
 
   cancelRevision(): void {
-    this.clearDraft();
+    if (this.isBusy) {
+      return;
+    }
+    this.resetDraft(true);
     this.deriveStateFromRecord();
   }
 
   returnFromError(): void {
+    if (this.isBusy) {
+      return;
+    }
     this.errorMessage = '';
     this.updateEditingState();
   }
@@ -263,6 +413,8 @@ export class TodayViewModel {
   private async handleSaveError(error: Error): Promise<void> {
     if (error instanceof DiaryError && (error.code === DiaryErrorCode.REVISION_EXPIRED ||
       error.code === DiaryErrorCode.REVISION_USED || error.code === DiaryErrorCode.REVISION_CONFLICT)) {
+      this.uiState = TodayUiState.TODAY_REVISION_ERROR;
+      this.resetDraft(true);
       await this.load();
       return;
     }
@@ -309,7 +461,8 @@ export class TodayViewModel {
       content: type === RecordType.BLANK ? null : this.draftContent,
       note: type === RecordType.BLANK || this.draftNote.trim().length === 0 ? null : this.draftNote,
       fontId: this.stylePresetId === StylePresetId.PAPER_INK ? 'system_serif_dev' : 'system_sans_dev',
-      paperId: this.stylePresetId === StylePresetId.PAPER_INK ? 'warm_paper_dev' : 'plain_ash_dev'
+      paperId: this.stylePresetId === StylePresetId.PAPER_INK ? 'warm_paper_dev' : 'plain_ash_dev',
+      backgroundImageId: this.draftBackgroundImageId
     };
   }
 
@@ -354,7 +507,15 @@ export class TodayViewModel {
     return this.isRevisionDraft ? '修订没有保存，机会仍然保留' : '暂时没有保存，请再试一次';
   }
 
-  private clearDraft(): void {
+  private resetDraft(removeOwnedBackground: boolean): void {
+    this.backgroundRequestVersion++;
+    this.isPickingBackground = false;
+    if (removeOwnedBackground && this.draftOwnedBackgroundImageId !== null) {
+      this.safeRemoveBackground(this.draftOwnedBackgroundImageId);
+    }
+    this.draftOwnedBackgroundImageId = null;
+    this.draftBackgroundImageId = null;
+    this.backgroundError = '';
     this.draftContent = '';
     this.draftNote = '';
     this.draftType = RecordType.WORD;
@@ -363,6 +524,34 @@ export class TodayViewModel {
     this.contentError = '';
     this.noteError = '';
     this.isRevisionDraft = false;
+  }
+
+  private hasDraftContext(): boolean {
+    return this.isRevisionDraft || this.isPickingBackground || this.draftContent.length > 0 ||
+      this.draftNote.length > 0 || this.draftBackgroundImageId !== null || this.isConfirmationVisible ||
+      this.uiState === TodayUiState.TODAY_SUBMIT_ERROR || this.uiState === TodayUiState.TODAY_REVISION_ERROR;
+  }
+
+  private isBackgroundDraftEditable(): boolean {
+    return this.isRevisionDraft || this.record === null;
+  }
+
+  private safeRemoveBackground(id: string): void {
+    if (this.backgroundImageStore === null) {
+      return;
+    }
+    try {
+      this.backgroundImageStore.remove(id);
+    } catch (error) {
+      AppLogger.warn('today.background_cleanup_failed');
+    }
+  }
+
+  private mapBackgroundError(error: Error): string {
+    if (error instanceof Error && error.message.trim().length > 0) {
+      return error.message;
+    }
+    return '\u80cc\u666f\u56fe\u5904\u7406\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5';
   }
 
   private syncRecordPresentation(record: DailyRecord | null): void {

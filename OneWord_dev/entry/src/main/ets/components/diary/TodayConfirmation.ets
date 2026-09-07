@@ -1,5 +1,6 @@
 import { HapticFeedback } from '../../utils/HapticFeedback';
 import { DiaryIconButton } from '../common/DiaryIconButton';
+import { DiaryBackground } from '../common/DiaryBackground';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
 import { DiaryWordDisplay } from '../common/DiaryWordDisplay';
 import { PaperBackdrop } from '../common/PaperBackdrop';
@@ -16,6 +17,7 @@ export struct TodayConfirmation {
   @Prop isRevision: boolean = false;
   @Prop isBusy: boolean = false;
   @Prop errorMessage: string = '';
+  @Prop backgroundImageUri: string = '';
   onConfirm: () => void = () => {
   };
   onCancel: () => void = () => {
@@ -25,6 +27,7 @@ export struct TodayConfirmation {
   build() {
     Stack() {
       PaperBackdrop({ paperId: this.paperId })
+      DiaryBackground({ imageUri: this.backgroundImageUri, paperId: this.paperId, scrimOpacity: 0.68 })
 
       Column() {
         Row() {

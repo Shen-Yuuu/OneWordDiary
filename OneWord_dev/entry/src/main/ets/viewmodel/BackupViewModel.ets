@@ -114,7 +114,7 @@ export class BackupViewModel {
 
   private messageForCode(code: BackupErrorCode): string {
     if (code === BackupErrorCode.FILE_TOO_LARGE) {
-      return '文件超过 5 MiB，未读取任何记录';
+      return '纯文字备份上限为 5 MiB，含背景图备份上限为 64 MiB';
     }
     if (code === BackupErrorCode.UNSUPPORTED_VERSION) {
       return '备份版本暂不支持，请使用匹配版本的应用';
@@ -132,6 +132,12 @@ export class BackupViewModel {
     if (code === BackupErrorCode.WRITE_FAILED) {
       return '无法写入所选位置，请重新选择';
     }
+    if (code === BackupErrorCode.IMAGE_MISSING) {
+      return '有日记的背景图片缺失或已损坏，未导出不完整备份';
+    }
+    if (code === BackupErrorCode.INVALID_IMAGE) {
+      return '备份中的背景图片无效，或包含暂不支持的动态图片';
+    }
     return '导入未完成，本机记录保持不变';
   }
 
@@ -140,4 +146,3 @@ export class BackupViewModel {
     this.resultMessage = '';
   }
 }
-

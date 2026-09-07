@@ -18,6 +18,7 @@ export interface ShareSingleData {
   note: string;
   fontId: string;
   paperId: string;
+  backgroundImageId?: string | null;
 }
 
 export interface ShareDayItem {

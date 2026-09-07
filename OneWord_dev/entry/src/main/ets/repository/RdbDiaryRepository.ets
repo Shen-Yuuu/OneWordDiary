@@ -114,6 +114,7 @@ export class RdbDiaryRepository implements DiaryRepository {
       record_type: record.recordType,
       font_id: record.fontId,
       paper_id: record.paperId,
+      background_image_id: record.backgroundImageId === undefined ? null : record.backgroundImageId,
       submitted_at: record.submittedAt,
       submitted_tz_offset: record.submittedTimezoneOffset,
       revision_deadline_at: record.revisionDeadlineAt,
@@ -127,6 +128,7 @@ export class RdbDiaryRepository implements DiaryRepository {
     const contentIndex = resultSet.getColumnIndex(DatabaseConstants.COLUMN_CONTENT);
     const noteIndex = resultSet.getColumnIndex(DatabaseConstants.COLUMN_NOTE);
     const revisedAtIndex = resultSet.getColumnIndex(DatabaseConstants.COLUMN_REVISED_AT);
+    const backgroundImageIdIndex = resultSet.getColumnIndex(DatabaseConstants.COLUMN_BACKGROUND_IMAGE_ID);
     return {
       localDate: resultSet.getString(resultSet.getColumnIndex(DatabaseConstants.COLUMN_LOCAL_DATE)),
       content: resultSet.isColumnNull(contentIndex) ? null : resultSet.getString(contentIndex),
@@ -135,6 +137,8 @@ export class RdbDiaryRepository implements DiaryRepository {
         resultSet.getString(resultSet.getColumnIndex(DatabaseConstants.COLUMN_RECORD_TYPE))),
       fontId: resultSet.getString(resultSet.getColumnIndex(DatabaseConstants.COLUMN_FONT_ID)),
       paperId: resultSet.getString(resultSet.getColumnIndex(DatabaseConstants.COLUMN_PAPER_ID)),
+      backgroundImageId: resultSet.isColumnNull(backgroundImageIdIndex) ? null :
+        resultSet.getString(backgroundImageIdIndex),
       submittedAt: resultSet.getLong(resultSet.getColumnIndex(DatabaseConstants.COLUMN_SUBMITTED_AT)),
       submittedTimezoneOffset: resultSet.getLong(
         resultSet.getColumnIndex(DatabaseConstants.COLUMN_SUBMITTED_TIMEZONE_OFFSET)),

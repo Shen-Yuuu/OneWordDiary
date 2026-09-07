@@ -1,6 +1,8 @@
 import { common, Want } from '@kit.AbilityKit';
+import { photoAccessHelper } from '@kit.MediaLibraryKit';
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
+import { DiaryBackground } from '../components/common/DiaryBackground';
 import { PrivacyConsentGate } from '../components/privacy/PrivacyConsentGate';
 import { TodayConfirmation } from '../components/diary/TodayConfirmation';
 import { TodayEditor } from '../components/diary/TodayEditor';
@@ -38,14 +40,19 @@ import { PrivacyConsentViewModel } from '../viewmodel/PrivacyConsentViewModel';
 @Component
 struct Index {
   private navPathStack: NavPathStack = new NavPathStack();
+  private readonly clock: SystemClock = new SystemClock();
+  private readonly localTimeResolver: SystemLocalTimeResolver = new SystemLocalTimeResolver();
+  private midnightRefreshTimer: number = -1;
+  private isPageActive: boolean = false;
 
   @State private viewModel: TodayViewModel = new TodayViewModel(
     AppServiceContainer.getDiaryService(),
     AppServiceContainer.getSettingsRepository(),
-    new SystemClock(),
-    new SystemLocalTimeResolver(),
+    this.clock,
+    this.localTimeResolver,
     new DiaryTextRules(),
-    new SystemCompletionFeedback()
+    new SystemCompletionFeedback(),
+    AppServiceContainer.getBackgroundImageService()
   );
   @State private privacyConsentViewModel: PrivacyConsentViewModel = new PrivacyConsentViewModel(
     AppServiceContainer.getSettingsRepository(),
@@ -53,16 +60,66 @@ struct Index {
   );
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
+  @State private pickerResumePending: boolean = false;
+  @State private pickerError: string = '';
 
   aboutToAppear(): void {
+    this.isPageActive = true;
+    this.scheduleMidnightRefresh();
     this.viewModel.load();
     this.privacyConsentViewModel.load();
   }
 
   onPageShow(): void {
-    if (this.viewModel.uiState !== TodayUiState.APP_INITIALIZING) {
+    this.isPageActive = true;
+    this.scheduleMidnightRefresh();
+    if (this.pickerResumePending) {
+      this.pickerResumePending = false;
+      return;
+    }
+    if (this.viewModel.uiState !== TodayUiState.APP_INITIALIZING && !this.viewModel.isPickingBackground) {
       this.viewModel.load();
     }
+  }
+
+  onPageHide(): void {
+    this.isPageActive = false;
+    this.clearMidnightRefreshTimer();
+  }
+
+  aboutToDisappear(): void {
+    this.isPageActive = false;
+    this.clearMidnightRefreshTimer();
+  }
+
+  private clearMidnightRefreshTimer(): void {
+    if (this.midnightRefreshTimer !== -1) {
+      clearTimeout(this.midnightRefreshTimer);
+      this.midnightRefreshTimer = -1;
+    }
+  }
+
+  private scheduleMidnightRefresh(): void {
+    this.clearMidnightRefreshTimer();
+    if (!this.isPageActive) {
+      return;
+    }
+    const now = this.clock.now();
+    const refreshAt = this.localTimeResolver.resolve(now).revisionDeadlineAt + 1;
+    this.midnightRefreshTimer = setTimeout(() => this.refreshForNewLocalDate(), Math.max(1, refreshAt - now));
+  }
+
+  private async refreshForNewLocalDate(): Promise<void> {
+    this.midnightRefreshTimer = -1;
+    if (!this.isPageActive) {
+      return;
+    }
+    if (this.viewModel.isBusy) {
+      this.midnightRefreshTimer = setTimeout(() => this.refreshForNewLocalDate(), 1000);
+      return;
+    }
+    await this.viewModel.load();
+    this.scheduleMidnightRefresh();
   }
 
   onBackPress(): boolean {
@@ -77,6 +134,33 @@ struct Index {
     return false;
   }
 
+  private async chooseBackground(): Promise<void> {
+    if (this.viewModel.isPickingBackground) {
+      return;
+    }
+    this.pickerError = '';
+    this.pickerResumePending = true;
+    const pickerDate = this.viewModel.localDate;
+    try {
+      const options = new photoAccessHelper.PhotoSelectOptions();
+      options.MIMEType = photoAccessHelper.PhotoViewMIMETypes.IMAGE_TYPE;
+      options.maxSelectNumber = 1;
+      const picker = new photoAccessHelper.PhotoViewPicker();
+      const result = await picker.select(options);
+      const currentDate = this.localTimeResolver.resolve(this.clock.now()).localDate;
+      if (pickerDate.length === 0 || pickerDate !== this.viewModel.localDate || currentDate !== pickerDate) {
+        this.pickerResumePending = false;
+        await this.viewModel.load();
+        return;
+      }
+      if (result.photoUris.length === 0) {
+        return;
+      }
+      await this.viewModel.selectBackgroundFromUri(result.photoUris[0]);
+    } catch (error) {
+      this.pickerError = '暂时无法打开相册，请稍后再试';
+    }
+  }
   private openScroll(): void {
     this.navPathStack.pushPath({
       name: AppRouteName.SCROLL,
@@ -222,6 +306,11 @@ struct Index {
           })
         } else {
         PaperBackdrop({ paperId: this.paperId })
+        DiaryBackground({
+          imageUri: this.viewModel.backgroundImageUri,
+          paperId: this.paperId,
+          scrimOpacity: 0.68
+        })
 
         if (this.viewModel.uiState === TodayUiState.APP_INITIALIZING) {
           AppLoadingPanel()
@@ -241,6 +330,7 @@ struct Index {
             isRevision: this.viewModel.isRevisionDraft,
             isBusy: this.viewModel.isBusy,
             errorMessage: this.viewModel.errorMessage,
+            backgroundImageUri: this.viewModel.backgroundImageUri,
             onConfirm: () => this.viewModel.confirmPending(),
             onCancel: () => this.viewModel.errorMessage.length > 0 ?
               this.viewModel.returnFromError() : this.viewModel.cancelConfirmation()
@@ -267,6 +357,15 @@ struct Index {
                 canConfirm: this.viewModel.canConfirmWord,
                 isRevision: this.viewModel.isRevisionDraft,
                 inspiration: this.viewModel.inspiration,
+                backgroundImageUri: this.viewModel.backgroundImageUri,
+                paperId: this.paperId,
+                isPickingBackground: this.viewModel.isPickingBackground,
+                backgroundError: this.pickerError.length > 0 ? this.pickerError : this.viewModel.backgroundError,
+                onChooseBackground: () => this.chooseBackground(),
+                onRemoveBackground: () => {
+                  this.pickerError = '';
+                  this.viewModel.removeBackgroundImage();
+                },
                 onContentChange: (value: string) => this.viewModel.setContent(value),
                 onNoteChange: (value: string) => this.viewModel.setNote(value),
                 onRefreshInspiration: () => this.viewModel.nextInspiration(),
@@ -301,7 +400,8 @@ struct Index {
             left: $r('app.float.page_horizontal_margin'),
             right: $r('app.float.page_horizontal_margin')
           })
-          .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+          .backgroundColor(this.viewModel.backgroundImageUri.length > 0 ? Color.Transparent :
+            (this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm')))
 
         }
       }

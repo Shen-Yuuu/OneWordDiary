@@ -1,5 +1,6 @@
 import { InspirationLine } from './InspirationLine';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
+import { DiaryBackground } from '../common/DiaryBackground';
 
 @Component
 export struct TodayEditor {
@@ -13,6 +14,10 @@ export struct TodayEditor {
   @Prop canConfirm: boolean = false;
   @Prop isRevision: boolean = false;
   @Prop inspiration: string = '';
+  @Prop backgroundImageUri: string = '';
+  @Prop paperId: string = 'warm_paper_dev';
+  @Prop isPickingBackground: boolean = false;
+  @Prop backgroundError: string = '';
   onContentChange: (value: string) => void = (value: string) => {
   };
   onNoteChange: (value: string) => void = (value: string) => {
@@ -26,6 +31,10 @@ export struct TodayEditor {
   onCancelRevision: () => void = () => {
   };
 
+  onChooseBackground: () => void = () => {
+  };
+  onRemoveBackground: () => void = () => {
+  };
   contentFontSize(): number {
     if (this.contentCount <= 1) {
       return 50;
@@ -114,6 +123,61 @@ export struct TodayEditor {
       .width('100%')
       .padding({ left: 24, right: 24 })
       .margin({ top: 6 })
+
+      Row({ space: 12 }) {
+        if (this.backgroundImageUri.length > 0) {
+          Stack() {
+            DiaryBackground({
+              imageUri: this.backgroundImageUri,
+              paperId: this.paperId,
+              scrimOpacity: 0.18
+            })
+          }
+          .width(76)
+          .height(52)
+          .borderRadius(8)
+          .clip(true)
+        }
+
+        Button(this.backgroundImageUri.length > 0 ? '更换背景' : '选择背景')
+          .height(40)
+          .fontSize(13)
+          .fontColor($r('app.color.text_secondary'))
+          .backgroundColor(Color.Transparent)
+          .border({ width: 1, color: $r('app.color.outline_soft') })
+          .borderRadius(20)
+          .enabled(!this.isPickingBackground)
+          .onClick(() => this.onChooseBackground())
+
+        if (this.backgroundImageUri.length > 0) {
+          Button('移除')
+            .height(40)
+            .fontSize(13)
+            .fontColor($r('app.color.accent_vermilion'))
+            .backgroundColor(Color.Transparent)
+            .enabled(!this.isPickingBackground)
+            .onClick(() => this.onRemoveBackground())
+        }
+
+        if (this.isPickingBackground) {
+          LoadingProgress()
+            .width(22)
+            .height(22)
+            .color($r('app.color.accent_vermilion'))
+        }
+      }
+      .width('100%')
+      .justifyContent(FlexAlign.Center)
+      .alignItems(VerticalAlign.Center)
+
+      if (this.backgroundError.length > 0) {
+        Text(this.backgroundError)
+          .fontSize(12)
+          .fontColor($r('app.color.error_danger'))
+          .textAlign(TextAlign.Center)
+          .margin({ top: 4 })
+          .accessibilityLevel('yes')
+      }
 
       Blank()
 

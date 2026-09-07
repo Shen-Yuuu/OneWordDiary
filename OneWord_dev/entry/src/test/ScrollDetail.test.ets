@@ -42,7 +42,8 @@ function createRecord(
   content: string | null,
   note: string | null = null,
   fontId: string = 'system_serif_dev',
-  paperId: string = 'warm_paper_dev'
+  paperId: string = 'warm_paper_dev',
+  backgroundImageId: string | null = null
 ): DailyRecord {
   return {
     localDate: localDate,
@@ -51,6 +52,7 @@ function createRecord(
     recordType: recordType,
     fontId: fontId,
     paperId: paperId,
+    backgroundImageId: backgroundImageId,
     submittedAt: 1000,
     submittedTimezoneOffset: 480,
     revisionDeadlineAt: 2000,
@@ -184,7 +186,8 @@ export default function scrollDetailTest(): void {
       const repository = new InMemoryDiaryRepository();
       await seed(repository, [
         createRecord('2026-08-17', RecordType.BLANK, null),
-        createRecord('2026-08-18', RecordType.WORD, '微风正好', '风停在窗边')
+        createRecord('2026-08-18', RecordType.WORD, '微风正好', '风停在窗边',
+          'system_serif_dev', 'warm_paper_dev', 'bg-detail.jpg')
       ]);
       const viewModel = new DetailViewModel(createService(repository), new DiaryDateFormatter());
 
@@ -195,12 +198,14 @@ export default function scrollDetailTest(): void {
       expect(viewModel.note).assertEqual('风停在窗边');
       expect(viewModel.recordType).assertEqual(RecordType.WORD);
       expect(viewModel.record !== null && viewModel.record.note === '风停在窗边').assertTrue();
+      expect(viewModel.backgroundImageId).assertEqual('bg-detail.jpg');
       expect(viewModel.dateLabel).assertEqual('8月18日 星期二');
 
       await viewModel.load('2026-08-17');
       expect(viewModel.uiState).assertEqual(DetailUiState.BLANK);
       expect(viewModel.recordType).assertEqual(RecordType.BLANK);
       expect(viewModel.content).assertEqual('');
+      expect(viewModel.backgroundImageId === null).assertTrue();
       expect(viewModel.record !== null && viewModel.record.content === null).assertTrue();
 
       await viewModel.load('2026-08-16');

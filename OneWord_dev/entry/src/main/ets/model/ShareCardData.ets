@@ -11,6 +11,7 @@ export class ShareCardData {
   noteText: string = '';  // 直接存储计算好的备注文本
   fontId: string = 'system_serif_dev';
   paperId: string = 'warm_paper_dev';
+  backgroundImageId: string | null = null;
 
   constructor(
     localDate: string,
@@ -18,7 +19,8 @@ export class ShareCardData {
     content: string,
     noteText: string,
     fontId: string,
-    paperId: string
+    paperId: string,
+    backgroundImageId: string | null = null
   ) {
     this.localDate = localDate;
     this.recordType = recordType;
@@ -26,6 +28,7 @@ export class ShareCardData {
     this.noteText = noteText;
     this.fontId = fontId;
     this.paperId = paperId;
+    this.backgroundImageId = backgroundImageId;
   }
 
   updateNoteText(noteText: string): void {

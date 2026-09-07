@@ -8,6 +8,8 @@ export enum BackupErrorCode {
   DUPLICATE_DATE = 'DUPLICATE_DATE',
   READ_FAILED = 'READ_FAILED',
   WRITE_FAILED = 'WRITE_FAILED',
+  IMAGE_MISSING = 'IMAGE_MISSING',
+  INVALID_IMAGE = 'INVALID_IMAGE',
   IMPORT_FAILED = 'IMPORT_FAILED'
 }
 
@@ -20,4 +22,3 @@ export class BackupError extends Error {
     this.code = code;
   }
 }
-

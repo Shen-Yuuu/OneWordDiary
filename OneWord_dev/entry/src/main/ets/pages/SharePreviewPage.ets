@@ -28,7 +28,12 @@ export struct SharePreviewPage {
   private readonly imageService: ShareImageService = new ShareImageService();
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private contentShown: boolean = false;
+  @State private backgroundImageUri: string = '';
+  @State private isBackgroundReady: boolean = true;
+  @State private backgroundLoadFailed: boolean = false;
+  @State private backgroundReloadKey: number = 0;
   private revealTimer: number = -1;
+  private backgroundLoadTimer: number = -1;
   onBack: () => void = () => {
   };
 
@@ -46,21 +51,22 @@ export struct SharePreviewPage {
     if (this.revealTimer !== -1) {
       clearTimeout(this.revealTimer);
     }
+    this.clearBackgroundLoadTimer();
     this.imageService.cleanup();
   }
 
   private async shareCurrentCard(): Promise<void> {
-    console.info(`SharePreviewPage shareCurrentCard: start, mode=${this.selectedMode}`);
+    if (this.selectedMode === DiaryShareMode.SINGLE && !this.isBackgroundReady) {
+      return;
+    }
 
     if (!this.viewModel.beginRendering()) {
-      console.warn('SharePreviewPage shareCurrentCard: beginRendering returned false, aborting');
       return;
     }
 
     try {
       const fileName = this.selectedMode === DiaryShareMode.SINGLE ?
         'oneword-single-share.png' : 'oneword-seven-days-share.png';
-      console.info(`SharePreviewPage shareCurrentCard: calling imageService.shareCard, fileName=${fileName}, componentId=${SHARE_CARD_COMPONENT_ID}`);
 
       await this.imageService.shareCard(
         this.getUIContext(),
@@ -69,26 +75,84 @@ export struct SharePreviewPage {
         fileName
       );
 
-      console.info('SharePreviewPage shareCurrentCard: shareCard completed successfully');
       this.viewModel.finishRendering();
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(`SharePreviewPage shareCurrentCard failed: ${error.message}, stack: ${error.stack}`);
-      } else {
-        console.error(`SharePreviewPage shareCurrentCard failed: ${JSON.stringify(error)}`);
-      }
+      console.error('SharePreviewPage shareCurrentCard failed');
       this.viewModel.failRendering();
     }
   }
 
   private async loadShareData(): Promise<void> {
+    this.backgroundImageUri = '';
+    this.isBackgroundReady = true;
+    this.backgroundLoadFailed = false;
     await this.viewModel.load(this.initialMode, this.preferredSingleDate);
     this.selectedMode = this.viewModel.mode;
+    if (this.viewModel.singleData === null) {
+      return;
+    }
+    this.backgroundImageUri = AppServiceContainer.getBackgroundImageService()
+      .resolveUri(this.viewModel.singleData.backgroundImageId);
+    if (this.backgroundImageUri.length > 0) {
+      this.beginBackgroundLoad();
+    }
+  }
+
+  private clearBackgroundLoadTimer(): void {
+    if (this.backgroundLoadTimer !== -1) {
+      clearTimeout(this.backgroundLoadTimer);
+      this.backgroundLoadTimer = -1;
+    }
+  }
+
+  private beginBackgroundLoad(): void {
+    this.clearBackgroundLoadTimer();
+    this.backgroundLoadFailed = false;
+    this.isBackgroundReady = false;
+    this.backgroundReloadKey++;
+    const generation = this.backgroundReloadKey;
+    this.backgroundLoadTimer = setTimeout(() => {
+      if (generation !== this.backgroundReloadKey || this.isBackgroundReady) {
+        return;
+      }
+      this.backgroundLoadTimer = -1;
+      this.backgroundReloadKey++;
+      this.backgroundLoadFailed = true;
+      this.isBackgroundReady = true;
+    }, 2500);
+  }
+
+  private handleBackgroundReady(imageUri: string, reloadKey: number): void {
+    if (imageUri !== this.backgroundImageUri || reloadKey !== this.backgroundReloadKey) {
+      return;
+    }
+    this.clearBackgroundLoadTimer();
+    this.backgroundLoadFailed = false;
+    this.isBackgroundReady = true;
+  }
+
+  private handleBackgroundFailed(imageUri: string, reloadKey: number): void {
+    if (imageUri !== this.backgroundImageUri || reloadKey !== this.backgroundReloadKey) {
+      return;
+    }
+    this.clearBackgroundLoadTimer();
+    this.backgroundReloadKey++;
+    this.backgroundLoadFailed = true;
+    this.isBackgroundReady = true;
+  }
+
+  private retryBackground(): void {
+    this.beginBackgroundLoad();
   }
 
   private selectMode(mode: DiaryShareMode): void {
     this.viewModel.selectMode(mode);
     if (this.viewModel.mode === mode) {
+      if (mode === DiaryShareMode.SINGLE && this.backgroundImageUri.length > 0) {
+        this.beginBackgroundLoad();
+      } else {
+        this.clearBackgroundLoadTimer();
+      }
       this.getUIContext().animateTo({ duration: 240, curve: Curve.EaseOut }, () => {
         this.selectedMode = mode;
       });
@@ -117,7 +181,14 @@ export struct SharePreviewPage {
         recordType: this.viewModel.singleData.recordType,
         content: this.viewModel.singleData.content,
         fontId: this.viewModel.singleData.fontId,
-        paperId: this.paperId
+        paperId: this.viewModel.singleData.paperId,
+        backgroundImageUri: this.backgroundImageUri,
+        showBackgroundImage: !this.backgroundLoadFailed,
+        backgroundReloadKey: this.backgroundReloadKey,
+        onBackgroundReady: (imageUri: string, reloadKey: number) =>
+          this.handleBackgroundReady(imageUri, reloadKey),
+        onBackgroundFailed: (imageUri: string, reloadKey: number) =>
+          this.handleBackgroundFailed(imageUri, reloadKey)
       })
         .transition(TransitionEffect.OPACITY.animation({ duration: 240, curve: Curve.EaseOut }))
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
@@ -207,9 +278,25 @@ export struct SharePreviewPage {
                     .textAlign(TextAlign.Center)
                 }
 
+                if (this.selectedMode === DiaryShareMode.SINGLE && !this.isBackgroundReady) {
+                  Text('正在读取背景…')
+                    .fontSize(13)
+                    .fontColor($r('app.color.text_secondary'))
+                }
+
+                if (this.selectedMode === DiaryShareMode.SINGLE && this.backgroundLoadFailed) {
+                  Button('背景读取失败，点此重试')
+                    .height(40)
+                    .fontSize(13)
+                    .fontColor($r('app.color.accent_vermilion'))
+                    .backgroundColor(Color.Transparent)
+                    .onClick(() => this.retryBackground())
+                }
+
                 DiaryPrimaryButton({
                   label: this.viewModel.uiState === ShareUiState.RENDERING ? '正在生成…' : '系统分享',
-                  isEnabled: this.viewModel.canShare && !this.viewModel.isBusy,
+                  isEnabled: this.viewModel.canShare && !this.viewModel.isBusy &&
+                    (this.selectedMode === DiaryShareMode.SEVEN_DAYS || this.isBackgroundReady),
                   onTap: () => this.shareCurrentCard()
                 })
               }

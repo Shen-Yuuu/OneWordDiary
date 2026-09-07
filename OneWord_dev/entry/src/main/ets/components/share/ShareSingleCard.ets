@@ -1,4 +1,5 @@
 import { RecordType } from '../../model/DailyRecord';
+import { DiaryBackground } from '../common/DiaryBackground';
 import { AppLogger } from '../../utils/AppLogger';
 import { DiaryDateFormatter } from '../../utils/DiaryDateFormatter';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
@@ -10,6 +11,15 @@ export struct ShareSingleCard {
   @Prop content: string = '';
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
+  @Prop backgroundImageUri: string = '';
+  @Prop showBackgroundImage: boolean = true;
+  @Prop backgroundReloadKey: number = 0;
+  onBackgroundReady: (imageUri: string, reloadKey: number) => void =
+    (imageUri: string, reloadKey: number) => {
+    };
+  onBackgroundFailed: (imageUri: string, reloadKey: number) => void =
+    (imageUri: string, reloadKey: number) => {
+    };
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
@@ -48,6 +58,20 @@ export struct ShareSingleCard {
         .width(286)
         .height(440)
         .objectFit(ImageFit.Fill)
+
+      if (this.showBackgroundImage) {
+        DiaryBackground({
+          imageUri: this.backgroundImageUri,
+          paperId: this.paperId,
+          scrimOpacity: 0.72,
+          fixedLightScrim: true,
+          reloadKey: this.backgroundReloadKey,
+          onReady: (imageUri: string, reloadKey: number) => this.onBackgroundReady(imageUri, reloadKey),
+          onFailed: (imageUri: string, reloadKey: number) => this.onBackgroundFailed(imageUri, reloadKey)
+        })
+          .width(286)
+          .height(440)
+      }
 
       Column() {
       Text(this.dateFormatter.compactLabel(this.localDate))

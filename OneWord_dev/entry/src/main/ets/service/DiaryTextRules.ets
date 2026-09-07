@@ -1,5 +1,10 @@
 import { AppConstants } from '../constants/AppConstants';
 import {
+  BackgroundImageError,
+  BackgroundImageErrorCode,
+  isValidBackgroundImageId
+} from '../model/BackgroundImage';
+import {
   DiaryEntryInput,
   NormalizedDiaryEntry,
   RecordType
@@ -23,7 +28,8 @@ export class DiaryTextRules {
         content: null,
         note: null,
         fontId: input.fontId,
-        paperId: input.paperId
+        paperId: input.paperId,
+        backgroundImageId: this.normalizeBackgroundImageId(input.backgroundImageId)
       };
     }
 
@@ -34,7 +40,8 @@ export class DiaryTextRules {
       content: normalizedContent,
       note: normalizedNote,
       fontId: input.fontId,
-      paperId: input.paperId
+      paperId: input.paperId,
+      backgroundImageId: this.normalizeBackgroundImageId(input.backgroundImageId)
     };
   }
 
@@ -85,6 +92,16 @@ export class DiaryTextRules {
 
   private hasLineBreak(value: string): boolean {
     return value.includes('\n') || value.includes('\r');
+  }
+
+  private normalizeBackgroundImageId(value: string | null | undefined): string | null {
+    if (value === undefined || value === null || value.length === 0) {
+      return null;
+    }
+    if (!isValidBackgroundImageId(value)) {
+      throw new BackgroundImageError(BackgroundImageErrorCode.INVALID_IMAGE, 'Invalid background image ID');
+    }
+    return value;
   }
 
   private validateStyle(fontId: string, paperId: string): void {

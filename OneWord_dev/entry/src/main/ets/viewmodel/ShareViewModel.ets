@@ -178,7 +178,8 @@ export class ShareViewModel {
       content: record.content === null ? '' : record.content,
       note: record.note === null ? '' : record.note,
       fontId: record.fontId,
-      paperId: record.paperId
+      paperId: record.paperId,
+      backgroundImageId: record.backgroundImageId === undefined ? null : record.backgroundImageId
     };
   }
 }

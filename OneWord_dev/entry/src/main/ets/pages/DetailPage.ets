@@ -1,5 +1,6 @@
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
+import { DiaryBackground } from '../components/common/DiaryBackground';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { DetailRecordContent } from '../components/detail/DetailRecordContent';
 
@@ -24,6 +25,9 @@ export struct DetailPage {
   };
 
 
+  private backgroundImageUri(): string {
+    return AppServiceContainer.getBackgroundImageService().resolveUri(this.viewModel.backgroundImageId);
+  }
   aboutToAppear(): void {
     this.revealTimer = setTimeout(() => {
       this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
@@ -43,6 +47,11 @@ export struct DetailPage {
     NavDestination() {
       Stack() {
         PaperBackdrop({ paperId: this.paperId })
+        DiaryBackground({
+          imageUri: this.backgroundImageUri(),
+          paperId: this.paperId,
+          scrimOpacity: 0.68
+        })
 
         Column() {
           Row() {

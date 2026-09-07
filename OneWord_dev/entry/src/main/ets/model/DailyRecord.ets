@@ -10,6 +10,7 @@ export interface DailyRecord {
   recordType: RecordType;
   fontId: string;
   paperId: string;
+  backgroundImageId?: string | null;
   submittedAt: number;
   submittedTimezoneOffset: number;
   revisionDeadlineAt: number;
@@ -24,6 +25,7 @@ export interface DiaryEntryInput {
   note: string | null;
   fontId: string;
   paperId: string;
+  backgroundImageId?: string | null;
 }
 
 export interface NormalizedDiaryEntry {
@@ -32,6 +34,7 @@ export interface NormalizedDiaryEntry {
   note: string | null;
   fontId: string;
   paperId: string;
+  backgroundImageId?: string | null;
 }
 
 export enum RevisionStatus {

@@ -28,9 +28,13 @@ export class DiaryDatabase {
     try {
       store.beginTransaction();
       transactionStarted = true;
-      if (store.version < 1) {
+      const previousVersion: number = store.version;
+      if (previousVersion < 1) {
         await store.executeSql(DatabaseConstants.CREATE_DAILY_RECORD_TABLE);
         await store.executeSql(DatabaseConstants.CREATE_SUBMITTED_AT_INDEX);
+      }
+      if (previousVersion >= 1 && previousVersion < 2) {
+        await store.executeSql(DatabaseConstants.ADD_BACKGROUND_IMAGE_ID_COLUMN);
       }
       store.version = DatabaseConstants.DATABASE_VERSION;
       store.commit();

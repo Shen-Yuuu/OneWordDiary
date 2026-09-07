@@ -1,6 +1,6 @@
 export class DatabaseConstants {
   static readonly DATABASE_NAME: string = 'oneword.db';
-  static readonly DATABASE_VERSION: number = 1;
+  static readonly DATABASE_VERSION: number = 2;
   static readonly TABLE_DAILY_RECORD: string = 'daily_record';
 
   static readonly COLUMN_LOCAL_DATE: string = 'local_date';
@@ -9,6 +9,7 @@ export class DatabaseConstants {
   static readonly COLUMN_RECORD_TYPE: string = 'record_type';
   static readonly COLUMN_FONT_ID: string = 'font_id';
   static readonly COLUMN_PAPER_ID: string = 'paper_id';
+  static readonly COLUMN_BACKGROUND_IMAGE_ID: string = 'background_image_id';
   static readonly COLUMN_SUBMITTED_AT: string = 'submitted_at';
   static readonly COLUMN_SUBMITTED_TIMEZONE_OFFSET: string = 'submitted_tz_offset';
   static readonly COLUMN_REVISION_DEADLINE_AT: string = 'revision_deadline_at';
@@ -24,6 +25,7 @@ export class DatabaseConstants {
     "record_type TEXT NOT NULL CHECK(record_type IN ('WORD', 'BLANK')), " +
     'font_id TEXT NOT NULL, ' +
     'paper_id TEXT NOT NULL, ' +
+    'background_image_id TEXT, ' +
     'submitted_at INTEGER NOT NULL, ' +
     'submitted_tz_offset INTEGER NOT NULL, ' +
     'revision_deadline_at INTEGER NOT NULL, ' +
@@ -34,4 +36,7 @@ export class DatabaseConstants {
 
   static readonly CREATE_SUBMITTED_AT_INDEX: string =
     'CREATE INDEX IF NOT EXISTS idx_daily_record_submitted_at ON daily_record(submitted_at DESC)';
+
+  static readonly ADD_BACKGROUND_IMAGE_ID_COLUMN: string =
+    'ALTER TABLE daily_record ADD COLUMN background_image_id TEXT';
 }

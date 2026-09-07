@@ -31,7 +31,7 @@ export struct BackupPage {
   private showExportWarning(): void {
     this.getUIContext().showAlertDialog({
       title: '导出本地备份？',
-      message: '备份文件未加密，包含全部日记正文与备注。请保存到可信位置并谨慎分享。',
+      message: '备份文件未加密，包含全部日记正文、备注与背景图片。请保存到可信位置并谨慎分享。',
       primaryButton: {
         value: '取消',
         action: () => {
@@ -242,7 +242,7 @@ export struct BackupPage {
               .onClick(() => this.viewModel.resetFeedback())
             }
 
-            Text('导入不会覆盖同一天的本机记录。文件上限 5 MiB、10000 条记录。')
+            Text('导入不会覆盖同一天的本机记录。纯文字备份上限 5 MiB，含背景图备份上限 64 MiB，最多 10000 条记录。')
               .fontSize(12)
               .lineHeight(20)
               .fontColor($r('app.color.text_tertiary'))
@@ -284,4 +284,3 @@ export struct BackupPage {
     .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
   }
 }
-
