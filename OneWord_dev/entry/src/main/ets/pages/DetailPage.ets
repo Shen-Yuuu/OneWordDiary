@@ -3,6 +3,7 @@ import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { DiaryBackground } from '../components/common/DiaryBackground';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { DetailRecordContent } from '../components/detail/DetailRecordContent';
+import { styleForPaper } from '../constants/StyleTokens';
 
 import { DetailUiState } from '../model/DetailUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
@@ -28,6 +29,11 @@ export struct DetailPage {
   private backgroundImageUri(): string {
     return AppServiceContainer.getBackgroundImageService().resolveUri(this.viewModel.backgroundImageId);
   }
+
+  private displayedPaperId(): string {
+    return this.viewModel.record === null ? this.paperId : this.viewModel.paperId;
+  }
+
   aboutToAppear(): void {
     this.revealTimer = setTimeout(() => {
       this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
@@ -46,11 +52,10 @@ export struct DetailPage {
   build() {
     NavDestination() {
       Stack() {
-        PaperBackdrop({ paperId: this.paperId })
+        PaperBackdrop({ paperId: this.displayedPaperId() })
         DiaryBackground({
           imageUri: this.backgroundImageUri(),
-          paperId: this.paperId,
-          scrimOpacity: 0.68
+          paperId: this.displayedPaperId()
         })
 
         Column() {
@@ -151,9 +156,9 @@ export struct DetailPage {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+      .backgroundColor(styleForPaper(this.displayedPaperId()).light.background)
     }
     .hideTitleBar(true)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+    .backgroundColor(styleForPaper(this.displayedPaperId()).light.background)
   }
 }

@@ -1,6 +1,7 @@
 import { RecordType } from '../../model/DailyRecord';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
 import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
+import { styleForPaper } from '../../constants/StyleTokens';
 
 @Component
 struct ScrollAxisNode {
@@ -77,29 +78,24 @@ export struct ScrollRecordNode {
   }
 
   textColor(): ResourceColor {
-    return this.item.paperId === 'plain_ash_dev' ?
-      $r('app.color.scroll_text_plain') : $r('app.color.scroll_text_warm');
+    return styleForPaper(this.item.paperId).light.textPrimary;
   }
 
   secondaryColor(): ResourceColor {
-    return this.item.paperId === 'plain_ash_dev' ?
-      $r('app.color.scroll_secondary_plain') : $r('app.color.scroll_secondary_warm');
+    return styleForPaper(this.item.paperId).light.textSecondary;
   }
 
   faintColor(): ResourceColor {
-    return this.item.paperId === 'plain_ash_dev' ?
-      $r('app.color.scroll_faint_plain') : $r('app.color.scroll_faint_warm');
+    return styleForPaper(this.item.paperId).light.textSecondary;
   }
 
   lineColor(): ResourceColor {
-    return this.item.paperId === 'plain_ash_dev' ?
-      $r('app.color.scroll_line_plain') : $r('app.color.scroll_line_warm');
+    return styleForPaper(this.item.paperId).light.divider;
   }
 
 
   accentColor(): ResourceColor {
-    return this.item.paperId === 'plain_ash_dev' ?
-      $r('app.color.scroll_accent_plain') : $r('app.color.scroll_accent_warm');
+    return styleForPaper(this.item.paperId).light.accent;
   }
 
   visibleNote(): string {

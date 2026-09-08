@@ -1,4 +1,5 @@
 import { AppLogger } from '../../utils/AppLogger';
+import { styleForPaper } from '../../constants/StyleTokens';
 
 @Component
 export struct PaperBackdrop {
@@ -13,7 +14,7 @@ export struct PaperBackdrop {
   }
 
   get paperColor(): ResourceColor {
-    return this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm');
+    return styleForPaper(this.paperId).light.background;
   }
 
   build() {
@@ -34,5 +35,6 @@ export struct PaperBackdrop {
     .height('100%')
     .backgroundColor(this.paperColor)
     .hitTestBehavior(HitTestMode.None)
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
   }
 }

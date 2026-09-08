@@ -5,6 +5,7 @@ import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem
 import { ShareDayItem, ShareDayKind } from '../../model/ShareModel';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
+import { styleForPaper } from '../../constants/StyleTokens';
 
 @Component
 export struct ShareScrollCard {
@@ -19,15 +20,15 @@ export struct ShareScrollCard {
   }
 
   textColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#242424' : '#282622';
+    return styleForPaper(this.paperId).light.textPrimary;
   }
 
   secondaryColor(): string {
-    return '#5F5B55';
+    return styleForPaper(this.paperId).light.textSecondary;
   }
 
   accentColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
+    return styleForPaper(this.paperId).light.accent;
   }
 
   recordFontFamily(): string {
@@ -147,8 +148,8 @@ export struct ShareScrollCard {
     }
     .width(286)
     .height(this.cardHeight())
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7')
-    .border({ width: 1, color: this.paperId === 'plain_ash_dev' ? '#E5E5E2' : '#EEE5E1' })
+    .backgroundColor(styleForPaper(this.paperId).light.background)
+    .border({ width: 1, color: styleForPaper(this.paperId).light.divider })
     .borderRadius(2)
   }
 }

@@ -1,4 +1,4 @@
-import { StylePresetId } from '../constants/StyleTokens';
+import { paperIdForStyle, StylePresetId } from '../constants/StyleTokens';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { DEFAULT_APP_SETTINGS, ReminderSettings } from '../model/Settings';
 import { SettingsUiState } from '../model/SettingsUiState';
@@ -91,8 +91,7 @@ export class SettingsViewModel {
   }
 
   private syncPaperStorage(stylePresetId: StylePresetId): void {
-    AppStorage.setOrCreate('currentPaperId',
-      stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev');
+    AppStorage.setOrCreate('currentPaperId', paperIdForStyle(stylePresetId));
   }
 
   async enableReminder(): Promise<void> {

@@ -1,6 +1,7 @@
 import { picker } from '@kit.CoreFileKit';
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
+import { styleForPaper } from '../constants/StyleTokens';
 import { BackupUiState } from '../model/BackupModel';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { BackupViewModel } from '../viewmodel/BackupViewModel';
@@ -278,9 +279,9 @@ export struct BackupPage {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+      .backgroundColor(styleForPaper(this.paperId).light.background)
     }
     .hideTitleBar(true)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+    .backgroundColor(styleForPaper(this.paperId).light.background)
   }
 }

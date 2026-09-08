@@ -13,6 +13,7 @@ import scrollDetailTest from './ScrollDetail.test';
 import settingsViewModelTest from './SettingsViewModel.test';
 import shareViewModelTest from './ShareViewModel.test';
 import timeBoundaryTest from './TimeBoundary.test';
+import themeCatalogTest from './ThemeCatalog.test';
 import todayViewModelTest from './TodayViewModel.test';
 
 export default function testsuite(): void {
@@ -26,6 +27,7 @@ export default function testsuite(): void {
   invisibleTextTest();
   localTimeResolverTest();
   timeBoundaryTest();
+  themeCatalogTest();
   scrollDetailTest();
   settingsViewModelTest();
   shareViewModelTest();

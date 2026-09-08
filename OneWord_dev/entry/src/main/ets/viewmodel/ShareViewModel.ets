@@ -1,4 +1,4 @@
-import { StylePresetId } from '../constants/StyleTokens';
+import { styleForPreset, StylePresetId } from '../constants/StyleTokens';
 import { DailyRecord, RecordType } from '../model/DailyRecord';
 import { DiaryShareMode, ShareDayItem, ShareDayKind, ShareSingleData } from '../model/ShareModel';
 import { ShareUiState } from '../model/ShareUiState';
@@ -121,9 +121,9 @@ export class ShareViewModel {
   }
 
   private applySevenDayStyle(stylePresetId: StylePresetId): void {
-    const isPlain = stylePresetId === StylePresetId.PLAIN_ASH;
-    this.sevenFontId = isPlain ? 'system_sans_dev' : 'system_serif_dev';
-    this.sevenPaperId = isPlain ? 'plain_ash_dev' : 'warm_paper_dev';
+    const style = styleForPreset(stylePresetId);
+    this.sevenFontId = style.fontId;
+    this.sevenPaperId = style.paperId;
   }
 
   private buildSevenDays(dates: string[], records: DailyRecord[]): ShareDayItem[] {

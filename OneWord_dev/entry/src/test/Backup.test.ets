@@ -115,6 +115,51 @@ export default function backupTest(): void {
       expect(decoded.stylePresetId).assertEqual(StylePresetId.PLAIN_ASH);
     });
 
+    it('roundTripsEverySupportedThemeAndRecordStyle', 0, () => {
+      const codec = new BackupCodec(new DiaryTextRules());
+      const styles: StylePresetId[] = [
+        StylePresetId.PAPER_INK,
+        StylePresetId.PLAIN_ASH,
+        StylePresetId.PINE_MIST,
+        StylePresetId.MIST_BLUE,
+        StylePresetId.APRICOT_PAPER
+      ];
+      const fontIds: string[] = [
+        'system_serif_dev',
+        'system_sans_dev',
+        'system_serif_dev',
+        'system_serif_dev',
+        'system_serif_dev'
+      ];
+      const paperIds: string[] = [
+        'warm_paper_dev',
+        'plain_ash_dev',
+        'pine_mist_dev',
+        'mist_blue_dev',
+        'apricot_paper_dev'
+      ];
+      for (let index = 0; index < styles.length; index++) {
+        const record = createRecord(`2026-08-${20 + index}`, '静');
+        record.fontId = fontIds[index];
+        record.paperId = paperIds[index];
+        const decoded = codec.decode(codec.encode([record], styles[index], 1000));
+        expect(decoded.stylePresetId).assertEqual(styles[index]);
+        expect(decoded.records[0].fontId).assertEqual(fontIds[index]);
+        expect(decoded.records[0].paperId).assertEqual(paperIds[index]);
+      }
+    });
+
+    it('rejectsUnknownAndMismatchedRecordStyles', 0, () => {
+      const codec = new BackupCodec(new DiaryTextRules());
+      const valid = codec.encode([createRecord('2026-08-21', '静')], StylePresetId.PAPER_INK, 1000);
+      expectBackupError(codec, valid.replace('warm_paper_dev', 'unknown_paper_dev'),
+        BackupErrorCode.INVALID_RECORD);
+      expectBackupError(codec, valid.replace('system_serif_dev', 'system_sans_dev'),
+        BackupErrorCode.INVALID_RECORD);
+      expectBackupError(codec, valid.replace('warm_paper_dev', 'plain_ash_dev'),
+        BackupErrorCode.INVALID_RECORD);
+    });
+
     it('rejectsDamagedUnknownDuplicateAndInvalidRecords', 0, () => {
       const codec = new BackupCodec(new DiaryTextRules());
       const valid = codec.encode([createRecord('2026-08-21', '静')], StylePresetId.PAPER_INK, 1000);

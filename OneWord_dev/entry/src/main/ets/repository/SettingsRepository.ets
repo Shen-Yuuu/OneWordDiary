@@ -1,5 +1,5 @@
 import { preferences } from '@kit.ArkData';
-import { StylePresetId } from '../constants/StyleTokens';
+import { isSupportedStylePreset, StylePresetId, stylePresetIdFromValue } from '../constants/StyleTokens';
 import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../model/Settings';
 
 const SETTINGS_FILE: string = 'oneword_settings';
@@ -118,10 +118,10 @@ export class PreferencesSettingsRepository implements SettingsRepository {
   }
 
   private isSupportedStyle(stylePresetId: string): boolean {
-    return stylePresetId === StylePresetId.PAPER_INK || stylePresetId === StylePresetId.PLAIN_ASH;
+    return isSupportedStylePreset(stylePresetId);
   }
 
   private toStylePresetId(value: string): StylePresetId {
-    return value === StylePresetId.PLAIN_ASH ? StylePresetId.PLAIN_ASH : StylePresetId.PAPER_INK;
+    return stylePresetIdFromValue(value);
   }
 }

@@ -8,6 +8,7 @@ import { TodayConfirmation } from '../components/diary/TodayConfirmation';
 import { TodayEditor } from '../components/diary/TodayEditor';
 import { TodayHeader } from '../components/diary/TodayHeader';
 import { TodayRecordCard } from '../components/diary/TodayRecordCard';
+import { styleForPaper } from '../constants/StyleTokens';
 import {
   AppRouteName,
   BackupRouteParam,
@@ -308,8 +309,7 @@ struct Index {
         PaperBackdrop({ paperId: this.paperId })
         DiaryBackground({
           imageUri: this.viewModel.backgroundImageUri,
-          paperId: this.paperId,
-          scrimOpacity: 0.68
+          paperId: this.paperId
         })
 
         if (this.viewModel.uiState === TodayUiState.APP_INITIALIZING) {
@@ -401,20 +401,20 @@ struct Index {
             right: $r('app.float.page_horizontal_margin')
           })
           .backgroundColor(this.viewModel.backgroundImageUri.length > 0 ? Color.Transparent :
-            (this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm')))
+            styleForPaper(this.paperId).light.background)
 
         }
       }
         }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+      .backgroundColor(styleForPaper(this.paperId).light.background)
     }
     .width('100%')
     .height('100%')
     .navDestination(this.routeBuilder)
     .hideTitleBar(true)
     .mode(NavigationMode.Stack)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+    .backgroundColor(styleForPaper(this.paperId).light.background)
   }
 }

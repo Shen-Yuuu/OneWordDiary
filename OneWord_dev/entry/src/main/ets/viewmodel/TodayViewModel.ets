@@ -1,4 +1,4 @@
-import { StylePresetId } from '../constants/StyleTokens';
+import { paperIdForStyle, styleForPreset, StylePresetId } from '../constants/StyleTokens';
 import { BackgroundImageStore } from '../model/BackgroundImage';
 import { DailyRecord, DiaryEntryInput, RecordType, RevisionStatus } from '../model/DailyRecord';
 import { DiaryError, DiaryErrorCode } from '../model/DiaryError';
@@ -161,8 +161,7 @@ export class TodayViewModel {
       this.localDate = snapshot.localDate;
       this.weekday = this.formatWeekday(new Date(timestamp).getDay());
       this.stylePresetId = settings.stylePresetId;
-      AppStorage.setOrCreate('currentPaperId',
-        settings.stylePresetId === StylePresetId.PLAIN_ASH ? 'plain_ash_dev' : 'warm_paper_dev');
+      AppStorage.setOrCreate('currentPaperId', paperIdForStyle(settings.stylePresetId));
       AppLogger.info(`style.today_load preset=${settings.stylePresetId}`);
       this.record = record;
       this.syncRecordPresentation(record);
@@ -456,12 +455,13 @@ export class TodayViewModel {
   }
 
   private createInput(type: RecordType): DiaryEntryInput {
+    const style = styleForPreset(this.stylePresetId);
     return {
       recordType: type,
       content: type === RecordType.BLANK ? null : this.draftContent,
       note: type === RecordType.BLANK || this.draftNote.trim().length === 0 ? null : this.draftNote,
-      fontId: this.stylePresetId === StylePresetId.PAPER_INK ? 'system_serif_dev' : 'system_sans_dev',
-      paperId: this.stylePresetId === StylePresetId.PAPER_INK ? 'warm_paper_dev' : 'plain_ash_dev',
+      fontId: style.fontId,
+      paperId: style.paperId,
       backgroundImageId: this.draftBackgroundImageId
     };
   }

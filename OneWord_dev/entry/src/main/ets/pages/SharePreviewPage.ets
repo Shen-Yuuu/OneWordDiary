@@ -2,6 +2,7 @@ import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPa
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { DiaryPrimaryButton } from '../components/common/DiaryPrimaryButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
+import { styleForPaper } from '../constants/StyleTokens';
 import { ShareScrollCard } from '../components/share/ShareScrollCard';
 import { ShareSingleCard } from '../components/share/ShareSingleCard';
 import { DiaryShareMode } from '../model/ShareModel';
@@ -207,7 +208,7 @@ export struct SharePreviewPage {
       this.shareCardContent()
     }
     .id(SHARE_CARD_COMPONENT_ID)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+    .backgroundColor(styleForPaper(this.paperId).light.background)
   }
 
   build() {
@@ -318,9 +319,9 @@ export struct SharePreviewPage {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+      .backgroundColor(styleForPaper(this.paperId).light.background)
     }
     .hideTitleBar(true)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+    .backgroundColor(styleForPaper(this.paperId).light.background)
   }
 }

@@ -1,7 +1,7 @@
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
-import { StylePresetId } from '../constants/StyleTokens';
+import { allStylePresets, StylePresetId, StyleTokens, styleForPaper } from '../constants/StyleTokens';
 import { SettingsUiState } from '../model/SettingsUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SettingsViewModel } from '../viewmodel/SettingsViewModel';
@@ -159,16 +159,16 @@ export struct SettingsPage {
   }
 
   @Builder
-  private styleCard(stylePresetId: StylePresetId, sample: string, label: string, paperColor: ResourceColor) {
+  private styleCard(style: StyleTokens, label: string, sample: string) {
     Column({ space: 10 }) {
       Stack({ alignContent: Alignment.Center }) {
         Row()
           .width(70)
           .height(98)
-          .backgroundColor(paperColor)
+          .backgroundColor(style.light.background)
           .border({
-            width: this.viewModel.stylePresetId === stylePresetId ? 2 : 1,
-            color: this.viewModel.stylePresetId === stylePresetId ?
+            width: this.viewModel.stylePresetId === style.id ? 2 : 1,
+            color: this.viewModel.stylePresetId === style.id ?
               $r('app.color.text_primary') : $r('app.color.outline_soft')
           })
           .borderRadius(3)
@@ -179,22 +179,56 @@ export struct SettingsPage {
           .fontFamily('oneword_wenkai, serif')
           .fontColor($r('app.color.text_primary'))
           .scale({
-            x: this.viewModel.stylePresetId === stylePresetId ? 1.08 : 1,
-            y: this.viewModel.stylePresetId === stylePresetId ? 1.08 : 1
+            x: this.viewModel.stylePresetId === style.id ? 1.08 : 1,
+            y: this.viewModel.stylePresetId === style.id ? 1.08 : 1
           })
           .animation({ duration: 220, curve: Curve.EaseOut })
       }
 
       Text(label)
         .fontSize(15)
-        .fontColor(this.viewModel.stylePresetId === stylePresetId ?
+        .fontColor(this.viewModel.stylePresetId === style.id ?
           $r('app.color.text_primary') : $r('app.color.text_secondary'))
     }
     .width(88)
+    .height(144)
     .padding({ top: 4, bottom: 8 })
-    .onClick(() => this.viewModel.selectStyle(stylePresetId))
+    .margin({ right: 12, bottom: 8 })
+    .onClick(() => this.viewModel.selectStyle(style.id))
     .accessibilityGroup(true)
-    .accessibilityText(`${label}风格${this.viewModel.stylePresetId === stylePresetId ? '，已选择' : ''}`)
+    .accessibilityText(`${label}风格${this.viewModel.stylePresetId === style.id ? '，已选择' : ''}`)
+  }
+
+  private styleLabel(id: StylePresetId): string {
+    switch (id) {
+      case StylePresetId.PLAIN_ASH:
+        return '素灰';
+      case StylePresetId.PINE_MIST:
+        return '松青';
+      case StylePresetId.MIST_BLUE:
+        return '雾蓝';
+      case StylePresetId.APRICOT_PAPER:
+        return '杏笺';
+      case StylePresetId.PAPER_INK:
+      default:
+        return '纸墨';
+    }
+  }
+
+  private styleSample(id: StylePresetId): string {
+    switch (id) {
+      case StylePresetId.PLAIN_ASH:
+        return '灰';
+      case StylePresetId.PINE_MIST:
+        return '松';
+      case StylePresetId.MIST_BLUE:
+        return '蓝';
+      case StylePresetId.APRICOT_PAPER:
+        return '杏';
+      case StylePresetId.PAPER_INK:
+      default:
+        return '墨';
+    }
   }
 
   @Builder
@@ -286,9 +320,10 @@ export struct SettingsPage {
             Scroll() {
               Column() {
                 this.sectionTitle('风格')
-                Row({ space: 18 }) {
-                  this.styleCard(StylePresetId.PAPER_INK, '墨', '纸墨', $r('app.color.paper_warm'))
-                  this.styleCard(StylePresetId.PLAIN_ASH, '灰', '素灰', $r('app.color.paper_plain'))
+                Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
+                  ForEach(allStylePresets(), (style: StyleTokens) => {
+                    this.styleCard(style, this.styleLabel(style.id), this.styleSample(style.id))
+                  }, (style: StyleTokens): string => style.id)
                 }
                 .width('100%')
                 .padding({ bottom: 12 })
@@ -396,9 +431,9 @@ export struct SettingsPage {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+      .backgroundColor(styleForPaper(this.paperId).light.background)
     }
     .hideTitleBar(true)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+    .backgroundColor(styleForPaper(this.paperId).light.background)
   }
 }

@@ -4,6 +4,7 @@ import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { ScrollFooter } from '../components/scroll/ScrollFooter';
 import { ScrollRecordNode } from '../components/scroll/ScrollRecordNode';
 import { ScrollLayoutMetrics } from '../constants/ScrollLayoutMetrics';
+import { styleForPaper } from '../constants/StyleTokens';
 import { ScrollDisplayItem } from '../model/ScrollDisplayItem';
 import { ScrollUiState } from '../model/ScrollUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
@@ -53,8 +54,8 @@ export struct ScrollPage {
         angle: top ? 90 : 270,
         // 注意：8 位 hex 在 ArkUI 中是 #AARRGGBB（透明度在前），用 rgba() 规避歧义
         colors: [
-          [this.paperId === 'plain_ash_dev' ? 'rgba(239, 239, 234, 1)' : 'rgba(253, 248, 247, 1)', 0],
-          [this.paperId === 'plain_ash_dev' ? 'rgba(239, 239, 234, 0)' : 'rgba(253, 248, 247, 0)', 1]
+          [styleForPaper(this.paperId).light.background, 0],
+          [Color.Transparent, 1]
         ]
       })
       .hitTestBehavior(HitTestMode.None)
@@ -193,15 +194,15 @@ export struct ScrollPage {
         }
         .width('100%')
         .height('100%')
-        .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+        .backgroundColor(styleForPaper(this.paperId).light.background)
         .opacity(this.contentShown ? 1 : 0)
         .translate({ y: this.contentShown ? 0 : 14 })
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+      .backgroundColor(styleForPaper(this.paperId).light.background)
     }
     .hideTitleBar(true)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+    .backgroundColor(styleForPaper(this.paperId).light.background)
   }
 }

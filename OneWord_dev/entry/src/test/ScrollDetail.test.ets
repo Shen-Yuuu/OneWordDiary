@@ -187,7 +187,7 @@ export default function scrollDetailTest(): void {
       await seed(repository, [
         createRecord('2026-08-17', RecordType.BLANK, null),
         createRecord('2026-08-18', RecordType.WORD, '微风正好', '风停在窗边',
-          'system_serif_dev', 'warm_paper_dev', 'bg-detail.jpg')
+          'system_serif_dev', 'pine_mist_dev', 'bg-detail.jpg')
       ]);
       const viewModel = new DetailViewModel(createService(repository), new DiaryDateFormatter());
 
@@ -197,6 +197,7 @@ export default function scrollDetailTest(): void {
       expect(viewModel.content).assertEqual('微风正好');
       expect(viewModel.note).assertEqual('风停在窗边');
       expect(viewModel.recordType).assertEqual(RecordType.WORD);
+      expect(viewModel.paperId).assertEqual('pine_mist_dev');
       expect(viewModel.record !== null && viewModel.record.note === '风停在窗边').assertTrue();
       expect(viewModel.backgroundImageId).assertEqual('bg-detail.jpg');
       expect(viewModel.dateLabel).assertEqual('8月18日 星期二');
@@ -211,6 +212,7 @@ export default function scrollDetailTest(): void {
       await viewModel.load('2026-08-16');
       expect(viewModel.uiState).assertEqual(DetailUiState.NOT_FOUND);
       expect(viewModel.contentCount).assertEqual(0);
+      expect(viewModel.paperId).assertEqual('warm_paper_dev');
     });
 
     it('reportsTheDetailLoadFailure', 0, async () => {

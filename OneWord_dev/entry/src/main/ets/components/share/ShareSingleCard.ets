@@ -3,6 +3,7 @@ import { DiaryBackground } from '../common/DiaryBackground';
 import { AppLogger } from '../../utils/AppLogger';
 import { DiaryDateFormatter } from '../../utils/DiaryDateFormatter';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
+import { styleForPaper } from '../../constants/StyleTokens';
 
 @Component
 export struct ShareSingleCard {
@@ -29,15 +30,15 @@ export struct ShareSingleCard {
   }
 
   textColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#242424' : '#282622';
+    return styleForPaper(this.paperId).light.textPrimary;
   }
 
   secondaryColor(): string {
-    return '#5F5B55';
+    return styleForPaper(this.paperId).light.textSecondary;
   }
 
   accentColor(): string {
-    return this.paperId === 'plain_ash_dev' ? '#626260' : '#A65C4D';
+    return styleForPaper(this.paperId).light.accent;
   }
 
   recordFontFamily(): string {
@@ -63,7 +64,7 @@ export struct ShareSingleCard {
         DiaryBackground({
           imageUri: this.backgroundImageUri,
           paperId: this.paperId,
-          scrimOpacity: 0.72,
+          scrimOpacity: 0.74,
           fixedLightScrim: true,
           reloadKey: this.backgroundReloadKey,
           onReady: (imageUri: string, reloadKey: number) => this.onBackgroundReady(imageUri, reloadKey),
@@ -188,8 +189,8 @@ export struct ShareSingleCard {
     }
     .width(286)
     .height(440)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? '#F7F7F5' : '#FDF8F7')
-    .border({ width: 1, color: this.paperId === 'plain_ash_dev' ? '#E5E5E2' : '#EEE5E1' })
+    .backgroundColor(styleForPaper(this.paperId).light.background)
+    .border({ width: 1, color: styleForPaper(this.paperId).light.divider })
     .borderRadius(2)
   }
 }

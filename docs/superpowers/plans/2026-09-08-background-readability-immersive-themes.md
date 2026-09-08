@@ -48,7 +48,7 @@
 - Produces: `paperIdForStyle(id: StylePresetId): string`
 - Existing consumers retain `StylePresetId`, `StyleTokens`, `FontFamilies`, `PAPER_INK_STYLE`, and `PLAIN_ASH_STYLE` compatibility.
 
-- [ ] **Step 1: Add failing catalog and persistence tests**
+- [x] **Step 1: Add failing catalog and persistence tests**
 
 Add assertions that all five preset IDs resolve to unique paper IDs, that an unknown preset falls back to paper ink, and that settings save/load accepts each new preset. Register `themeCatalogTest()` in `List.test.ets`.
 
@@ -59,7 +59,7 @@ expect(styleForPaper('mist_blue_dev').id).assertEqual(StylePresetId.MIST_BLUE);
 expect(styleForPaper('unknown').id).assertEqual(StylePresetId.PAPER_INK);
 ```
 
-- [ ] **Step 2: Implement the catalog and semantic color accessors**
+- [x] **Step 2: Implement the catalog and semantic color accessors**
 
 Extend the enum and define the three palettes. Keep all themes on `FontFamilies.SERIF`. Provide lookup functions using explicit `switch` statements compatible with ArkTS; callers must not duplicate theme IDs.
 
@@ -79,7 +79,7 @@ export function paperIdForStyle(id: StylePresetId): string {
 
 Add base color resources for each paper, surface, text-secondary/accent/divider pair when a component requires a `ResourceColor`. Do not alter dark resources because runtime is locked to light mode.
 
-- [ ] **Step 3: Replace binary theme validation and mapping**
+- [x] **Step 3: Replace binary theme validation and mapping**
 
 Use the catalog in `SettingsRepository`, `SettingsViewModel`, `TodayViewModel`, `ShareViewModel`, and `BackupCodec`. Backup record validation must accept only the catalog’s five `fontId/paperId` combinations and reject unknown paper IDs. Old values remain byte-for-byte compatible.
 
@@ -89,11 +89,11 @@ private toStylePresetId(value: string): StylePresetId {
 }
 ```
 
-- [ ] **Step 4: Render five responsive cards and propagate semantic colors**
+- [x] **Step 4: Render five responsive cards and propagate semantic colors**
 
 Render setting cards from the catalog in a wrapping `Flex`, with 44vp minimum tap targets and selection accessibility text. Replace every page-level `paperId === 'plain_ash_dev' ? ... : ...` branch with a catalog helper or a focused component helper. Preserve historical content snapshots and seven-day card behavior.
 
-- [ ] **Step 5: Run focused tests and scan for binary branches**
+- [x] **Step 5: Run focused tests and scan for binary branches**
 
 Run the configured Hypium suite and verify the new theme tests pass. Then run:
 
@@ -116,11 +116,11 @@ Expected: no theme-selection binary branch remains outside catalog compatibility
 - Produces: unchanged `DiaryBackground` public properties and callbacks.
 - Produces: centralized `PHOTO_SCRIM_OPACITY = 0.74` and reading-focus gradient values used by home, confirmation, detail, and single-day share automatically.
 
-- [ ] **Step 1: Add a focused token test**
+- [x] **Step 1: Add a focused token test**
 
 Test that the shared default is 0.74 and that every supported `paperId` resolves to a valid overlay color. Keep rendering callbacks and `reloadKey` behavior unchanged.
 
-- [ ] **Step 2: Implement the layered paper wash**
+- [x] **Step 2: Implement the layered paper wash**
 
 Keep the image as the bottom layer using `ImageFit.Cover`. Place a uniform theme paper-color row at opacity 0.74 over it, followed by a noninteractive center-weighted gradient layer. The gradient should add no more than 0.12 opacity at the reading center and fade toward the page edges.
 
@@ -138,11 +138,11 @@ Row()
 
 Use fixed light theme hex colors for `fixedLightScrim` so component snapshots do not depend on resource resolution. Keep the entire image stack invisible until decode completion; missing and failed images continue to reveal the original `PaperBackdrop`.
 
-- [ ] **Step 3: Verify every photo surface inherits the default**
+- [x] **Step 3: Verify every photo surface inherits the default**
 
 Inspect all `DiaryBackground` call sites. Remove local `scrimOpacity: 0.68` overrides so the shared 0.74 default applies. `ShareSingleCard` must keep `fixedLightScrim: true`; seven-day sharing must not acquire `DiaryBackground`.
 
-- [ ] **Step 4: Run background and share tests**
+- [x] **Step 4: Run background and share tests**
 
 Run the complete Hypium suite because this shared component affects the home flow and share readiness behavior. Confirm no test changes weaken the existing load-generation or timeout assertions.
 
@@ -160,11 +160,11 @@ Run the complete Hypium suite because this shared component affects the home flo
 - Produces: `configureImmersiveWindow(windowStage: window.WindowStage): Promise<void>`
 - Keeps `initializeAndLoad()` startup behavior and font registration ordering intact.
 
-- [ ] **Step 1: Verify the local API signatures**
+- [x] **Step 1: Verify the local API signatures**
 
 Use the installed API 21 declarations to confirm the supported calls for edge-to-edge layout, transparent status/navigation bars, and system icon brightness. Record exact signatures in the acceptance document; avoid deprecated calls when an API 21 replacement exists.
 
-- [ ] **Step 2: Implement best-effort window configuration**
+- [x] **Step 2: Implement best-effort window configuration**
 
 After content loads, obtain the main window and apply edge-to-edge layout plus transparent status and navigation colors. Select dark status/navigation icons because the app is locked to a light paper wash. Catch `BusinessError`, log `window.immersive_failed code=<code>`, and continue startup.
 
@@ -181,11 +181,11 @@ private async configureImmersiveWindow(windowStage: window.WindowStage): Promise
 }
 ```
 
-- [ ] **Step 3: Preserve safe content placement**
+- [x] **Step 3: Preserve safe content placement**
 
 Verify the root background fills the window while interactive content remains within system safe areas. If full-window layout moves controls under the status/navigation regions, apply `expandSafeArea` only to `PaperBackdrop` and `DiaryBackground` layers rather than the entire interactive column.
 
-- [ ] **Step 4: Build and document device limits**
+- [x] **Step 4: Build and document device limits**
 
 Run Debug `assembleHap`. If no connected device exists, mark status-bar icon contrast, gesture-bar transparency, cutout layout, and three-button navigation as pending device checks.
 
@@ -197,18 +197,18 @@ Run Debug `assembleHap`. If no connected device exists, mark status-bar icon con
 - Modify: `docs/testing/2026-09-08-background-theme-immersive-acceptance.md`
 - Modify: this plan’s checkboxes as work completes
 
-- [ ] **Step 1: Review cross-task consistency**
+- [x] **Step 1: Review cross-task consistency**
 
 Confirm the catalog is the only theme source, all five IDs round-trip through settings and backup, `DiaryBackground` uses the same layers in single-day sharing, and system-bar setup cannot block initialization.
 
-- [ ] **Step 2: Run full tests and final signed build**
+- [x] **Step 2: Run full tests and final signed build**
 
 Run Hypium and inspect `test_result.txt` for actual failure/error counts; hvigor exit code alone is insufficient. Then run Debug `assembleHap` and record the signed HAP path and size.
 
-- [ ] **Step 3: Check scope and text integrity**
+- [x] **Step 3: Check scope and text integrity**
 
 Run `git diff --check`, scan changed `.ets/.json/.md` for U+FFFD, and confirm no changes to permissions, dependencies, app version, database version, or signing configuration.
 
-- [ ] **Step 4: Record remaining device acceptance**
+- [x] **Step 4: Record remaining device acceptance**
 
 Document which visual and system-UI checks were performed on a connected device. If no device is connected, do not claim full visual acceptance; provide a concrete checklist for background legibility, five themes, system bars, sharing, and legacy records.

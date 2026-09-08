@@ -164,6 +164,23 @@ export default function settingsViewModelTest(): void {
       expect(fixture.settingsRepository.settings.reminder.enabled).assertFalse();
     });
 
+    it('persistsEverySupportedStyle', 0, async () => {
+      const fixture = new SettingsFixture();
+      const styles: StylePresetId[] = [
+        StylePresetId.PAPER_INK,
+        StylePresetId.PLAIN_ASH,
+        StylePresetId.PINE_MIST,
+        StylePresetId.MIST_BLUE,
+        StylePresetId.APRICOT_PAPER
+      ];
+      await fixture.viewModel.load();
+      for (let index = 0; index < styles.length; index++) {
+        await fixture.viewModel.selectStyle(styles[index]);
+        expect(fixture.viewModel.stylePresetId).assertEqual(styles[index]);
+        expect(fixture.settingsRepository.settings.stylePresetId).assertEqual(styles[index]);
+      }
+    });
+
     it('requestsPermissionOnlyWhenEnablingAndPublishesDailyReminder', 0, async () => {
       const fixture = new SettingsFixture();
       await fixture.viewModel.load();

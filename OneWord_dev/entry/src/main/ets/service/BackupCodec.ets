@@ -1,5 +1,11 @@
 import { buffer } from '@kit.ArkTS';
-import { StylePresetId } from '../constants/StyleTokens';
+import {
+  isSupportedPaperId,
+  isSupportedStylePreset,
+  styleForPaper,
+  stylePresetIdFromValue,
+  StylePresetId
+} from '../constants/StyleTokens';
 import { BackgroundImageBackupData } from '../model/BackgroundImage';
 import { BackupDocument, BackupRecordPayload, DecodedBackup } from '../model/BackupModel';
 import { BackupError, BackupErrorCode } from '../model/BackupError';
@@ -242,8 +248,7 @@ export class BackupCodec {
   }
 
   private parseStyle(value: string): StylePresetId {
-    if (value === StylePresetId.PAPER_INK) return StylePresetId.PAPER_INK;
-    if (value === StylePresetId.PLAIN_ASH) return StylePresetId.PLAIN_ASH;
+    if (isSupportedStylePreset(value)) return stylePresetIdFromValue(value);
     throw new BackupError(BackupErrorCode.INVALID_FORMAT, '备份包含未知风格');
   }
 
@@ -254,9 +259,11 @@ export class BackupCodec {
   }
 
   private validateRecordStyle(fontId: string, paperId: string): void {
-    const paperInk = fontId === 'system_serif_dev' && paperId === 'warm_paper_dev';
-    const plainAsh = fontId === 'system_sans_dev' && paperId === 'plain_ash_dev';
-    if (!paperInk && !plainAsh) {
+    if (!isSupportedPaperId(paperId)) {
+      throw new BackupError(BackupErrorCode.INVALID_RECORD, '备份包含未知历史风格');
+    }
+    const style = styleForPaper(paperId);
+    if (fontId !== style.fontId) {
       throw new BackupError(BackupErrorCode.INVALID_RECORD, '备份包含未知历史风格');
     }
   }

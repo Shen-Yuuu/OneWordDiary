@@ -1,5 +1,6 @@
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
+import { styleForPaper } from '../constants/StyleTokens';
 
 @Component
 export struct PrivacyPage {
@@ -133,9 +134,9 @@ export struct PrivacyPage {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+      .backgroundColor(styleForPaper(this.paperId).light.background)
     }
     .hideTitleBar(true)
-    .backgroundColor(this.paperId === 'plain_ash_dev' ? $r('app.color.paper_plain') : $r('app.color.paper_warm'))
+    .backgroundColor(styleForPaper(this.paperId).light.background)
   }
 }

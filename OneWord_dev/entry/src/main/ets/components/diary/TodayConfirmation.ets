@@ -27,7 +27,7 @@ export struct TodayConfirmation {
   build() {
     Stack() {
       PaperBackdrop({ paperId: this.paperId })
-      DiaryBackground({ imageUri: this.backgroundImageUri, paperId: this.paperId, scrimOpacity: 0.68 })
+      DiaryBackground({ imageUri: this.backgroundImageUri, paperId: this.paperId })
 
       Column() {
         Row() {

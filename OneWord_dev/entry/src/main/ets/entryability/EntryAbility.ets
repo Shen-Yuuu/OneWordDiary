@@ -73,7 +73,27 @@ export default class EntryAbility extends UIAbility {
       AppLogger.info('ability.content_loaded');
       // 官方指引：全局字体在 loadContent 回调内注册（过早 getMainWindow 会报 1300002 窗口状态异常）
       this.registerCustomFonts(windowStage);
+      this.configureImmersiveWindow(windowStage);
     });
+  }
+
+  private async configureImmersiveWindow(windowStage: window.WindowStage): Promise<void> {
+    try {
+      const mainWindow: window.Window = await windowStage.getMainWindow();
+      await mainWindow.setWindowLayoutFullScreen(true);
+      await mainWindow.setWindowSystemBarProperties({
+        statusBarColor: '#00000000',
+        navigationBarColor: '#00000000',
+        isStatusBarLightIcon: false,
+        statusBarContentColor: '#1F1F1F',
+        isNavigationBarLightIcon: false,
+        navigationBarContentColor: '#1F1F1F'
+      });
+      AppLogger.info('window.immersive_ready');
+    } catch (error) {
+      const businessError = error as BusinessError;
+      AppLogger.error(`window.immersive_failed code=${businessError.code}`);
+    }
   }
 
   onWindowStageDestroy(): void {
