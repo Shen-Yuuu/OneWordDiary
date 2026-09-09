@@ -1,4 +1,4 @@
-export const PHOTO_IMAGE_OPACITY: number = 0.16;
+export const PHOTO_IMAGE_OPACITY: number = 0.10;
 
 class DiaryBackgroundSource {
   readonly uri: string;
