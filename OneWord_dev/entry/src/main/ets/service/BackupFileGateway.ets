@@ -75,7 +75,16 @@ export class DocumentUriBackupFileGateway implements BackupFileGateway {
           this.ensureWithinLimit(totalBytes, maxBytes);
           chunks.push(buffer.from(target, 0, bytesRead));
         }
-        return buffer.concat(chunks, totalBytes).toString('utf8');
+        const outputBytes = new Uint8Array(totalBytes);
+        let outputOffset: number = 0;
+        for (let chunkIndex: number = 0; chunkIndex < chunks.length; chunkIndex++) {
+          const chunk = chunks[chunkIndex];
+          for (let byteIndex: number = 0; byteIndex < chunk.length; byteIndex++) {
+            outputBytes[outputOffset] = chunk[byteIndex];
+            outputOffset++;
+          }
+        }
+        return buffer.from(outputBytes).toString('utf8');
       } catch (error) {
         const thrown: Error = error as Error;
         operationError = thrown;
@@ -146,8 +155,9 @@ export class DocumentUriBackupFileGateway implements BackupFileGateway {
   }
 
   private mapError(error: Error, fallbackCode: BackupErrorCode, message: string): BackupError {
-    if (error instanceof BackupError) {
-      return error;
+    if (error instanceof BackupError || error.name === 'BackupError') {
+      const backupError = error as BackupError;
+      return new BackupError(backupError.code, backupError.message);
     }
     return new BackupError(fallbackCode, message);
   }

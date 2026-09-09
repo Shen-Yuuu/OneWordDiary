@@ -171,7 +171,8 @@ export default function settingsViewModelTest(): void {
         StylePresetId.PLAIN_ASH,
         StylePresetId.PINE_MIST,
         StylePresetId.MIST_BLUE,
-        StylePresetId.APRICOT_PAPER
+        StylePresetId.APRICOT_PAPER,
+        StylePresetId.ROSE_PINK
       ];
       await fixture.viewModel.load();
       for (let index = 0; index < styles.length; index++) {

@@ -12,7 +12,8 @@ export enum StylePresetId {
   PLAIN_ASH = 'plain_ash',
   PINE_MIST = 'pine_mist',
   MIST_BLUE = 'mist_blue',
-  APRICOT_PAPER = 'apricot_paper'
+  APRICOT_PAPER = 'apricot_paper',
+  ROSE_PINK = 'rose_pink'
 }
 
 export interface StylePalette {
@@ -97,13 +98,21 @@ export const APRICOT_PAPER_STYLE: StyleTokens = {
   dark: { background: '#282019', surface: '#33291F', textPrimary: '#F7EFE2', textSecondary: '#D7C4B2', accent: '#D3A37C', divider: '#574535' }
 };
 
-export const STYLE_PRESETS: StyleTokens[] = [PAPER_INK_STYLE, PLAIN_ASH_STYLE, PINE_MIST_STYLE, MIST_BLUE_STYLE, APRICOT_PAPER_STYLE];
+export const ROSE_PINK_STYLE: StyleTokens = {
+  id: StylePresetId.ROSE_PINK, fontId: 'system_serif_dev', paperId: 'rose_pink_dev', fontFamily: FontFamilies.SERIF,
+  light: { background: '#F8E8EC', surface: '#FFF7F8', textPrimary: '#3D2930', textSecondary: '#80636A', accent: '#B15F76', divider: '#E8CDD4' },
+  dark: { background: '#2A1C22', surface: '#35232B', textPrimary: '#F9EAF0', textSecondary: '#D2B4BF', accent: '#D889A1', divider: '#513641' }
+};
+
+export const STYLE_PRESETS: StyleTokens[] = [
+  PAPER_INK_STYLE, PLAIN_ASH_STYLE, PINE_MIST_STYLE, MIST_BLUE_STYLE, APRICOT_PAPER_STYLE, ROSE_PINK_STYLE
+];
 
 // ArkUI struct generated code has shown unstable cross-module live bindings for
 // imported constants on some devices. Components call this function instead of
 // reading STYLE_PRESETS directly; tests can still inspect the exported catalog.
 export function allStylePresets(): StyleTokens[] {
-  return [PAPER_INK_STYLE, PLAIN_ASH_STYLE, PINE_MIST_STYLE, MIST_BLUE_STYLE, APRICOT_PAPER_STYLE];
+  return [PAPER_INK_STYLE, PLAIN_ASH_STYLE, PINE_MIST_STYLE, MIST_BLUE_STYLE, APRICOT_PAPER_STYLE, ROSE_PINK_STYLE];
 }
 
 export function styleForPreset(id: StylePresetId): StyleTokens {
@@ -112,6 +121,7 @@ export function styleForPreset(id: StylePresetId): StyleTokens {
     case StylePresetId.PINE_MIST: return PINE_MIST_STYLE;
     case StylePresetId.MIST_BLUE: return MIST_BLUE_STYLE;
     case StylePresetId.APRICOT_PAPER: return APRICOT_PAPER_STYLE;
+    case StylePresetId.ROSE_PINK: return ROSE_PINK_STYLE;
     case StylePresetId.PAPER_INK:
     default: return PAPER_INK_STYLE;
   }
@@ -123,6 +133,7 @@ export function styleForPaper(paperId: string): StyleTokens {
     case 'pine_mist_dev': return PINE_MIST_STYLE;
     case 'mist_blue_dev': return MIST_BLUE_STYLE;
     case 'apricot_paper_dev': return APRICOT_PAPER_STYLE;
+    case 'rose_pink_dev': return ROSE_PINK_STYLE;
     case 'warm_paper_dev':
     default: return PAPER_INK_STYLE;
   }
@@ -135,6 +146,7 @@ export function isSupportedPaperId(value: string): boolean {
     case 'pine_mist_dev':
     case 'mist_blue_dev':
     case 'apricot_paper_dev':
+    case 'rose_pink_dev':
       return true;
     default:
       return false;
@@ -148,6 +160,7 @@ export function isSupportedStylePreset(value: string): boolean {
     case StylePresetId.PINE_MIST:
     case StylePresetId.MIST_BLUE:
     case StylePresetId.APRICOT_PAPER:
+    case StylePresetId.ROSE_PINK:
       return true;
     default: return false;
   }
@@ -159,6 +172,7 @@ export function stylePresetIdFromValue(value: string): StylePresetId {
     case StylePresetId.PINE_MIST: return StylePresetId.PINE_MIST;
     case StylePresetId.MIST_BLUE: return StylePresetId.MIST_BLUE;
     case StylePresetId.APRICOT_PAPER: return StylePresetId.APRICOT_PAPER;
+    case StylePresetId.ROSE_PINK: return StylePresetId.ROSE_PINK;
     case StylePresetId.PAPER_INK:
     default: return StylePresetId.PAPER_INK;
   }

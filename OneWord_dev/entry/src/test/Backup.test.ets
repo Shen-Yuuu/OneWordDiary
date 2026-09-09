@@ -202,6 +202,15 @@ export default function backupTest(): void {
       expect(codec.decode(text).records[0].backgroundImageId).assertEqual(null);
     });
 
+    it('roundTripsRosePinkBackupStyle', 0, () => {
+      const codec = new BackupCodec(new DiaryTextRules());
+      const text = codec.encode([createRecord('2026-08-22', '花', '给今天留一点温柔')],
+        StylePresetId.ROSE_PINK, 1000);
+      const decoded = codec.decode(text);
+      expect(decoded.stylePresetId).assertEqual(StylePresetId.ROSE_PINK);
+      expect(text.includes('background_image')).assertFalse();
+    });
+
     it('rejectsV2ImageBackupDocumentsAndFilesOverFiveMiB', 0, () => {
       const codec = new BackupCodec(new DiaryTextRules());
       const v1 = codec.encode([createRecord('2026-08-21', '静')], StylePresetId.PAPER_INK, 1000);

@@ -209,6 +209,8 @@ export struct SettingsPage {
         return '雾蓝';
       case StylePresetId.APRICOT_PAPER:
         return '杏笺';
+      case StylePresetId.ROSE_PINK:
+        return '玫瑰粉';
       case StylePresetId.PAPER_INK:
       default:
         return '纸墨';
@@ -225,6 +227,8 @@ export struct SettingsPage {
         return '蓝';
       case StylePresetId.APRICOT_PAPER:
         return '杏';
+      case StylePresetId.ROSE_PINK:
+        return '玫';
       case StylePresetId.PAPER_INK:
       default:
         return '墨';
