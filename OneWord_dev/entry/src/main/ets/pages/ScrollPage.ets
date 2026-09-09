@@ -194,6 +194,7 @@ export struct ScrollPage {
         }
         .width('100%')
         .height('100%')
+        .padding({ top: $r('app.float.immersive_top_content_offset') })
         .backgroundColor(styleForPaper(this.paperId).light.background)
         .opacity(this.contentShown ? 1 : 0)
         .translate({ y: this.contentShown ? 0 : 14 })

@@ -80,7 +80,7 @@ export default class EntryAbility extends UIAbility {
   private async configureImmersiveWindow(windowStage: window.WindowStage): Promise<void> {
     try {
       const mainWindow: window.Window = await windowStage.getMainWindow();
-      await mainWindow.setWindowLayoutFullScreen(false);
+      await mainWindow.setWindowLayoutFullScreen(true);
       await mainWindow.setWindowSystemBarProperties({
         statusBarColor: '#00000000',
         navigationBarColor: '#00000000',

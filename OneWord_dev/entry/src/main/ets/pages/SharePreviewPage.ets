@@ -313,7 +313,7 @@ export struct SharePreviewPage {
         }
         .width('100%')
         .height('100%')
-        .padding({ left: 24, right: 24 })
+        .padding({ top: $r('app.float.immersive_top_content_offset'), left: 24, right: 24 })
         .opacity(this.contentShown ? 1 : 0)
         .translate({ y: this.contentShown ? 0 : 14 })
       }

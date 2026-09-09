@@ -170,7 +170,11 @@ export struct TodayConfirmation {
       }
       .width('100%')
       .height('100%')
-      .padding({ left: $r('app.float.page_horizontal_margin'), right: $r('app.float.page_horizontal_margin') })
+      .padding({
+        top: $r('app.float.immersive_top_content_offset'),
+        left: $r('app.float.page_horizontal_margin'),
+        right: $r('app.float.page_horizontal_margin')
+      })
       .alignItems(HorizontalAlign.Center)
     }
     .width('100%')
