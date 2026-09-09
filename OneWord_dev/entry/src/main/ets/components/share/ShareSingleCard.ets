@@ -64,8 +64,6 @@ export struct ShareSingleCard {
         DiaryBackground({
           imageUri: this.backgroundImageUri,
           paperId: this.paperId,
-          scrimOpacity: 0.74,
-          fixedLightScrim: true,
           reloadKey: this.backgroundReloadKey,
           onReady: (imageUri: string, reloadKey: number) => this.onBackgroundReady(imageUri, reloadKey),
           onFailed: (imageUri: string, reloadKey: number) => this.onBackgroundFailed(imageUri, reloadKey)

@@ -1,6 +1,5 @@
 import { InspirationLine } from './InspirationLine';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
-import { DiaryBackground } from '../common/DiaryBackground';
 
 @Component
 export struct TodayEditor {
@@ -125,37 +124,25 @@ export struct TodayEditor {
       .margin({ top: 6 })
 
       Row({ space: 12 }) {
-        if (this.backgroundImageUri.length > 0) {
-          Stack() {
-            DiaryBackground({
-              imageUri: this.backgroundImageUri,
-              paperId: this.paperId,
-              scrimOpacity: 0.18
-            })
-          }
-          .width(76)
-          .height(52)
-          .borderRadius(8)
-          .clip(true)
-        }
-
         Button(this.backgroundImageUri.length > 0 ? '更换背景' : '选择背景')
-          .height(40)
+          .height($r('app.float.touch_target_min'))
           .fontSize(13)
           .fontColor($r('app.color.text_secondary'))
           .backgroundColor(Color.Transparent)
           .border({ width: 1, color: $r('app.color.outline_soft') })
           .borderRadius(20)
           .enabled(!this.isPickingBackground)
+          .accessibilityText(this.backgroundImageUri.length > 0 ? '更换今日背景' : '选择今日背景')
           .onClick(() => this.onChooseBackground())
 
         if (this.backgroundImageUri.length > 0) {
           Button('移除')
-            .height(40)
+            .height($r('app.float.touch_target_min'))
             .fontSize(13)
             .fontColor($r('app.color.accent_vermilion'))
             .backgroundColor(Color.Transparent)
             .enabled(!this.isPickingBackground)
+            .accessibilityText('移除今日背景')
             .onClick(() => this.onRemoveBackground())
         }
 
