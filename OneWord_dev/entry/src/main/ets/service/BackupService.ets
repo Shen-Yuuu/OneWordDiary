@@ -1,5 +1,3 @@
-import { fileIo } from '@kit.CoreFileKit';
-import { buffer } from '@kit.ArkTS';
 import { BackupError, BackupErrorCode } from '../model/BackupError';
 import { BackupImportPlan, BackupImportResult, DecodedBackup } from '../model/BackupModel';
 import { DailyRecord } from '../model/DailyRecord';
@@ -7,23 +5,27 @@ import { DiaryRepository } from '../repository/DiaryRepository';
 import { SettingsRepository } from '../repository/SettingsRepository';
 import { Clock } from '../utils/Clock';
 import { BackupCodec } from './BackupCodec';
+import { BackupFileGateway } from './BackupFileGateway';
 
 export class BackupService {
   private readonly diaryRepository: DiaryRepository;
   private readonly settingsRepository: SettingsRepository;
   private readonly clock: Clock;
   private readonly codec: BackupCodec;
+  private readonly fileGateway: BackupFileGateway;
 
   constructor(
     diaryRepository: DiaryRepository,
     settingsRepository: SettingsRepository,
     clock: Clock,
-    codec: BackupCodec
+    codec: BackupCodec,
+    fileGateway: BackupFileGateway
   ) {
     this.diaryRepository = diaryRepository;
     this.settingsRepository = settingsRepository;
     this.clock = clock;
     this.codec = codec;
+    this.fileGateway = fileGateway;
   }
 
   async exportToUri(uri: string): Promise<number> {
@@ -31,15 +33,7 @@ export class BackupService {
       const records = await this.diaryRepository.findPageBefore(null, BackupCodec.MAX_RECORDS + 1);
       const settings = await this.settingsRepository.load();
       const text = this.codec.encode(records, settings.stylePresetId, this.clock.now());
-      if (buffer.byteLength(text, 'utf8') > BackupCodec.MAX_FILE_BYTES) {
-        throw new BackupError(BackupErrorCode.FILE_TOO_LARGE, '备份内容超过文件上限');
-      }
-      const file = fileIo.openSync(uri, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.TRUNC);
-      try {
-        fileIo.writeSync(file.fd, text, { encoding: 'utf-8' });
-      } finally {
-        fileIo.closeSync(file);
-      }
+      this.fileGateway.writeUtf8(uri, text, BackupCodec.MAX_FILE_BYTES);
       return records.length;
     } catch (error) {
       if (error instanceof BackupError) {
@@ -52,11 +46,7 @@ export class BackupService {
   async prepareImportFromUri(uri: string): Promise<BackupImportPlan> {
     let text: string;
     try {
-      const stat = fileIo.statSync(uri);
-      if (stat.size > BackupCodec.MAX_FILE_BYTES) {
-        throw new BackupError(BackupErrorCode.FILE_TOO_LARGE, '备份文件超过 5 MiB');
-      }
-      text = fileIo.readTextSync(uri, { encoding: 'utf-8' });
+      text = this.fileGateway.readUtf8(uri, BackupCodec.MAX_FILE_BYTES);
     } catch (error) {
       if (error instanceof BackupError) {
         throw error;

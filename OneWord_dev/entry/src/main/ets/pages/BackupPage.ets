@@ -1,3 +1,4 @@
+import { common } from '@kit.AbilityKit';
 import { picker } from '@kit.CoreFileKit';
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
@@ -51,11 +52,12 @@ export struct BackupPage {
       this.showPickerUnavailable();
       return;
     }
+    const abilityContext = context as common.UIAbilityContext;
     try {
       const options = new picker.DocumentSaveOptions();
       options.newFileNames = [this.defaultBackupName()];
       options.fileSuffixChoices = ['一字日记备份|.oneword'];
-      const uris = await new picker.DocumentViewPicker(context).save(options);
+      const uris = await new picker.DocumentViewPicker(abilityContext).save(options);
       if (uris.length === 0) {
         return;
       }
@@ -71,11 +73,12 @@ export struct BackupPage {
       this.showPickerUnavailable();
       return;
     }
+    const abilityContext = context as common.UIAbilityContext;
     try {
       const options = new picker.DocumentSelectOptions();
       options.maxSelectNumber = 1;
       options.fileSuffixFilters = ['一字日记备份|.oneword'];
-      const uris = await new picker.DocumentViewPicker(context).select(options);
+      const uris = await new picker.DocumentViewPicker(abilityContext).select(options);
       if (uris.length === 0) {
         return;
       }

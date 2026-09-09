@@ -1,5 +1,6 @@
 import baselineTest from './Baseline.test';
 import backupTest from './Backup.test';
+import backupFileGatewayTest from './BackupFileGateway.test';
 import diaryConcurrencyTest from './DiaryConcurrency.test';
 import diaryServiceTest from './DiaryService.test';
 import diaryTextRulesTest from './DiaryTextRules.test';
@@ -15,6 +16,7 @@ import todayViewModelTest from './TodayViewModel.test';
 export default function testsuite(): void {
   baselineTest();
   backupTest();
+  backupFileGatewayTest();
   diaryTextRulesTest();
   diaryTimePolicyTest();
   invisibleTextTest();

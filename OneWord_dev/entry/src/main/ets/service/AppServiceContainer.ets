@@ -7,6 +7,7 @@ import { SystemClock } from '../utils/Clock';
 import { SystemLocalTimeResolver } from '../utils/LocalTimeResolver';
 import { AppResetService } from './AppResetService';
 import { BackupCodec } from './BackupCodec';
+import { DocumentUriBackupFileGateway } from './BackupFileGateway';
 import { BackupService } from './BackupService';
 import { DiaryService } from './DiaryService';
 import { DiaryTextRules } from './DiaryTextRules';
@@ -42,7 +43,8 @@ export class AppServiceContainer {
       repository,
       settingsRepository,
       new SystemClock(),
-      new BackupCodec(new DiaryTextRules())
+      new BackupCodec(new DiaryTextRules()),
+      new DocumentUriBackupFileGateway()
     );
   }
 
