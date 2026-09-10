@@ -50,9 +50,6 @@ export class ShareViewModel {
   }
 
   get activePaperId(): string {
-    if (this.mode === DiaryShareMode.SINGLE && this.singleData !== null) {
-      return this.singleData.paperId;
-    }
     return this.sevenPaperId;
   }
 

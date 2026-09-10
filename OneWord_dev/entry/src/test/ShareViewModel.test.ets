@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@ohos/hypium';
-import { StylePresetId } from '../main/ets/constants/StyleTokens';
+import { styleForPaper, StylePresetId } from '../main/ets/constants/StyleTokens';
 import { DailyRecord, RecordType } from '../main/ets/model/DailyRecord';
 import { DiaryShareMode, ShareDayKind } from '../main/ets/model/ShareModel';
 import { ShareUiState } from '../main/ets/model/ShareUiState';
@@ -86,6 +86,7 @@ function createShareRecord(
 
 class ShareFixture {
   readonly repository: InMemoryDiaryRepository = new InMemoryDiaryRepository();
+  readonly settingsRepository: ShareMemorySettingsRepository = new ShareMemorySettingsRepository();
   readonly viewModel: ShareViewModel;
 
   constructor() {
@@ -97,7 +98,7 @@ class ShareFixture {
     });
     this.viewModel = new ShareViewModel(
       new DiaryService(this.repository, clock, resolver, new DiaryTextRules()),
-      new ShareMemorySettingsRepository(),
+      this.settingsRepository,
       clock,
       resolver,
       new DiaryDateFormatter()
@@ -107,8 +108,9 @@ class ShareFixture {
 
 export default function shareViewModelTest(): void {
   describe('ShareViewModel', () => {
-    it('usesHistoricalContentAndStyleForSingleShare', 0, async () => {
+    it('usesHistoricalContentAndCurrentStyleForSingleShare', 0, async () => {
       const fixture = new ShareFixture();
+      await fixture.settingsRepository.saveStylePresetId(StylePresetId.ROSE_PINK);
       await fixture.repository.insert(createShareRecord(
         '2026-01-01', RecordType.WORD, '静', '这是今天留下的一句备注',
         'system_sans_dev', 'plain_ash_dev', 'bg-share.jpg'
@@ -122,7 +124,10 @@ export default function shareViewModelTest(): void {
         fixture.viewModel.singleData.note === '这是今天留下的一句备注').assertTrue();
       expect(fixture.viewModel.singleData !== null &&
         fixture.viewModel.singleData.fontId === 'system_sans_dev').assertTrue();
-      expect(fixture.viewModel.activePaperId).assertEqual('plain_ash_dev');
+      expect(fixture.viewModel.activePaperId).assertEqual('rose_pink_dev');
+      expect(styleForPaper(fixture.viewModel.activePaperId).light.background).assertEqual('#F8E8EC');
+      expect(fixture.viewModel.singleData !== null &&
+        fixture.viewModel.singleData.paperId === 'plain_ash_dev').assertTrue();
       expect(fixture.viewModel.singleData !== null &&
         fixture.viewModel.singleData.backgroundImageId === 'bg-share.jpg').assertTrue();
     });

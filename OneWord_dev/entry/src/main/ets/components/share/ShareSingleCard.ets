@@ -24,11 +24,6 @@ export struct ShareSingleCard {
   private readonly dateFormatter: DiaryDateFormatter = new DiaryDateFormatter();
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
-  paperBackground(): Resource {
-    return this.paperId === 'plain_ash_dev' ?
-      $r('app.media.share_bg_plain') : $r('app.media.share_bg_warm');
-  }
-
   textColor(): string {
     return styleForPaper(this.paperId).light.textPrimary;
   }
@@ -55,11 +50,6 @@ export struct ShareSingleCard {
 
   build() {
     Stack() {
-      Image(this.paperBackground())
-        .width(286)
-        .height(440)
-        .objectFit(ImageFit.Fill)
-
       if (this.showBackgroundImage) {
         DiaryBackground({
           imageUri: this.backgroundImageUri,

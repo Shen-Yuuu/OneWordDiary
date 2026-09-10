@@ -182,7 +182,7 @@ export struct SharePreviewPage {
         recordType: this.viewModel.singleData.recordType,
         content: this.viewModel.singleData.content,
         fontId: this.viewModel.singleData.fontId,
-        paperId: this.viewModel.singleData.paperId,
+        paperId: this.viewModel.activePaperId,
         backgroundImageUri: this.backgroundImageUri,
         showBackgroundImage: !this.backgroundLoadFailed,
         backgroundReloadKey: this.backgroundReloadKey,
@@ -196,7 +196,7 @@ export struct SharePreviewPage {
       ShareScrollCard({
         days: this.viewModel.sevenDays,
         fontId: this.viewModel.sevenFontId,
-        paperId: this.paperId
+        paperId: this.viewModel.activePaperId
       })
         .transition(TransitionEffect.OPACITY.animation({ duration: 240, curve: Curve.EaseOut }))
     }
@@ -208,7 +208,7 @@ export struct SharePreviewPage {
       this.shareCardContent()
     }
     .id(SHARE_CARD_COMPONENT_ID)
-    .backgroundColor(styleForPaper(this.paperId).light.background)
+    .backgroundColor(styleForPaper(this.viewModel.activePaperId).light.background)
   }
 
   build() {
