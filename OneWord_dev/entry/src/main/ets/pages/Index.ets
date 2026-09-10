@@ -398,6 +398,7 @@ struct Index {
           .height('100%')
           .padding({
             top: $r('app.float.immersive_top_content_offset'),
+            bottom: $r('app.float.immersive_bottom_content_offset'),
             left: $r('app.float.page_horizontal_margin'),
             right: $r('app.float.page_horizontal_margin')
           })

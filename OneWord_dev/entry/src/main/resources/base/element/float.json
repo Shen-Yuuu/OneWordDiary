@@ -33,6 +33,10 @@
       "value": "32vp"
     },
     {
+      "name": "immersive_bottom_content_offset",
+      "value": "32vp"
+    },
+    {
       "name": "primary_button_height",
       "value": "52vp"
     },
