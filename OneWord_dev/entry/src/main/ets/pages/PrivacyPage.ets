@@ -99,28 +99,14 @@ export struct PrivacyPage {
 
           Scroll() {
             Column() {
-              Text('你的文字，只属于你。')
-                .width('100%')
-                .fontSize(27)
-                .fontFamily('oneword_wenkai, serif')
-                .fontColor($r('app.color.text_primary'))
-                .letterSpacing(2)
-                .margin({ top: 24, bottom: 18 })
-
-              this.privacyItem('本机保存', '日记默认只保存在当前设备，不需要账号，也不会上传到服务器。')
-              this.privacyItem('没有追踪', '应用不申请网络权限，不接入统计、广告或用户画像服务。')
-              this.privacyItem('克制的提醒', '每日提醒只显示固定文案，不读取或展示你的日记正文与注解。')
-              this.privacyItem('谨慎分享', '分享图片默认不包含注解；分享前始终展示完整预览。')
-              this.privacyItem('主动备份', '应用未接入系统备份恢复扩展。只有你主动选择时才会导出或导入；导出的 .oneword 文件只包含日记正文、备注及必要的文字记录信息，不包含背景图片，且未加密，请保存到可信位置。')
+              this.privacyItem('本机存储', '日记保存在当前设备。')
+              this.privacyItem('分享与备份', '仅在你主动操作时生成或读取文件。')
+              this.privacyItem('清除数据', '可在设置中清空全部数据。')
               this.officialPolicyEntry()
-
-              Text('一字 1.0 · 离线优先')
-                .fontSize(13)
-                .fontColor($r('app.color.text_tertiary'))
-                .margin({ top: 32, bottom: 44 })
             }
             .width('100%')
             .alignItems(HorizontalAlign.Start)
+            .padding({ top: 18, bottom: 36 })
           }
           .layoutWeight(1)
           .scrollBar(BarState.Off)

@@ -23,7 +23,7 @@ export struct PrivacyConsentGate {
         .fontColor($r('app.color.text_primary'))
         .letterSpacing(2)
 
-      Text('在继续前，请阅读并同意《一字日记隐私政策》。日记默认仅保存在本机，不会上传到服务器。')
+      Text('请阅读并同意《一字日记隐私政策》。')
         .fontSize(16)
         .lineHeight(25)
         .fontColor($r('app.color.text_secondary'))

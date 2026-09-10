@@ -24,7 +24,6 @@ export struct SettingsPage {
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private contentShown: boolean = false;
-  @State private reminderTimeLabel: string = '21:00';
   private revealTimer: number = -1;
 
   aboutToAppear(): void {
@@ -50,62 +49,12 @@ export struct SettingsPage {
 
   private async loadSettings(): Promise<void> {
     await this.viewModel.load();
-    this.reminderTimeLabel = this.viewModel.reminderTimeLabel;
-  }
-
-  private toggleReminder(isOn: boolean): void {
-    if (isOn) {
-      this.showReminderExplanation();
-    } else {
-      this.viewModel.disableReminder();
-    }
-  }
-
-  private showReminderExplanation(): void {
-    this.getUIContext().showAlertDialog({
-      title: '开启每日提醒？',
-      message: '每天在设定时间轻轻提醒你回望今天。即使当天已经记录，提醒仍会出现，且不会包含日记内容。',
-      primaryButton: {
-        value: '暂不开启',
-        action: () => {
-        }
-      },
-      secondaryButton: {
-        value: '继续',
-        fontColor: $r('app.color.accent_vermilion'),
-        action: () => this.viewModel.enableReminder()
-      }
-    });
-  }
-
-  private showTimePicker(): void {
-    const selected = new Date();
-    selected.setHours(this.viewModel.reminder.hour, this.viewModel.reminder.minute, 0, 0);
-    this.getUIContext().showTimePickerDialog({
-      selected: selected,
-      useMilitaryTime: true,
-      onAccept: (value: TimePickerResult) => {
-        void this.updateReminderTime(value.hour, value.minute);
-      }
-    });
-  }
-
-  private async updateReminderTime(hour: number, minute: number): Promise<void> {
-    this.reminderTimeLabel = this.formatReminderTime(hour, minute);
-    await this.viewModel.changeReminderTime(hour, minute);
-    this.reminderTimeLabel = this.viewModel.reminderTimeLabel;
-  }
-
-  private formatReminderTime(hour: number, minute: number): string {
-    const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
-    const formattedMinute = minute < 10 ? `0${minute}` : `${minute}`;
-    return `${formattedHour}:${formattedMinute}`;
   }
 
   private showFirstClearConfirmation(): void {
     this.getUIContext().showAlertDialog({
       title: '清空全部数据？',
-      message: '这会删除所有日记，并重置风格和每日提醒。',
+      message: '这会永久删除设备上的全部日记和背景图片，并恢复默认风格。',
       primaryButton: {
         value: '取消',
         action: () => {
@@ -139,7 +88,7 @@ export struct SettingsPage {
   private async performClear(): Promise<void> {
     if (await this.viewModel.clearAll()) {
       try {
-        this.getUIContext().getPromptAction().showToast({ message: '已回到最初的一页' });
+        this.getUIContext().getPromptAction().showToast({ message: '已清空全部数据' });
       } catch (error) {
         // 提示失败不影响清空结果
       }
@@ -210,7 +159,7 @@ export struct SettingsPage {
       case StylePresetId.APRICOT_PAPER:
         return '杏笺';
       case StylePresetId.ROSE_PINK:
-        return '玫瑰粉';
+        return '瑰粉';
       case StylePresetId.PAPER_INK:
       default:
         return '纸墨';
@@ -228,34 +177,11 @@ export struct SettingsPage {
       case StylePresetId.APRICOT_PAPER:
         return '杏';
       case StylePresetId.ROSE_PINK:
-        return '玫';
+        return '瑰';
       case StylePresetId.PAPER_INK:
       default:
         return '墨';
     }
-  }
-
-  @Builder
-  private reminderTimeRow() {
-    Row() {
-      Text('提醒时间')
-        .fontSize(17)
-        .fontColor($r('app.color.text_primary'))
-
-      Row({ space: 8 }) {
-        Text(this.reminderTimeLabel)
-          .fontSize(15)
-          .fontColor($r('app.color.text_secondary'))
-        Text('›')
-          .fontSize(24)
-          .fontColor($r('app.color.text_tertiary'))
-      }
-    }
-    .width('100%')
-    .height(58)
-    .justifyContent(FlexAlign.SpaceBetween)
-    .alignItems(VerticalAlign.Center)
-    .onClick(() => this.showTimePicker())
   }
 
   @Builder
@@ -334,48 +260,6 @@ export struct SettingsPage {
 
                 Divider().color($r('app.color.divider_subtle'))
 
-                this.sectionTitle('提醒')
-                Row() {
-                  Text('每日回望提醒')
-                    .fontSize(17)
-                    .fontColor($r('app.color.text_primary'))
-
-                  Toggle({ type: ToggleType.Switch, isOn: this.viewModel.reminder.enabled })
-                    .selectedColor($r('app.color.accent_vermilion'))
-                    .enabled(!this.viewModel.isBusy)
-                    .onChange((isOn: boolean) => this.toggleReminder(isOn))
-                }
-                .width('100%')
-                .height(58)
-                .justifyContent(FlexAlign.SpaceBetween)
-                .alignItems(VerticalAlign.Center)
-
-                this.reminderTimeRow()
-
-                Text(this.viewModel.reminderStatusMessage)
-                  .width('100%')
-                  .fontSize(14)
-                  .lineHeight(22)
-                  .fontColor(this.viewModel.uiState === SettingsUiState.READY ?
-                    $r('app.color.text_tertiary') : $r('app.color.accent_vermilion'))
-                  .padding({ bottom: 10 })
-
-                if (this.viewModel.uiState === SettingsUiState.REMINDER_PERMISSION_DENIED ||
-                  this.viewModel.uiState === SettingsUiState.REMINDER_DISABLED_BY_SYSTEM ||
-                  this.viewModel.uiState === SettingsUiState.REMINDER_SCHEDULE_ERROR) {
-                  Button('重新检查并开启')
-                    .height(44)
-                    .fontSize(14)
-                    .fontColor($r('app.color.text_primary'))
-                    .backgroundColor(Color.Transparent)
-                    .border({ width: 1, color: $r('app.color.outline_soft') })
-                    .borderRadius(22)
-                    .margin({ bottom: 12 })
-                    .onClick(() => this.viewModel.enableReminder())
-                }
-
-                Divider().color($r('app.color.divider_subtle'))
-
                 this.sectionTitle('关于数据')
                 this.navigationRow('备份与恢复', '', () => this.onOpenBackup(this.paperId))
                 this.navigationRow('隐私政策', '', () => this.onOpenPrivacy(this.paperId))
@@ -422,7 +306,7 @@ export struct SettingsPage {
               .width(30)
               .height(30)
               .color($r('app.color.accent_vermilion'))
-            Text('正在收起所有文字…')
+            Text('正在清空…')
               .fontSize(15)
               .fontColor($r('app.color.text_secondary'))
           }

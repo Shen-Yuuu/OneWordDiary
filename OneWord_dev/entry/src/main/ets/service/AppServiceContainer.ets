@@ -14,6 +14,7 @@ import { BackgroundImageService } from './BackgroundImageService';
 import { DiaryService } from './DiaryService';
 import { DiaryTextRules } from './DiaryTextRules';
 import { ReminderScheduler, SystemReminderScheduler } from './ReminderScheduler';
+import { ReminderRetirementService } from './ReminderRetirementService';
 
 export class AppServiceContainer {
   private static abilityContext: common.UIAbilityContext | null = null;
@@ -38,6 +39,7 @@ export class AppServiceContainer {
       backgroundImageService
     );
     await resetService.resumeIfNeeded();
+    await new ReminderRetirementService(settingsRepository, reminderScheduler).retire();
     await AppServiceContainer.cleanupBackgroundOrphans(repository, backgroundImageService);
 
     AppServiceContainer.diaryService = new DiaryService(

@@ -33,7 +33,7 @@ export struct BackupPage {
   private showExportWarning(): void {
     this.getUIContext().showAlertDialog({
       title: '导出本地备份？',
-      message: '备份文件未加密，仅包含全部日记正文与备注，不包含背景图片。请保存到可信位置并谨慎分享。',
+      message: '备份文件未加密，包含日记正文和备注。',
       primaryButton: {
         value: '取消',
         action: () => {
@@ -191,30 +191,11 @@ export struct BackupPage {
           .alignItems(VerticalAlign.Center)
 
           Column({ space: 22 }) {
-            Column({ space: 8 }) {
-              Text('只在你主动选择时读写文件')
-                .fontSize(18)
-                .fontFamily('oneword_wenkai, serif')
-                .fontColor($r('app.color.text_primary'))
-                .letterSpacing(1.4)
-
-              Text('备份不经过网络，只包含日记正文与备注，不包含背景图片、通知权限与提醒时间。')
-                .fontSize(14)
-                .lineHeight(22)
-                .fontColor($r('app.color.text_secondary'))
-                .textAlign(TextAlign.Center)
-            }
-            .padding({ top: 26, bottom: 14 })
-            .alignItems(HorizontalAlign.Center)
-
-            this.operationCard('↑', '导出备份', '生成未加密的 .oneword 文件', () => this.showExportWarning())
-            this.operationCard('↓', '导入备份', '预检完整文件后，只补入缺失日期', () => this.chooseImportFile())
+            this.operationCard('↑', '导出备份', '导出 .oneword 文件', () => this.showExportWarning())
+            this.operationCard('↓', '导入备份', '从 .oneword 文件恢复', () => this.chooseImportFile())
 
             if (this.viewModel.resultMessage.length > 0) {
               Column({ space: 10 }) {
-                Text('完成')
-                  .fontSize(14)
-                  .fontColor($r('app.color.accent_vermilion'))
                 Text(this.viewModel.resultMessage)
                   .fontSize(15)
                   .lineHeight(23)
@@ -228,9 +209,6 @@ export struct BackupPage {
               .onClick(() => this.viewModel.resetFeedback())
             } else if (this.viewModel.errorMessage.length > 0) {
               Column({ space: 10 }) {
-                Text('没有改动本机数据')
-                  .fontSize(14)
-                  .fontColor($r('app.color.accent_vermilion'))
                 Text(this.viewModel.errorMessage)
                   .fontSize(15)
                   .lineHeight(23)
@@ -244,7 +222,7 @@ export struct BackupPage {
               .onClick(() => this.viewModel.resetFeedback())
             }
 
-            Text('导入不会覆盖同一天的本机记录。文件上限 5 MiB，最多 10000 条记录。')
+            Text('同日期记录不会被覆盖')
               .fontSize(12)
               .lineHeight(20)
               .fontColor($r('app.color.text_tertiary'))
@@ -267,8 +245,8 @@ export struct BackupPage {
               .width(30)
               .height(30)
               .color($r('app.color.accent_vermilion'))
-            Text(this.viewModel.uiState === BackupUiState.EXPORTING ? '正在整理备份…' :
-              this.viewModel.uiState === BackupUiState.IMPORTING ? '正在收入长卷…' : '正在检查文件…')
+            Text(this.viewModel.uiState === BackupUiState.EXPORTING ? '正在导出…' :
+              this.viewModel.uiState === BackupUiState.IMPORTING ? '正在导入…' : '正在检查文件…')
               .fontSize(15)
               .fontColor($r('app.color.text_secondary'))
           }
