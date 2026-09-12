@@ -27,6 +27,10 @@ export struct SettingsPage {
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private contentShown: boolean = false;
+  @State private styleExpanded: boolean = false;
+  @State private styleBodyHeight: number = 0;
+  @State private fontExpanded: boolean = false;
+  @State private fontBodyHeight: number = 0;
   private revealTimer: number = -1;
 
   aboutToAppear(): void {
@@ -108,6 +112,50 @@ export struct SettingsPage {
       .fontColor($r('app.color.text_tertiary'))
       .letterSpacing(1.6)
       .padding({ top: 16, bottom: 10 })
+  }
+
+  @Builder
+  private collapsibleHeader(title: string, value: string, expanded: boolean, onToggle: () => void) {
+    Row() {
+      Text(title)
+        .fontSize(13)
+        .fontWeight(FontWeight.Medium)
+        .fontColor($r('app.color.text_tertiary'))
+        .letterSpacing(1.6)
+
+      Blank()
+
+      if (value.length > 0) {
+        Text(value)
+          .fontSize(12)
+          .fontColor($r('app.color.text_tertiary'))
+          .margin({ right: 10 })
+      }
+
+      Text('›')
+        .fontSize(20)
+        .fontColor($r('app.color.text_tertiary'))
+        .rotate({ angle: expanded ? 90 : 0 })
+        .animation({ duration: 250, curve: Curve.EaseOut })
+    }
+    .width('100%')
+    .height(36)
+    .padding({ top: 10 })
+    .onClick(() => onToggle())
+    .accessibilityText(`${title}，${expanded ? '已展开' : '已收起'}，点击${expanded ? '收起' : '展开'}`)
+  }
+
+  private currentStyleLabel(): string {
+    return this.styleLabel(this.viewModel.stylePresetId);
+  }
+
+  private currentFontLabel(): string {
+    for (const option of allFontOptions()) {
+      if (option.id === this.viewModel.fontPresetId) {
+        return option.displayName;
+      }
+    }
+    return '';
   }
 
   @Builder
@@ -288,31 +336,54 @@ export struct SettingsPage {
 
             Scroll() {
               Column() {
-                this.sectionTitle('风格')
-                Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
-                  ForEach(allStylePresets(), (style: StyleTokens) => {
-                    this.styleCard(style, this.styleLabel(style.id), this.styleSample(style.id))
-                  }, (style: StyleTokens): string => style.id)
+                this.collapsibleHeader('风格', this.currentStyleLabel(), this.styleExpanded, (): void => {
+                  this.styleExpanded = !this.styleExpanded;
+                })
+                Column() {
+                  Column() {
+                    Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
+                      ForEach(allStylePresets(), (style: StyleTokens) => {
+                        this.styleCard(style, this.styleLabel(style.id), this.styleSample(style.id))
+                      }, (style: StyleTokens): string => style.id)
+                    }
+                    .width('100%')
+                    .padding({ bottom: 12 })
+                  }
+                  .onAreaChange((_oldArea: Area, newArea: Area) => {
+                    this.styleBodyHeight = Number(newArea.height);
+                  })
                 }
                 .width('100%')
-                .padding({ bottom: 12 })
+                .height(this.styleExpanded ? this.styleBodyHeight : 0)
+                .opacity(this.styleExpanded ? 1 : 0)
+                .clip(true)
+                .animation({ duration: 300, curve: Curve.EaseOut })
 
                 Divider().color($r('app.color.divider_subtle'))
 
-                this.sectionTitle('字体')
-                Grid() {
-                  ForEach(allFontOptions(), (option: FontOption) => {
-                    GridItem() {
-                      this.fontCard(option)
-                    }
-                  }, (option: FontOption): string => option.id)
+                this.collapsibleHeader('字体', this.currentFontLabel(), this.fontExpanded, (): void => {
+                  this.fontExpanded = !this.fontExpanded;
+                })
+                Column() {
+                  Grid() {
+                    ForEach(allFontOptions(), (option: FontOption) => {
+                      GridItem() {
+                        this.fontCard(option)
+                      }
+                    }, (option: FontOption): string => option.id)
+                  }
+                  .width('100%')
+                  .height(184)
+                  .columnsTemplate('1fr 1fr')
+                  .columnsGap(10)
+                  .rowsGap(8)
+                  .padding({ bottom: 12 })
                 }
                 .width('100%')
-                .height(184)
-                .columnsTemplate('1fr 1fr')
-                .columnsGap(10)
-                .rowsGap(8)
-                .padding({ bottom: 12 })
+                .height(this.fontExpanded ? this.fontBodyHeight : 0)
+                .opacity(this.fontExpanded ? 1 : 0)
+                .clip(true)
+                .animation({ duration: 300, curve: Curve.EaseOut })
 
                 Divider().color($r('app.color.divider_subtle'))
 

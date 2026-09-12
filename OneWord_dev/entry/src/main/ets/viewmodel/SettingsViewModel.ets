@@ -5,7 +5,9 @@ import { DEFAULT_APP_SETTINGS, ReminderSettings } from '../model/Settings';
 import { SettingsUiState } from '../model/SettingsUiState';
 import { SettingsRepository } from '../repository/SettingsRepository';
 import { AppResetService } from '../service/AppResetService';
+import { AppServiceContainer } from '../service/AppServiceContainer';
 import { ReminderScheduler } from '../service/ReminderScheduler';
+import { ThemeChrome } from '../utils/ThemeChrome';
 import { AppLogger } from '../utils/AppLogger';
 
 @Observed
@@ -84,6 +86,7 @@ export class SettingsViewModel {
     try {
       await this.settingsRepository.saveStylePresetId(stylePresetId);
       this.syncPaperStorage(stylePresetId);
+      ThemeChrome.apply(AppServiceContainer.getAbilityContext(), paperIdForStyle(stylePresetId));
       AppLogger.info(`style.select id=${stylePresetId} save=ok`);
       await this.refreshReminderState();
     } catch (error) {

@@ -1,9 +1,10 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { FontFamilies } from '../constants/StyleTokens';
+import { FontFamilies, paperIdForStyle } from '../constants/StyleTokens';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { AppLogger } from '../utils/AppLogger';
+import { ThemeChrome } from '../utils/ThemeChrome';
 
 const FONT_FAMILY_SERIF = 'oneword_wenkai';
 const FONT_FAMILY_SERIF_MEDIUM = 'oneword_wenkai_medium';
@@ -104,6 +105,7 @@ export default class EntryAbility extends UIAbility {
       // 官方指引：全局字体在 loadContent 回调内注册（过早 getMainWindow 会报 1300002 窗口状态异常）
       this.registerCustomFonts(windowStage);
       this.configureImmersiveWindow(windowStage);
+      this.syncThemeChrome();
     });
   }
 
@@ -124,6 +126,14 @@ export default class EntryAbility extends UIAbility {
       const businessError = error as BusinessError;
       AppLogger.error(`window.immersive_failed code=${businessError.code}`);
     }
+  }
+
+  private syncThemeChrome(): void {
+    AppServiceContainer.getSettingsRepository().load().then((settings) => {
+      ThemeChrome.apply(this.context, paperIdForStyle(settings.stylePresetId));
+    }).catch(() => {
+      AppLogger.error('window.theme_chrome_failed');
+    });
   }
 
   onWindowStageDestroy(): void {
