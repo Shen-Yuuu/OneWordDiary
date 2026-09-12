@@ -28,6 +28,7 @@ export struct SharePreviewPage {
   );
   private readonly imageService: ShareImageService = new ShareImageService();
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
+  @State private showNote: boolean = false;
   @State private contentShown: boolean = false;
   @State private backgroundImageUri: string = '';
   @State private isBackgroundReady: boolean = true;
@@ -181,8 +182,10 @@ export struct SharePreviewPage {
         localDate: this.viewModel.singleData.localDate,
         recordType: this.viewModel.singleData.recordType,
         content: this.viewModel.singleData.content,
+        note: this.viewModel.singleData.note,
         fontId: this.viewModel.singleData.fontId,
         paperId: this.viewModel.activePaperId,
+        showNote: this.showNote,
         backgroundImageUri: this.backgroundImageUri,
         showBackgroundImage: !this.backgroundLoadFailed,
         backgroundReloadKey: this.backgroundReloadKey,
@@ -195,7 +198,8 @@ export struct SharePreviewPage {
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
       ShareScrollCard({
         days: this.viewModel.sevenDays,
-        paperId: this.viewModel.activePaperId
+        paperId: this.viewModel.activePaperId,
+        showNote: this.showNote
       })
         .transition(TransitionEffect.OPACITY.animation({ duration: 240, curve: Curve.EaseOut }))
     }
@@ -265,6 +269,21 @@ export struct SharePreviewPage {
                 .padding(3)
                 .border({ width: 1, color: $r('app.color.outline_soft') })
                 .borderRadius(20)
+
+                Row({ space: 8 }) {
+                  Text('显示备注')
+                    .fontSize(12)
+                    .fontColor($r('app.color.text_tertiary'))
+
+                  Toggle({ type: ToggleType.Switch, isOn: this.showNote })
+                    .selectedColor(styleForPaper(this.paperId).light.accent)
+                    .onChange((isOn: boolean) => {
+                      this.getUIContext().animateTo({ duration: 240, curve: Curve.EaseOut }, () => {
+                        this.showNote = isOn;
+                      });
+                    })
+                }
+                .margin({ top: 2 })
 
                 Stack() {
                   this.shareCard()

@@ -10,6 +10,7 @@ import { styleForPaper } from '../../constants/StyleTokens';
 @Component
 export struct ShareScrollCard {
   @Prop days: ShareDayItem[] = [];
+  @Prop showNote: boolean = false;
   @Prop paperId: string = 'warm_paper_dev';
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
@@ -57,8 +58,8 @@ export struct ShareScrollCard {
       item.fontId,
       this.paperId,
       this.sideFor(item, index),
-      '',
-      false,
+      item.note,
+      this.showNote && item.note.length > 0,
       item.kind === ShareDayKind.MISSING
     );
   }

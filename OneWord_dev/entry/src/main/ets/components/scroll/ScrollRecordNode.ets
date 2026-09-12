@@ -127,7 +127,7 @@ export struct ScrollRecordNode {
       .fontSize(10)
       .lineHeight(14)
       .fontFamily(this.recordFontFamily())
-      .fontColor(this.textColor())
+      .fontColor(this.secondaryColor())
       .maxLines(2)
       .textAlign(textAlign)
       .minFontScale(1)

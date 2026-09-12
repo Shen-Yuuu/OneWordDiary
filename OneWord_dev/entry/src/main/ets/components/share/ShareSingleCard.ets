@@ -11,6 +11,8 @@ export struct ShareSingleCard {
   @Prop localDate: string = '';
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop content: string = '';
+  @Prop note: string = '';
+  @Prop showNote: boolean = false;
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   @Prop backgroundImageUri: string = '';
@@ -47,6 +49,10 @@ export struct ShareSingleCard {
 
   contentCount(): number {
     return this.graphemeCounter.count(this.content);
+  }
+
+  hasNote(): boolean {
+    return this.showNote && this.note.length > 0;
   }
 
   build() {
@@ -111,7 +117,8 @@ export struct ShareSingleCard {
             }
           }
           .width('100%')
-          .height(292)
+          .height(this.hasNote() ? 244 : 292)
+          .animation({ duration: 240, curve: Curve.EaseOut })
         } else {
           Column({ space: 14 }) {
             Stack({ alignContent: Alignment.Center }) {
@@ -136,14 +143,28 @@ export struct ShareSingleCard {
               .minFontScale(1)
               .maxFontScale(1)
           }
-          .height(292)
+          .height(this.hasNote() ? 244 : 292)
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
         }
       }
       .width('100%')
-      .height(292)
+      .height(this.hasNote() ? 244 : 292)
       .alignItems(HorizontalAlign.Center)
+      .animation({ duration: 240, curve: Curve.EaseOut })
+
+      if (this.hasNote()) {
+        Text(this.note)
+          .width(248)
+          .fontSize(15)
+          .lineHeight(22)
+          .fontFamily(this.recordFontFamily())
+          .fontColor(this.textColor())
+          .letterSpacing(0.6)
+          .textAlign(TextAlign.Center)
+          .maxLines(2)
+          .margin({ top: 2, bottom: 6 })
+      }
 
       Row({ space: 9 }) {
         Stack({ alignContent: Alignment.Center }) {
