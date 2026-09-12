@@ -33,22 +33,6 @@ export struct TodayRecordCard {
         accessibilityPrefix: '今日正文'
       })
 
-      if (this.canRevise) {
-        Text(`尚可修订 1 次 · 截止 ${this.revisionDeadline}`)
-          .fontSize(13)
-          .fontColor($r('app.color.text_secondary'))
-          .letterSpacing(1)
-          .textAlign(TextAlign.Center)
-          .margin({ top: 34 })
-          .accessibilityLevel('yes')
-      } else {
-        Text(this.finalLabel)
-          .fontSize(13)
-          .fontColor($r('app.color.accent_vermilion'))
-          .margin({ top: 34 })
-          .accessibilityLevel('yes')
-      }
-
       Blank()
 
       if (this.canRevise) {
@@ -57,10 +41,20 @@ export struct TodayRecordCard {
             .width($r('app.float.touch_target_min'))
             .height($r('app.float.touch_target_min'))
 
-          DiaryPrimaryButton({
-            label: '修订今日',
-            onTap: () => this.onRevise()
-          })
+          Column({ space: 8 }) {
+            Text('尚可修订 1 次')
+              .fontSize(13)
+              .fontColor($r('app.color.text_secondary'))
+              .letterSpacing(1)
+              .textAlign(TextAlign.Center)
+              .accessibilityLevel('yes')
+
+            DiaryPrimaryButton({
+              label: '修订今日',
+              onTap: () => this.onRevise()
+            })
+          }
+          .alignItems(HorizontalAlign.Center)
 
           DiaryIconButton({
             icon: $r('app.media.ic_share'),
@@ -70,13 +64,23 @@ export struct TodayRecordCard {
           })
         }
         .justifyContent(FlexAlign.Center)
+        .alignItems(VerticalAlign.Bottom)
       } else {
-        DiaryIconButton({
-          icon: $r('app.media.ic_share'),
-          accessibilityLabel: '分享今天',
-          bordered: true,
-          onTap: () => this.onShare()
-        })
+        Column({ space: 10 }) {
+          Text(this.finalLabel)
+            .fontSize(13)
+            .fontColor($r('app.color.accent_vermilion'))
+            .letterSpacing(1)
+            .accessibilityLevel('yes')
+
+          DiaryIconButton({
+            icon: $r('app.media.ic_share'),
+            accessibilityLabel: '分享今天',
+            bordered: true,
+            onTap: () => this.onShare()
+          })
+        }
+        .alignItems(HorizontalAlign.Center)
       }
 
       Text(`已留下 ${this.recordCount} 天`)

@@ -16,9 +16,15 @@ export struct DetailRecordContent {
 
   build() {
     Column() {
+      Text(this.dateLabel)
+        .fontSize(14)
+        .fontColor($r('app.color.text_secondary'))
+        .letterSpacing(1.4)
+        .margin({ top: 16, bottom: 12 })
+
       Blank()
 
-      Column({ space: 12 }) {
+      Column() {
         DiaryHeroContent({
           recordType: this.recordType,
           content: this.content,
@@ -27,12 +33,6 @@ export struct DetailRecordContent {
           fontId: this.fontId,
           accessibilityPrefix: '日记正文'
         })
-
-        Text(this.dateLabel)
-          .fontSize(14)
-          .fontColor($r('app.color.text_secondary'))
-          .letterSpacing(1.4)
-          .margin({ top: 8 })
       }
       .width('100%')
       .alignItems(HorizontalAlign.Center)

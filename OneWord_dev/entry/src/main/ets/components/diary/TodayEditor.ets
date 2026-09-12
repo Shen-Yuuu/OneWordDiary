@@ -39,12 +39,12 @@ export struct TodayEditor {
   };
   contentFontSize(): number {
     if (this.contentCount <= 1) {
-      return 50;
+      return 55;
     }
     if (this.contentCount === 2) {
-      return 40;
+      return 45;
     }
-    return this.contentCount === 3 ? 33 : 28;
+    return this.contentCount === 3 ? 38 : 33;
   }
 
   aboutToAppear(): void {

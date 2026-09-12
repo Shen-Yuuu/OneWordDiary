@@ -109,9 +109,9 @@ export struct TodayConfirmation {
 
             if (this.note.length > 0) {
               Text(this.note)
-                .fontSize(16)
+                .fontSize(20)
                 .fontFamily(fontFamilyForId(this.fontId))
-                .fontColor($r('app.color.text_secondary'))
+                .fontColor($r('app.color.text_primary'))
                 .lineHeight(24)
                 .textAlign(TextAlign.Center)
                 .maxLines(3)

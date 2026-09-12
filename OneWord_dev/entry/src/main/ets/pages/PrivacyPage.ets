@@ -105,6 +105,8 @@ export struct PrivacyPage {
               this.officialPolicyEntry()
             }
             .width('100%')
+            .height('100%')
+            .justifyContent(FlexAlign.Start)
             .alignItems(HorizontalAlign.Start)
             .padding({ top: 18, bottom: 36 })
           }

@@ -50,12 +50,12 @@ export struct DiaryHeroContent {
 
   heroCharSize(): number {
     if (this.contentCount <= 1) {
-      return 136;
+      return 142;
     }
     if (this.contentCount === 2) {
-      return 76;
+      return 85;
     }
-    return this.contentCount === 3 ? 56 : 44;
+    return this.contentCount === 3 ? 65 : 54;
   }
 
   charGap(): number {
@@ -171,10 +171,10 @@ export struct DiaryHeroContent {
       if (this.note.length > 0) {
         Text(this.note)
           .width(280)
-          .fontSize(14)
+          .fontSize(20)
           .lineHeight(22)
           .fontFamily(this.recordFontFamily())
-          .fontColor($r('app.color.text_secondary'))
+          .fontColor($r('app.color.text_primary'))
           .letterSpacing(0.6)
           .textAlign(TextAlign.Center)
           .maxLines(2)
