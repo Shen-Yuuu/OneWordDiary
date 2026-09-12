@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
+import { FontPresetId } from '../main/ets/constants/FontCatalog';
 import { DailyRecord, RecordType } from '../main/ets/model/DailyRecord';
 import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../main/ets/model/Settings';
 import { SettingsUiState } from '../main/ets/model/SettingsUiState';
@@ -12,6 +13,7 @@ import { SettingsViewModel } from '../main/ets/viewmodel/SettingsViewModel';
 class MemorySettingsRepository implements SettingsRepository {
   settings: AppSettings = {
     stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
+    fontPresetId: DEFAULT_APP_SETTINGS.fontPresetId,
     reminder: MemorySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder),
     privacyPolicyAcceptedVersion: ''
   };
@@ -21,6 +23,7 @@ class MemorySettingsRepository implements SettingsRepository {
   async load(): Promise<AppSettings> {
     return {
       stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
       reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
       privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
@@ -29,6 +32,16 @@ class MemorySettingsRepository implements SettingsRepository {
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
     this.settings = {
       stylePresetId: stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
+      reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
+      privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
+    };
+  }
+
+  async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      fontPresetId: fontPresetId,
       reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
       privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
@@ -37,6 +50,7 @@ class MemorySettingsRepository implements SettingsRepository {
   async saveReminder(reminder: ReminderSettings): Promise<void> {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
       reminder: MemorySettingsRepository.cloneReminder(reminder),
       privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
@@ -46,6 +60,7 @@ class MemorySettingsRepository implements SettingsRepository {
     this.privacyPolicyAcceptedVersion = version;
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
       reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
       privacyPolicyAcceptedVersion: version
     };
@@ -61,6 +76,7 @@ class MemorySettingsRepository implements SettingsRepository {
   async reset(): Promise<void> {
     this.settings = {
       stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
+      fontPresetId: DEFAULT_APP_SETTINGS.fontPresetId,
       reminder: MemorySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder),
       privacyPolicyAcceptedVersion: ''
     };
@@ -182,6 +198,16 @@ export default function settingsViewModelTest(): void {
       }
     });
 
+    it('persistsFontIndependentlyFromStyle', 0, async () => {
+      const fixture = new SettingsFixture();
+      await fixture.viewModel.load();
+      await fixture.viewModel.selectStyle(StylePresetId.ROSE_PINK);
+      await fixture.viewModel.selectFont(FontPresetId.MINGCHAO);
+      expect(fixture.viewModel.fontPresetId).assertEqual(FontPresetId.MINGCHAO);
+      expect(fixture.settingsRepository.settings.fontPresetId).assertEqual(FontPresetId.MINGCHAO);
+      expect(fixture.settingsRepository.settings.stylePresetId).assertEqual(StylePresetId.ROSE_PINK);
+    });
+
     it('requestsPermissionOnlyWhenEnablingAndPublishesDailyReminder', 0, async () => {
       const fixture = new SettingsFixture();
       await fixture.viewModel.load();
@@ -236,6 +262,7 @@ export default function settingsViewModelTest(): void {
       expect(cleared).assertTrue();
       expect(await fixture.diaryRepository.countAll()).assertEqual(0);
       expect(fixture.settingsRepository.settings.stylePresetId).assertEqual(StylePresetId.PAPER_INK);
+      expect(fixture.settingsRepository.settings.fontPresetId).assertEqual(FontPresetId.DEFAULT);
       expect(fixture.settingsRepository.settings.reminder.enabled).assertFalse();
       expect(fixture.scheduler.cancelAllCount).assertEqual(1);
       expect(fixture.settingsRepository.resetPending).assertFalse();

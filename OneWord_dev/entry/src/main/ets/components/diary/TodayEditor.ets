@@ -1,8 +1,10 @@
 import { InspirationLine } from './InspirationLine';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
+import { fontFamilyForId } from '../../constants/FontCatalog';
 
 @Component
 export struct TodayEditor {
+  @Prop fontId: string = 'oneword_kai';
   @Prop content: string = '';
   @Prop note: string = '';
   @Prop contentCount: number = 0;
@@ -58,7 +60,7 @@ export struct TodayEditor {
           .height(140)
           .fontSize(this.contentFontSize())
           .fontWeight(FontWeight.Medium)
-          .fontFamily('oneword_wenkai_medium, serif')
+          .fontFamily(fontFamilyForId(this.fontId))
           .fontColor($r('app.color.text_primary'))
           .placeholderColor($r('app.color.text_primary'))
           .placeholderFont({ size: 28, weight: FontWeight.Lighter })
@@ -91,7 +93,7 @@ export struct TodayEditor {
           .width('100%')
           .height(110)
           .fontSize(15)
-          .fontFamily('oneword_wenkai, serif')
+          .fontFamily(fontFamilyForId(this.fontId))
           .fontColor($r('app.color.text_primary'))
           .placeholderColor($r('app.color.text_primary'))
           .placeholderFont({ size: 15, family: 'oneword_wenkai, serif' })

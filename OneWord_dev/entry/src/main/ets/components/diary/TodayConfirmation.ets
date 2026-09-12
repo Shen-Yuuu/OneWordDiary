@@ -5,9 +5,11 @@ import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
 import { DiaryWordDisplay } from '../common/DiaryWordDisplay';
 import { PaperBackdrop } from '../common/PaperBackdrop';
 import { RecordType } from '../../model/DailyRecord';
+import { fontFamilyForId } from '../../constants/FontCatalog';
 
 @Component
 export struct TodayConfirmation {
+  @Prop fontId: string = 'oneword_kai';
   @Prop dateText: string = '';
   @Prop draftType: RecordType = RecordType.WORD;
   @Prop content: string = '';
@@ -95,6 +97,7 @@ export struct TodayConfirmation {
             DiaryWordDisplay({
               content: this.content,
               contentCount: this.contentCount,
+              fontFamily: fontFamilyForId(this.fontId),
               accessibilityPrefix: '今日正文'
             })
 
@@ -107,6 +110,7 @@ export struct TodayConfirmation {
             if (this.note.length > 0) {
               Text(this.note)
                 .fontSize(16)
+                .fontFamily(fontFamilyForId(this.fontId))
                 .fontColor($r('app.color.text_secondary'))
                 .lineHeight(24)
                 .textAlign(TextAlign.Center)

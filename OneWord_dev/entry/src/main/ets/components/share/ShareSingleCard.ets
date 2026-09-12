@@ -4,6 +4,7 @@ import { AppLogger } from '../../utils/AppLogger';
 import { DiaryDateFormatter } from '../../utils/DiaryDateFormatter';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 import { styleForPaper } from '../../constants/StyleTokens';
+import { fontFamilyForId } from '../../constants/FontCatalog';
 
 @Component
 export struct ShareSingleCard {
@@ -37,7 +38,7 @@ export struct ShareSingleCard {
   }
 
   recordFontFamily(): string {
-    return 'oneword_wenkai, serif';
+    return fontFamilyForId(this.fontId);
   }
 
   aboutToAppear(): void {
@@ -129,7 +130,7 @@ export struct ShareSingleCard {
 
             Text('留白')
               .fontSize(14)
-              .fontFamily(this.recordFontFamily())
+              .fontFamily('oneword_wenkai, serif')
               .fontColor(this.secondaryColor())
               .letterSpacing(4)
               .minFontScale(1)
@@ -162,7 +163,7 @@ export struct ShareSingleCard {
 
         Text('一字日记')
           .fontSize(13)
-          .fontFamily(this.recordFontFamily())
+          .fontFamily('oneword_wenkai, serif')
           .fontColor(this.textColor())
           .letterSpacing(3)
           .minFontScale(1)

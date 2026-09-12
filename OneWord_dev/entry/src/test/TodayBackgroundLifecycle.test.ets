@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
+import { FontPresetId } from '../main/ets/constants/FontCatalog';
 import { BackgroundImageStore } from '../main/ets/model/BackgroundImage';
 import { DailyRecord } from '../main/ets/model/DailyRecord';
 import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../main/ets/model/Settings';
@@ -22,6 +23,9 @@ class MemorySettingsRepository implements SettingsRepository {
   }
 
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
+  }
+
+  async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {

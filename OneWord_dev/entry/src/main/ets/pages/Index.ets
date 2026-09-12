@@ -79,7 +79,7 @@ struct Index {
       return;
     }
     if (this.viewModel.uiState !== TodayUiState.APP_INITIALIZING && !this.viewModel.isPickingBackground) {
-      this.viewModel.load();
+      this.viewModel.load(true);
     }
   }
 
@@ -326,6 +326,7 @@ struct Index {
             content: this.viewModel.draftContent,
             contentCount: this.viewModel.contentCount,
             note: this.viewModel.draftNote,
+            fontId: this.viewModel.fontPresetId,
             paperId: this.paperId,
             isRevision: this.viewModel.isRevisionDraft,
             isBusy: this.viewModel.isBusy,
@@ -349,6 +350,7 @@ struct Index {
               TodayEditor({
                 content: this.viewModel.draftContent,
                 note: this.viewModel.draftNote,
+                fontId: this.viewModel.fontPresetId,
                 contentCount: this.viewModel.contentCount,
                 noteCount: this.viewModel.noteCount,
                 recordCount: this.viewModel.recordCount,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
+import { FontPresetId } from '../main/ets/constants/FontCatalog';
 import { DailyRecord, RecordType } from '../main/ets/model/DailyRecord';
 import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../main/ets/model/Settings';
 import { TodayUiState } from '../main/ets/model/TodayUiState';
@@ -24,6 +25,16 @@ class MemorySettingsRepository implements SettingsRepository {
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
     this.settings = {
       stylePresetId: stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
+      reminder: this.settings.reminder,
+      privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
+    };
+  }
+
+  async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      fontPresetId: fontPresetId,
       reminder: this.settings.reminder,
       privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
@@ -32,6 +43,7 @@ class MemorySettingsRepository implements SettingsRepository {
   async saveReminder(reminder: ReminderSettings): Promise<void> {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
       reminder: reminder,
       privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
@@ -45,6 +57,7 @@ class MemorySettingsRepository implements SettingsRepository {
     this.privacyPolicyAcceptedVersion = version;
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
       reminder: this.settings.reminder,
       privacyPolicyAcceptedVersion: version
     };
@@ -75,6 +88,7 @@ class FailingOnceRevisionRepository extends InMemoryDiaryRepository {
 class ViewModelFixture {
   readonly repository: DiaryRepository;
   readonly clock: FixedClock;
+  readonly settingsRepository: MemorySettingsRepository = new MemorySettingsRepository();
   readonly viewModel: TodayViewModel;
 
   constructor(repository: DiaryRepository = new InMemoryDiaryRepository()) {
@@ -89,7 +103,7 @@ class ViewModelFixture {
     const service = new DiaryService(repository, this.clock, resolver, rules);
     this.viewModel = new TodayViewModel(
       service,
-      new MemorySettingsRepository(),
+      this.settingsRepository,
       this.clock,
       resolver,
       rules,
@@ -150,6 +164,57 @@ export default function todayViewModelTest(): void {
       const saved = await fixture.repository.findByDate('2026-08-18');
       expect(saved !== null && saved.content === '静').assertTrue();
       expect(saved !== null && saved.note === '雨后的窗').assertTrue();
+    });
+
+    it('capturesTheSelectedFontWhenSubmitting', 0, async () => {
+      const fixture = new ViewModelFixture();
+      await fixture.settingsRepository.saveFontPresetId(FontPresetId.DYMON_HANDWRITING);
+      await fixture.viewModel.load();
+      fixture.viewModel.setContent('风');
+      fixture.viewModel.setNote('吹过窗边');
+      fixture.viewModel.showWordConfirmation();
+      await fixture.viewModel.confirmPending();
+
+      const saved = await fixture.repository.findByDate('2026-08-18');
+      expect(saved !== null && saved.fontId === FontPresetId.DYMON_HANDWRITING).assertTrue();
+      expect(fixture.viewModel.recordFontId).assertEqual(FontPresetId.DYMON_HANDWRITING);
+    });
+
+    it('refreshesFontWithoutDiscardingTheCurrentDraft', 0, async () => {
+      const fixture = new ViewModelFixture();
+      await fixture.viewModel.load();
+      fixture.viewModel.setContent('雨');
+      fixture.viewModel.setNote('落在窗边');
+      await fixture.settingsRepository.saveFontPresetId(FontPresetId.SLIDE_YOURAN);
+
+      await fixture.viewModel.load(true);
+
+      expect(fixture.viewModel.draftContent).assertEqual('雨');
+      expect(fixture.viewModel.draftNote).assertEqual('落在窗边');
+      expect(fixture.viewModel.fontPresetId).assertEqual(FontPresetId.SLIDE_YOURAN);
+      expect(fixture.viewModel.uiState).assertEqual(TodayUiState.TODAY_EDITING_WORD);
+    });
+
+    it('capturesTheCurrentFontOnRevisionWithoutChangingBeforeSave', 0, async () => {
+      const fixture = new ViewModelFixture();
+      await fixture.viewModel.load();
+      fixture.viewModel.setContent('静');
+      fixture.viewModel.showWordConfirmation();
+      await fixture.viewModel.confirmPending();
+      expect(fixture.viewModel.record !== null &&
+        fixture.viewModel.record.fontId === FontPresetId.DEFAULT).assertTrue();
+
+      await fixture.settingsRepository.saveFontPresetId(FontPresetId.YUNFENG_FEIYUN);
+      fixture.clock.setTime(1500);
+      await fixture.viewModel.load();
+      expect(fixture.viewModel.record !== null &&
+        fixture.viewModel.record.fontId === FontPresetId.DEFAULT).assertTrue();
+      fixture.viewModel.startRevision();
+      fixture.viewModel.showWordConfirmation();
+      await fixture.viewModel.confirmPending();
+
+      expect(fixture.viewModel.record !== null &&
+        fixture.viewModel.record.fontId === FontPresetId.YUNFENG_FEIYUN).assertTrue();
     });
 
     it('keepsBlankSemanticallyEmptyWhenDraftNoteExists', 0, async () => {

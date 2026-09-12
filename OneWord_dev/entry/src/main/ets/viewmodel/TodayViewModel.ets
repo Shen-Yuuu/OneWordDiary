@@ -1,4 +1,5 @@
 import { paperIdForStyle, styleForPreset, StylePresetId } from '../constants/StyleTokens';
+import { FontPresetId } from '../constants/FontCatalog';
 import { BackgroundImageStore } from '../model/BackgroundImage';
 import { DailyRecord, DiaryEntryInput, RecordType, RevisionStatus } from '../model/DailyRecord';
 import { DiaryError, DiaryErrorCode } from '../model/DiaryError';
@@ -27,6 +28,7 @@ export class TodayViewModel {
   localDate: string = '';
   weekday: string = '';
   stylePresetId: StylePresetId = StylePresetId.PAPER_INK;
+  fontPresetId: FontPresetId = FontPresetId.DEFAULT;
   isRevisionDraft: boolean = false;
   inspirationIndex: number = 0;
   recordDisplayType: RecordType = RecordType.WORD;
@@ -161,7 +163,9 @@ export class TodayViewModel {
       this.localDate = snapshot.localDate;
       this.weekday = this.formatWeekday(new Date(timestamp).getDay());
       this.stylePresetId = settings.stylePresetId;
+      this.fontPresetId = settings.fontPresetId;
       AppStorage.setOrCreate('currentPaperId', paperIdForStyle(settings.stylePresetId));
+      AppStorage.setOrCreate('currentFontId', settings.fontPresetId);
       AppLogger.info(`style.today_load preset=${settings.stylePresetId}`);
       this.record = record;
       this.syncRecordPresentation(record);
@@ -460,7 +464,7 @@ export class TodayViewModel {
       recordType: type,
       content: type === RecordType.BLANK ? null : this.draftContent,
       note: type === RecordType.BLANK || this.draftNote.trim().length === 0 ? null : this.draftNote,
-      fontId: style.fontId,
+      fontId: this.fontPresetId,
       paperId: style.paperId,
       backgroundImageId: this.draftBackgroundImageId
     };

@@ -1,4 +1,5 @@
 import diaryBackgroundDomainTest from './DiaryBackgroundDomain.test';
+import fontCatalogTest from './FontCatalog.test';
 import todayBackgroundLifecycleTest from './TodayBackgroundLifecycle.test';
 import baselineTest from './Baseline.test';
 import backupTest from './Backup.test';
@@ -21,6 +22,7 @@ import todayViewModelTest from './TodayViewModel.test';
 export default function testsuite(): void {
   baselineTest();
   diaryBackgroundDomainTest();
+  fontCatalogTest();
   todayBackgroundLifecycleTest();
   backupTest();
   backupFileGatewayTest();

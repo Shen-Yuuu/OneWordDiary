@@ -195,7 +195,6 @@ export struct SharePreviewPage {
     } else if (this.selectedMode === DiaryShareMode.SEVEN_DAYS) {
       ShareScrollCard({
         days: this.viewModel.sevenDays,
-        fontId: this.viewModel.sevenFontId,
         paperId: this.viewModel.activePaperId
       })
         .transition(TransitionEffect.OPACITY.animation({ duration: 240, curve: Curve.EaseOut }))

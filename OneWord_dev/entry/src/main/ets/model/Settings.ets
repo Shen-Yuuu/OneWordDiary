@@ -1,4 +1,5 @@
 import { StylePresetId } from '../constants/StyleTokens';
+import { FontPresetId } from '../constants/FontCatalog';
 
 export interface ReminderSettings {
   enabled: boolean;
@@ -10,6 +11,7 @@ export interface ReminderSettings {
 
 export interface AppSettings {
   stylePresetId: StylePresetId;
+  fontPresetId: FontPresetId;
   reminder: ReminderSettings;
   privacyPolicyAcceptedVersion: string;
 }
@@ -24,6 +26,7 @@ export const DEFAULT_REMINDER_SETTINGS: ReminderSettings = {
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   stylePresetId: StylePresetId.PAPER_INK,
+  fontPresetId: FontPresetId.DEFAULT,
   reminder: DEFAULT_REMINDER_SETTINGS,
   privacyPolicyAcceptedVersion: ''
 };

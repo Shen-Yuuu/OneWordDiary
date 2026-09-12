@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
+import { FontPresetId } from '../main/ets/constants/FontCatalog';
 import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../main/ets/model/Settings';
 import { SettingsRepository } from '../main/ets/repository/SettingsRepository';
 import { PrivacyConsentViewModel } from '../main/ets/viewmodel/PrivacyConsentViewModel';
@@ -15,6 +16,7 @@ class MemoryPrivacySettingsRepository implements SettingsRepository {
     }
     return {
       stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
+      fontPresetId: DEFAULT_APP_SETTINGS.fontPresetId,
       reminder: MemoryPrivacySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder),
       privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
@@ -28,6 +30,9 @@ class MemoryPrivacySettingsRepository implements SettingsRepository {
   }
 
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
+  }
+
+  async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {

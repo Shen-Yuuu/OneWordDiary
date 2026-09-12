@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
+import { FontPresetId } from '../main/ets/constants/FontCatalog';
 import { BackupError, BackupErrorCode } from '../main/ets/model/BackupError';
 import { DailyRecord, RecordType } from '../main/ets/model/DailyRecord';
 import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../main/ets/model/Settings';
@@ -19,6 +20,7 @@ class MemoryBackupSettingsRepository implements SettingsRepository {
   async load(): Promise<AppSettings> {
     return {
       stylePresetId: this.stylePresetId,
+      fontPresetId: DEFAULT_APP_SETTINGS.fontPresetId,
       reminder: {
         enabled: DEFAULT_APP_SETTINGS.reminder.enabled,
         hour: DEFAULT_APP_SETTINGS.reminder.hour,
@@ -32,6 +34,9 @@ class MemoryBackupSettingsRepository implements SettingsRepository {
 
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
     this.stylePresetId = stylePresetId;
+  }
+
+  async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {
@@ -220,15 +225,36 @@ export default function backupTest(): void {
       expectBackupError(codec, ' '.repeat(BackupCodec.MAX_FILE_BYTES + 1), BackupErrorCode.FILE_TOO_LARGE);
     });
 
-    it('rejectsUnknownAndMismatchedRecordStyles', 0, () => {
+    it('acceptsIndependentFontsAndRejectsUnknownDisplayStyles', 0, () => {
       const codec = new BackupCodec(new DiaryTextRules());
       const valid = codec.encode([createRecord('2026-08-21', '静')], StylePresetId.PAPER_INK, 1000);
       expectBackupError(codec, valid.replace('warm_paper_dev', 'unknown_paper_dev'),
         BackupErrorCode.INVALID_RECORD);
-      expectBackupError(codec, valid.replace('system_serif_dev', 'system_sans_dev'),
-        BackupErrorCode.INVALID_RECORD);
-      expectBackupError(codec, valid.replace('warm_paper_dev', 'plain_ash_dev'),
-        BackupErrorCode.INVALID_RECORD);
+      const independentFont = codec.decode(valid.replace('system_serif_dev', 'smiley_sans_oblique'));
+      expect(independentFont.records[0].fontId).assertEqual('smiley_sans_oblique');
+      const independentPaper = codec.decode(valid.replace('warm_paper_dev', 'plain_ash_dev'));
+      expect(independentPaper.records[0].paperId).assertEqual('plain_ash_dev');
+      expectBackupError(codec, valid.replace('system_serif_dev', 'unknown_font'), BackupErrorCode.INVALID_RECORD);
+    });
+
+    it('roundTripsEverySelectableFontWithoutEmbeddingFontFiles', 0, () => {
+      const codec = new BackupCodec(new DiaryTextRules());
+      const fonts: FontPresetId[] = [
+        FontPresetId.DEFAULT,
+        FontPresetId.SMILEY_SANS,
+        FontPresetId.DYMON_HANDWRITING,
+        FontPresetId.SLIDE_YOURAN,
+        FontPresetId.MINGCHAO,
+        FontPresetId.YUNFENG_FEIYUN
+      ];
+      for (let index = 0; index < fonts.length; index++) {
+        const record = createRecord(`2026-07-${10 + index}`, '字');
+        record.fontId = fonts[index];
+        const text = codec.encode([record], StylePresetId.PAPER_INK, 1000);
+        expect(codec.decode(text).records[0].fontId).assertEqual(fonts[index]);
+        expect(text.includes('.ttf')).assertFalse();
+        expect(text.includes('.otf')).assertFalse();
+      }
     });
 
     it('rejectsDamagedUnknownDuplicateAndInvalidRecords', 0, () => {

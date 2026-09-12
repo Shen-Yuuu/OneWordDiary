@@ -2,6 +2,7 @@ import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPa
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { allStylePresets, StylePresetId, StyleTokens, styleForPaper } from '../constants/StyleTokens';
+import { allFontOptions, FontOption } from '../constants/FontCatalog';
 import { SettingsUiState } from '../model/SettingsUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SettingsViewModel } from '../viewmodel/SettingsViewModel';
@@ -54,7 +55,7 @@ export struct SettingsPage {
   private showFirstClearConfirmation(): void {
     this.getUIContext().showAlertDialog({
       title: '清空全部数据？',
-      message: '这会永久删除设备上的全部日记和背景图片，并恢复默认风格。',
+      message: '这会永久删除设备上的全部日记和背景图片，并恢复默认设置。',
       primaryButton: {
         value: '取消',
         action: () => {
@@ -185,6 +186,37 @@ export struct SettingsPage {
   }
 
   @Builder
+  private fontCard(option: FontOption) {
+    Column({ space: 8 }) {
+      Text(option.sample)
+        .fontSize(30)
+        .fontFamily(option.fontFamily)
+        .fontColor($r('app.color.text_primary'))
+
+      Text(option.displayName)
+        .fontSize(14)
+        .fontColor(this.viewModel.fontPresetId === option.id ?
+          $r('app.color.text_primary') : $r('app.color.text_secondary'))
+        .maxLines(1)
+    }
+    .width('47%')
+    .height(104)
+    .justifyContent(FlexAlign.Center)
+    .border({
+      width: this.viewModel.fontPresetId === option.id ? 2 : 1,
+      color: this.viewModel.fontPresetId === option.id ?
+        $r('app.color.text_primary') : $r('app.color.outline_soft')
+    })
+    .borderRadius(10)
+    .margin({ right: 10, bottom: 10 })
+    .backgroundColor($r('app.color.surface_primary'))
+    .animation({ duration: 180, curve: Curve.EaseOut })
+    .onClick(() => this.viewModel.selectFont(option.id))
+    .accessibilityGroup(true)
+    .accessibilityText(`${option.displayName}${this.viewModel.fontPresetId === option.id ? '，已选择' : ''}`)
+  }
+
+  @Builder
   private navigationRow(title: string, value: string, onTap: () => void) {
     Row() {
       Text(title)
@@ -254,6 +286,17 @@ export struct SettingsPage {
                   ForEach(allStylePresets(), (style: StyleTokens) => {
                     this.styleCard(style, this.styleLabel(style.id), this.styleSample(style.id))
                   }, (style: StyleTokens): string => style.id)
+                }
+                .width('100%')
+                .padding({ bottom: 12 })
+
+                Divider().color($r('app.color.divider_subtle'))
+
+                this.sectionTitle('字体')
+                Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
+                  ForEach(allFontOptions(), (option: FontOption) => {
+                    this.fontCard(option)
+                  }, (option: FontOption): string => option.id)
                 }
                 .width('100%')
                 .padding({ bottom: 12 })

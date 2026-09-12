@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
+import { FontPresetId } from '../main/ets/constants/FontCatalog';
 import {
   BackgroundImageBackupData,
   BackgroundImageBackupStore
@@ -17,12 +18,16 @@ class BackgroundResetSettingsRepository implements SettingsRepository {
   async load(): Promise<AppSettings> {
     return {
       stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
+      fontPresetId: DEFAULT_APP_SETTINGS.fontPresetId,
       reminder: DEFAULT_APP_SETTINGS.reminder,
       privacyPolicyAcceptedVersion: ''
     };
   }
 
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
+  }
+
+  async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {

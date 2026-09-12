@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { StylePresetId } from '../main/ets/constants/StyleTokens';
+import { FontPresetId } from '../main/ets/constants/FontCatalog';
 import { AppSettings, ReminderSettings } from '../main/ets/model/Settings';
 import { SettingsRepository } from '../main/ets/repository/SettingsRepository';
 import { ReminderRetirementService } from '../main/ets/service/ReminderRetirementService';
@@ -8,6 +9,7 @@ import { ReminderScheduler } from '../main/ets/service/ReminderScheduler';
 class RetirementSettingsRepository implements SettingsRepository {
   settings: AppSettings = {
     stylePresetId: StylePresetId.PAPER_INK,
+    fontPresetId: FontPresetId.DEFAULT,
     reminder: {
       enabled: true,
       hour: 22,
@@ -24,6 +26,10 @@ class RetirementSettingsRepository implements SettingsRepository {
 
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
     this.settings.stylePresetId = stylePresetId;
+  }
+
+  async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
+    this.settings.fontPresetId = fontPresetId;
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {

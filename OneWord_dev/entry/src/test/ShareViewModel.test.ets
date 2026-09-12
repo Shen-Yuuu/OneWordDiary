@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { styleForPaper, StylePresetId } from '../main/ets/constants/StyleTokens';
+import { FontPresetId } from '../main/ets/constants/FontCatalog';
 import { DailyRecord, RecordType } from '../main/ets/model/DailyRecord';
 import { DiaryShareMode, ShareDayKind } from '../main/ets/model/ShareModel';
 import { ShareUiState } from '../main/ets/model/ShareUiState';
@@ -24,6 +25,16 @@ class ShareMemorySettingsRepository implements SettingsRepository {
   async saveStylePresetId(stylePresetId: StylePresetId): Promise<void> {
     this.settings = {
       stylePresetId: stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
+      reminder: this.settings.reminder,
+      privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
+    };
+  }
+
+  async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      fontPresetId: fontPresetId,
       reminder: this.settings.reminder,
       privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
@@ -32,6 +43,7 @@ class ShareMemorySettingsRepository implements SettingsRepository {
   async saveReminder(reminder: ReminderSettings): Promise<void> {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
       reminder: reminder,
       privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
@@ -42,6 +54,7 @@ class ShareMemorySettingsRepository implements SettingsRepository {
     this.privacyPolicyAcceptedVersion = version;
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
       reminder: this.settings.reminder,
       privacyPolicyAcceptedVersion: version
     };
@@ -139,9 +152,11 @@ export default function shareViewModelTest(): void {
     it('buildsSevenNaturalDaysAcrossYearBoundary', 0, async () => {
       const fixture = new ShareFixture();
       await fixture.repository.insert(createShareRecord(
-        '2026-01-02', RecordType.WORD, '新', '跨年的第一句备注'
+        '2026-01-02', RecordType.WORD, '新', '跨年的第一句备注', FontPresetId.SMILEY_SANS
       ));
-      await fixture.repository.insert(createShareRecord('2026-01-01', RecordType.BLANK, null));
+      await fixture.repository.insert(createShareRecord(
+        '2026-01-01', RecordType.BLANK, null, null, FontPresetId.MINGCHAO
+      ));
 
       await fixture.viewModel.load(DiaryShareMode.SEVEN_DAYS, null);
 
@@ -149,11 +164,14 @@ export default function shareViewModelTest(): void {
       expect(fixture.viewModel.sevenDays[0].localDate).assertEqual('2026-01-02');
       expect(fixture.viewModel.sevenDays[0].kind).assertEqual(ShareDayKind.WORD);
       expect(fixture.viewModel.sevenDays[0].note).assertEqual('跨年的第一句备注');
+      expect(fixture.viewModel.sevenDays[0].fontId).assertEqual(FontPresetId.SMILEY_SANS);
       expect(fixture.viewModel.sevenDays[0].showMonthHeader).assertTrue();
       expect(fixture.viewModel.sevenDays[0].monthLabel).assertEqual('二〇二六年一月');
       expect(fixture.viewModel.sevenDays[1].kind).assertEqual(ShareDayKind.BLANK);
+      expect(fixture.viewModel.sevenDays[1].fontId).assertEqual(FontPresetId.MINGCHAO);
       expect(fixture.viewModel.sevenDays[2].localDate).assertEqual('2025-12-31');
       expect(fixture.viewModel.sevenDays[2].kind).assertEqual(ShareDayKind.MISSING);
+      expect(fixture.viewModel.sevenDays[2].fontId).assertEqual(FontPresetId.DEFAULT);
       expect(fixture.viewModel.sevenDays[2].showMonthHeader).assertTrue();
       expect(fixture.viewModel.sevenDays[2].monthLabel).assertEqual('二〇二五年十二月');
     });

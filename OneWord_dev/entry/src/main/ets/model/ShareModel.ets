@@ -30,4 +30,5 @@ export interface ShareDayItem {
   kind: ShareDayKind;
   content: string;
   note: string;
+  fontId: string;
 }

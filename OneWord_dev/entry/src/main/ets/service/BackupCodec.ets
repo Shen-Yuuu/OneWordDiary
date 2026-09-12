@@ -2,10 +2,10 @@ import { buffer } from '@kit.ArkTS';
 import {
   isSupportedPaperId,
   isSupportedStylePreset,
-  styleForPaper,
   stylePresetIdFromValue,
   StylePresetId
 } from '../constants/StyleTokens';
+import { isSupportedFontId } from '../constants/FontCatalog';
 import { BackupDocument, BackupRecordPayload, DecodedBackup } from '../model/BackupModel';
 import { BackupError, BackupErrorCode } from '../model/BackupError';
 import { DailyRecord, DiaryEntryInput, NormalizedDiaryEntry, RecordType } from '../model/DailyRecord';
@@ -194,12 +194,8 @@ export class BackupCodec {
   }
 
   private validateRecordStyle(fontId: string, paperId: string): void {
-    if (!isSupportedPaperId(paperId)) {
-      throw new BackupError(BackupErrorCode.INVALID_RECORD, '备份包含未知历史风格');
-    }
-    const style = styleForPaper(paperId);
-    if (fontId !== style.fontId) {
-      throw new BackupError(BackupErrorCode.INVALID_RECORD, '备份包含未知历史风格');
+    if (!isSupportedPaperId(paperId) || !isSupportedFontId(fontId)) {
+      throw new BackupError(BackupErrorCode.INVALID_RECORD, '备份包含未知显示样式');
     }
   }
 

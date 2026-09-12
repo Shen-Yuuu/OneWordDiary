@@ -66,6 +66,7 @@ export class ShareViewModel {
       const today = this.localTimeResolver.resolve(this.clock.now()).localDate;
       const settings = await this.settingsRepository.load();
       this.applySevenDayStyle(settings.stylePresetId);
+      this.sevenFontId = settings.fontPresetId;
 
       const dates = this.dateFormatter.recentDates(today, 7);
       const records = await this.diaryService.getRecordsBetween(dates[dates.length - 1], dates[0]);
@@ -122,7 +123,6 @@ export class ShareViewModel {
 
   private applySevenDayStyle(stylePresetId: StylePresetId): void {
     const style = styleForPreset(stylePresetId);
-    this.sevenFontId = style.fontId;
     this.sevenPaperId = style.paperId;
   }
 
@@ -136,17 +136,18 @@ export class ShareViewModel {
         this.dateFormatter.monthKey(localDate) !== this.dateFormatter.monthKey(dates[index - 1]);
       const record = recordByDate.get(localDate);
       if (record === undefined) {
-        return this.createDayItem(localDate, ShareDayKind.MISSING, '', '', showMonthHeader);
+        return this.createDayItem(localDate, ShareDayKind.MISSING, '', '', this.sevenFontId, showMonthHeader);
       }
       const note = record.note === null ? '' : record.note;
       if (record.recordType === RecordType.BLANK) {
-        return this.createDayItem(localDate, ShareDayKind.BLANK, '', note, showMonthHeader);
+        return this.createDayItem(localDate, ShareDayKind.BLANK, '', note, record.fontId, showMonthHeader);
       }
       return this.createDayItem(
         localDate,
         ShareDayKind.WORD,
         record.content === null ? '' : record.content,
         note,
+        record.fontId,
         showMonthHeader
       );
     });
@@ -157,6 +158,7 @@ export class ShareViewModel {
     kind: ShareDayKind,
     content: string,
     note: string,
+    fontId: string,
     showMonthHeader: boolean
   ): ShareDayItem {
     return {
@@ -167,7 +169,8 @@ export class ShareViewModel {
       showMonthHeader: showMonthHeader,
       kind: kind,
       content: content,
-      note: note
+      note: note,
+      fontId: fontId
     };
   }
 

@@ -10,7 +10,6 @@ import { styleForPaper } from '../../constants/StyleTokens';
 @Component
 export struct ShareScrollCard {
   @Prop days: ShareDayItem[] = [];
-  @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
@@ -24,10 +23,6 @@ export struct ShareScrollCard {
 
   accentColor(): string {
     return styleForPaper(this.paperId).light.accent;
-  }
-
-  recordFontFamily(): string {
-    return 'oneword_wenkai, serif';
   }
 
   aboutToAppear(): void {
@@ -59,7 +54,7 @@ export struct ShareScrollCard {
       recordType,
       item.content,
       this.graphemeCounter.count(item.content),
-      this.fontId,
+      item.fontId,
       this.paperId,
       this.sideFor(item, index),
       '',
@@ -102,7 +97,7 @@ export struct ShareScrollCard {
       Column({ space: 10 }) {
         Text('卷尾')
           .fontSize(13)
-          .fontFamily(this.recordFontFamily())
+          .fontFamily('oneword_wenkai, serif')
           .fontColor(this.secondaryColor())
           .letterSpacing(2)
 
@@ -122,7 +117,7 @@ export struct ShareScrollCard {
 
           Text('一字日记')
             .fontSize(11)
-            .fontFamily(this.recordFontFamily())
+            .fontFamily('oneword_wenkai, serif')
             .fontColor(this.textColor())
             .letterSpacing(2.4)
         }

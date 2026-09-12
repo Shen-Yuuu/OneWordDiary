@@ -7,6 +7,11 @@ import { AppLogger } from '../utils/AppLogger';
 
 const FONT_FAMILY_SERIF = 'oneword_wenkai';
 const FONT_FAMILY_SERIF_MEDIUM = 'oneword_wenkai_medium';
+const FONT_FAMILY_SMILEY_SANS = 'oneword_smiley_sans';
+const FONT_FAMILY_DYMON_HANDWRITING = 'oneword_dymon_handwriting';
+const FONT_FAMILY_SLIDE_YOURAN = 'oneword_slide_youran';
+const FONT_FAMILY_MINGCHAO = 'oneword_mingchao';
+const FONT_FAMILY_YUNFENG_FEIYUN = 'oneword_yunfeng_feiyun';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -27,10 +32,15 @@ export default class EntryAbility extends UIAbility {
 
   private registerCustomFonts(windowStage: window.WindowStage): void {
     AppLogger.info(`font.v4 constants_check serif=${FontFamilies.SERIF} medium=${FontFamilies.SERIF_HEAVY}`);
-    AppLogger.info('font.register_start families=oneword_wenkai,oneword_wenkai_medium');
+    AppLogger.info('font.register_start count=7');
     windowStage.getMainWindow().then((mainWindow: window.Window) => {
       this.verifyFontAsset('fonts/OneWordKai-Regular.ttf');
       this.verifyFontAsset('fonts/OneWordKai-Medium.ttf');
+      this.verifyFontAsset('fonts/SmileySans-Oblique.ttf');
+      this.verifyFontAsset('fonts/Dymon-ShouXieTi.otf');
+      this.verifyFontAsset('fonts/slideyouran-Regular.ttf');
+      this.verifyFontAsset('fonts/mingchao.ttf');
+      this.verifyFontAsset('fonts/YunfengFeiyun.ttf');
       const fontManager = mainWindow.getUIContext().getFont();
       fontManager.registerFont({
         familyName: FONT_FAMILY_SERIF,
@@ -40,7 +50,27 @@ export default class EntryAbility extends UIAbility {
         familyName: FONT_FAMILY_SERIF_MEDIUM,
         familySrc: $rawfile('fonts/OneWordKai-Medium.ttf')
       });
-      AppLogger.info('font.custom_registered families=oneword_wenkai,oneword_wenkai_medium');
+      fontManager.registerFont({
+        familyName: FONT_FAMILY_SMILEY_SANS,
+        familySrc: $rawfile('fonts/SmileySans-Oblique.ttf')
+      });
+      fontManager.registerFont({
+        familyName: FONT_FAMILY_DYMON_HANDWRITING,
+        familySrc: $rawfile('fonts/Dymon-ShouXieTi.otf')
+      });
+      fontManager.registerFont({
+        familyName: FONT_FAMILY_SLIDE_YOURAN,
+        familySrc: $rawfile('fonts/slideyouran-Regular.ttf')
+      });
+      fontManager.registerFont({
+        familyName: FONT_FAMILY_MINGCHAO,
+        familySrc: $rawfile('fonts/mingchao.ttf')
+      });
+      fontManager.registerFont({
+        familyName: FONT_FAMILY_YUNFENG_FEIYUN,
+        familySrc: $rawfile('fonts/YunfengFeiyun.ttf')
+      });
+      AppLogger.info('font.custom_registered count=7');
     }).catch((err: BusinessError) => {
       AppLogger.error(`font.register_failed code=${err.code}`);
     });

@@ -2,6 +2,7 @@ import { curves } from '@kit.ArkUI';
 import { FallingChar, splitChars } from './FallingChar';
 import { InkSeal } from './InkSeal';
 import { FontFamilies } from '../../constants/StyleTokens';
+import { fontFamilyForId } from '../../constants/FontCatalog';
 import { RecordType } from '../../model/DailyRecord';
 
 const CHAR_STAGGER_MS: number = 80;
@@ -44,7 +45,7 @@ export struct DiaryHeroContent {
   }
 
   recordFontFamily(): string {
-    return 'oneword_wenkai, serif';
+    return fontFamilyForId(this.fontId);
   }
 
   heroCharSize(): number {

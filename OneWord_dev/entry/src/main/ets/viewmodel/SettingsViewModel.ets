@@ -1,4 +1,5 @@
 import { paperIdForStyle, StylePresetId } from '../constants/StyleTokens';
+import { FontPresetId } from '../constants/FontCatalog';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { DEFAULT_APP_SETTINGS, ReminderSettings } from '../model/Settings';
 import { SettingsUiState } from '../model/SettingsUiState';
@@ -11,6 +12,7 @@ import { AppLogger } from '../utils/AppLogger';
 export class SettingsViewModel {
   uiState: SettingsUiState = SettingsUiState.LOADING;
   stylePresetId: StylePresetId = StylePresetId.PAPER_INK;
+  fontPresetId: FontPresetId = FontPresetId.DEFAULT;
   reminder: ReminderSettings = SettingsViewModel.cloneReminder(DEFAULT_APP_SETTINGS.reminder);
   errorMessage: string = '';
 
@@ -60,7 +62,9 @@ export class SettingsViewModel {
     try {
       const settings = await this.settingsRepository.load();
       this.stylePresetId = settings.stylePresetId;
+      this.fontPresetId = settings.fontPresetId;
       this.syncPaperStorage(settings.stylePresetId);
+      this.syncFontStorage(settings.fontPresetId);
       AppLogger.info(`style.settings_load preset=${settings.stylePresetId}`);
       this.reminder = SettingsViewModel.cloneReminder(settings.reminder);
       await this.refreshReminderState();
@@ -90,8 +94,33 @@ export class SettingsViewModel {
     }
   }
 
+  async selectFont(fontPresetId: FontPresetId): Promise<void> {
+    if (this.isBusy || fontPresetId === this.fontPresetId) {
+      return;
+    }
+    const previous = this.fontPresetId;
+    this.fontPresetId = fontPresetId;
+    try {
+      await this.settingsRepository.saveFontPresetId(fontPresetId);
+      this.syncFontStorage(fontPresetId);
+      this.uiState = SettingsUiState.READY;
+      this.errorMessage = '';
+      AppLogger.info(`font.select id=${fontPresetId} save=ok`);
+    } catch (error) {
+      this.fontPresetId = previous;
+      this.syncFontStorage(previous);
+      this.uiState = SettingsUiState.SAVE_ERROR;
+      this.errorMessage = '字体未能保存，请重试';
+      AppLogger.error(`font.select id=${fontPresetId} save=fail`);
+    }
+  }
+
   private syncPaperStorage(stylePresetId: StylePresetId): void {
     AppStorage.setOrCreate('currentPaperId', paperIdForStyle(stylePresetId));
+  }
+
+  private syncFontStorage(fontPresetId: FontPresetId): void {
+    AppStorage.setOrCreate('currentFontId', fontPresetId);
   }
 
   async enableReminder(): Promise<void> {
@@ -249,6 +278,9 @@ export class SettingsViewModel {
     try {
       await this.resetService.clearAll();
       this.stylePresetId = StylePresetId.PAPER_INK;
+      this.fontPresetId = FontPresetId.DEFAULT;
+      this.syncPaperStorage(this.stylePresetId);
+      this.syncFontStorage(this.fontPresetId);
       this.reminder = SettingsViewModel.cloneReminder(DEFAULT_APP_SETTINGS.reminder);
       this.uiState = SettingsUiState.READY;
       return true;

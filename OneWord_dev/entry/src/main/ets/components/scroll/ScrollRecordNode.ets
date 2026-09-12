@@ -2,6 +2,7 @@ import { RecordType } from '../../model/DailyRecord';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
 import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 import { styleForPaper } from '../../constants/StyleTokens';
+import { fontFamilyForId } from '../../constants/FontCatalog';
 
 @Component
 struct ScrollAxisNode {
@@ -54,7 +55,7 @@ export struct ScrollRecordNode {
   };
 
   recordFontFamily(): string {
-    return 'oneword_wenkai, serif';
+    return fontFamilyForId(this.item.fontId);
   }
 
   recordFontSize(): number {
@@ -138,7 +139,7 @@ export struct ScrollRecordNode {
     Column({ space: 4 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(11)
-        .fontFamily(this.recordFontFamily())
+        .fontFamily('oneword_wenkai, serif')
         .fontColor(this.secondaryColor())
         .letterSpacing(1)
 
@@ -174,7 +175,7 @@ export struct ScrollRecordNode {
     Column() {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(11)
-        .fontFamily(this.recordFontFamily())
+        .fontFamily('oneword_wenkai, serif')
         .fontColor(this.secondaryColor())
         .letterSpacing(1)
 
@@ -195,7 +196,7 @@ export struct ScrollRecordNode {
     Column() {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(11)
-        .fontFamily(this.recordFontFamily())
+        .fontFamily('oneword_wenkai, serif')
         .fontColor(this.faintColor())
         .letterSpacing(1)
 
