@@ -1,5 +1,5 @@
 import { paperIdForStyle, StylePresetId } from '../constants/StyleTokens';
-import { FontPresetId } from '../constants/FontCatalog';
+import { FontPresetId, fontFamilyForId } from '../constants/FontCatalog';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { DEFAULT_APP_SETTINGS, ReminderSettings } from '../model/Settings';
 import { SettingsUiState } from '../model/SettingsUiState';
@@ -66,6 +66,7 @@ export class SettingsViewModel {
       this.syncPaperStorage(settings.stylePresetId);
       this.syncFontStorage(settings.fontPresetId);
       AppLogger.info(`style.settings_load preset=${settings.stylePresetId}`);
+      AppLogger.info(`font.settings_load id=${settings.fontPresetId} family=${fontFamilyForId(settings.fontPresetId)}`);
       this.reminder = SettingsViewModel.cloneReminder(settings.reminder);
       await this.refreshReminderState();
     } catch (error) {
@@ -94,9 +95,14 @@ export class SettingsViewModel {
     }
   }
 
-  async selectFont(fontPresetId: FontPresetId): Promise<void> {
-    if (this.isBusy || fontPresetId === this.fontPresetId) {
-      return;
+  async selectFont(fontPresetId: FontPresetId): Promise<boolean> {
+    if (this.isBusy) {
+      AppLogger.warn(`font.select ignored=busy requested=${fontPresetId}`);
+      return false;
+    }
+    if (fontPresetId === this.fontPresetId) {
+      AppLogger.info(`font.select unchanged id=${fontPresetId}`);
+      return true;
     }
     const previous = this.fontPresetId;
     this.fontPresetId = fontPresetId;
@@ -105,13 +111,15 @@ export class SettingsViewModel {
       this.syncFontStorage(fontPresetId);
       this.uiState = SettingsUiState.READY;
       this.errorMessage = '';
-      AppLogger.info(`font.select id=${fontPresetId} save=ok`);
+      AppLogger.info(`font.select id=${fontPresetId} family=${fontFamilyForId(fontPresetId)} save=ok`);
+      return true;
     } catch (error) {
       this.fontPresetId = previous;
       this.syncFontStorage(previous);
       this.uiState = SettingsUiState.SAVE_ERROR;
       this.errorMessage = '字体未能保存，请重试';
       AppLogger.error(`font.select id=${fontPresetId} save=fail`);
+      return false;
     }
   }
 

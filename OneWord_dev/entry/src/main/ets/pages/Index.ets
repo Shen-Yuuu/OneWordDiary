@@ -9,6 +9,7 @@ import { TodayEditor } from '../components/diary/TodayEditor';
 import { TodayHeader } from '../components/diary/TodayHeader';
 import { TodayRecordCard } from '../components/diary/TodayRecordCard';
 import { styleForPaper } from '../constants/StyleTokens';
+import { FontPresetId } from '../constants/FontCatalog';
 import {
   AppRouteName,
   BackupRouteParam,
@@ -220,6 +221,11 @@ struct Index {
     this.navPathStack.pop();
   }
 
+  private applySelectedFont(fontPresetId: FontPresetId): void {
+    AppLogger.info(`font.index_receive id=${fontPresetId}`);
+    this.viewModel.applyFontPreference(fontPresetId);
+  }
+
 
   private async openOfficialPrivacyPolicy(): Promise<void> {
     const abilityContext = this.getUIContext().getHostContext() as common.UIAbilityContext;
@@ -276,7 +282,8 @@ struct Index {
         onBack: () => this.closeDestination(),
         onOpenPrivacy: (paperId: string) => this.openPrivacy(paperId),
         onOpenBackup: (paperId: string) => this.openBackup(paperId),
-        onClearComplete: () => this.finishClear()
+        onClearComplete: () => this.finishClear(),
+        onFontChanged: (fontPresetId: FontPresetId) => this.applySelectedFont(fontPresetId)
       })
     } else if (name === AppRouteName.BACKUP && param instanceof BackupRouteParam) {
       BackupPage({

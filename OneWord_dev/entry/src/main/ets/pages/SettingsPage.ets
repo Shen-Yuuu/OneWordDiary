@@ -2,7 +2,7 @@ import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPa
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { allStylePresets, StylePresetId, StyleTokens, styleForPaper } from '../constants/StyleTokens';
-import { allFontOptions, FontOption } from '../constants/FontCatalog';
+import { allFontOptions, FontOption, FontPresetId } from '../constants/FontCatalog';
 import { SettingsUiState } from '../model/SettingsUiState';
 import { AppServiceContainer } from '../service/AppServiceContainer';
 import { SettingsViewModel } from '../viewmodel/SettingsViewModel';
@@ -21,6 +21,8 @@ export struct SettingsPage {
   onOpenBackup: (paperId: string) => void = () => {
   };
   onClearComplete: () => void = () => {
+  };
+  onFontChanged: (fontPresetId: FontPresetId) => void = () => {
   };
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
@@ -187,20 +189,20 @@ export struct SettingsPage {
 
   @Builder
   private fontCard(option: FontOption) {
-    Column({ space: 8 }) {
+    Column({ space: 2 }) {
       Text(option.sample)
-        .fontSize(30)
+        .fontSize(21)
         .fontFamily(option.fontFamily)
         .fontColor($r('app.color.text_primary'))
 
       Text(option.displayName)
-        .fontSize(14)
+        .fontSize(10)
         .fontColor(this.viewModel.fontPresetId === option.id ?
           $r('app.color.text_primary') : $r('app.color.text_secondary'))
         .maxLines(1)
     }
-    .width('47%')
-    .height(104)
+    .width('100%')
+    .height(52)
     .justifyContent(FlexAlign.Center)
     .border({
       width: this.viewModel.fontPresetId === option.id ? 2 : 1,
@@ -208,12 +210,17 @@ export struct SettingsPage {
         $r('app.color.text_primary') : $r('app.color.outline_soft')
     })
     .borderRadius(10)
-    .margin({ right: 10, bottom: 10 })
     .backgroundColor($r('app.color.surface_primary'))
     .animation({ duration: 180, curve: Curve.EaseOut })
-    .onClick(() => this.viewModel.selectFont(option.id))
+    .onClick(() => this.selectFont(option.id))
     .accessibilityGroup(true)
     .accessibilityText(`${option.displayName}${this.viewModel.fontPresetId === option.id ? '，已选择' : ''}`)
+  }
+
+  private async selectFont(fontPresetId: FontPresetId): Promise<void> {
+    if (await this.viewModel.selectFont(fontPresetId)) {
+      this.onFontChanged(fontPresetId);
+    }
   }
 
   @Builder
@@ -293,12 +300,18 @@ export struct SettingsPage {
                 Divider().color($r('app.color.divider_subtle'))
 
                 this.sectionTitle('字体')
-                Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
+                Grid() {
                   ForEach(allFontOptions(), (option: FontOption) => {
-                    this.fontCard(option)
+                    GridItem() {
+                      this.fontCard(option)
+                    }
                   }, (option: FontOption): string => option.id)
                 }
                 .width('100%')
+                .height(184)
+                .columnsTemplate('1fr 1fr')
+                .columnsGap(10)
+                .rowsGap(8)
                 .padding({ bottom: 12 })
 
                 Divider().color($r('app.color.divider_subtle'))

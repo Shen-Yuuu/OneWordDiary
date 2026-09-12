@@ -195,6 +195,23 @@ export default function todayViewModelTest(): void {
       expect(fixture.viewModel.uiState).assertEqual(TodayUiState.TODAY_EDITING_WORD);
     });
 
+    it('appliesSettingsFontImmediatelyAndSnapshotsItOnSubmit', 0, async () => {
+      const fixture = new ViewModelFixture();
+      await fixture.viewModel.load();
+      fixture.viewModel.setContent('云');
+      fixture.viewModel.setNote('草稿仍在');
+
+      fixture.viewModel.applyFontPreference(FontPresetId.MINGCHAO);
+
+      expect(fixture.viewModel.draftContent).assertEqual('云');
+      expect(fixture.viewModel.draftNote).assertEqual('草稿仍在');
+      expect(fixture.viewModel.fontPresetId).assertEqual(FontPresetId.MINGCHAO);
+      fixture.viewModel.showWordConfirmation();
+      await fixture.viewModel.confirmPending();
+      const saved = await fixture.repository.findByDate('2026-08-18');
+      expect(saved !== null && saved.fontId === FontPresetId.MINGCHAO).assertTrue();
+    });
+
     it('capturesTheCurrentFontOnRevisionWithoutChangingBeforeSave', 0, async () => {
       const fixture = new ViewModelFixture();
       await fixture.viewModel.load();

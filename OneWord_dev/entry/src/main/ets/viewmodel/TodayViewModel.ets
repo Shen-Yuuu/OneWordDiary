@@ -1,5 +1,5 @@
 import { paperIdForStyle, styleForPreset, StylePresetId } from '../constants/StyleTokens';
-import { FontPresetId } from '../constants/FontCatalog';
+import { FontPresetId, fontFamilyForId } from '../constants/FontCatalog';
 import { BackgroundImageStore } from '../model/BackgroundImage';
 import { DailyRecord, DiaryEntryInput, RecordType, RevisionStatus } from '../model/DailyRecord';
 import { DiaryError, DiaryErrorCode } from '../model/DiaryError';
@@ -167,6 +167,7 @@ export class TodayViewModel {
       AppStorage.setOrCreate('currentPaperId', paperIdForStyle(settings.stylePresetId));
       AppStorage.setOrCreate('currentFontId', settings.fontPresetId);
       AppLogger.info(`style.today_load preset=${settings.stylePresetId}`);
+      AppLogger.info(`font.today_load id=${settings.fontPresetId} family=${fontFamilyForId(settings.fontPresetId)} preserveDraft=${shouldPreserveDraft}`);
       this.record = record;
       this.syncRecordPresentation(record);
       this.recordCount = recordCount;
@@ -205,6 +206,13 @@ export class TodayViewModel {
     this.noteCount = this.textRules.countGraphemes(normalized);
     this.noteError = this.validateNote(value);
     this.updateEditingState();
+  }
+
+  applyFontPreference(fontPresetId: FontPresetId): void {
+    const previous = this.fontPresetId;
+    this.fontPresetId = fontPresetId;
+    AppStorage.setOrCreate('currentFontId', fontPresetId);
+    AppLogger.info(`font.today_apply previous=${previous} id=${fontPresetId} family=${fontFamilyForId(fontPresetId)}`);
   }
 
   nextInspiration(): void {
@@ -460,6 +468,7 @@ export class TodayViewModel {
 
   private createInput(type: RecordType): DiaryEntryInput {
     const style = styleForPreset(this.stylePresetId);
+    AppLogger.info(`font.today_snapshot date=${this.localDate} id=${this.fontPresetId} family=${fontFamilyForId(this.fontPresetId)} revision=${this.isRevisionDraft}`);
     return {
       recordType: type,
       content: type === RecordType.BLANK ? null : this.draftContent,

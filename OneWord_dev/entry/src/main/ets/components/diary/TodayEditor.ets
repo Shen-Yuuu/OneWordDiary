@@ -1,6 +1,7 @@
 import { InspirationLine } from './InspirationLine';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
 import { fontFamilyForId } from '../../constants/FontCatalog';
+import { AppLogger } from '../../utils/AppLogger';
 
 @Component
 export struct TodayEditor {
@@ -44,6 +45,10 @@ export struct TodayEditor {
       return 40;
     }
     return this.contentCount === 3 ? 33 : 28;
+  }
+
+  aboutToAppear(): void {
+    AppLogger.info(`font.editor_appear id=${this.fontId} family=${fontFamilyForId(this.fontId)}`);
   }
 
   build() {
