@@ -1,12 +1,14 @@
 import { curves } from '@kit.ArkUI';
+import { styleForPaper } from '../../constants/StyleTokens';
 
 /**
  * 朱红「已」印章：先“盖下”（大倍缩落 + 回正 + 显影），落定后进入极缓慢的呼吸循环。
- * 盖章与呼吸分两层容器，避免同一属性被两段动画争用。
+ * 盖章与呼吸分两层容器，避免同一属性被两段动画争用。印泥色跟随当前主题强调色。
  */
 @Component
 export struct InkSeal {
   @Prop delay: number = 0;
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private stamped: boolean = false;
   @State private breathing: boolean = false;
   private stampTimer: number = -1;
@@ -48,7 +50,7 @@ export struct InkSeal {
         .fontFamily('oneword_wenkai_medium, serif')
         .fontWeight(FontWeight.Bold)
         .fontColor('#FFFFFF')
-        .backgroundColor($r('app.color.accent_vermilion'))
+        .backgroundColor(styleForPaper(this.paperId).light.accent)
         .textAlign(TextAlign.Center)
         .borderRadius(3)
         .scale({ x: this.breathing ? 1.12 : 1, y: this.breathing ? 1.12 : 1 })

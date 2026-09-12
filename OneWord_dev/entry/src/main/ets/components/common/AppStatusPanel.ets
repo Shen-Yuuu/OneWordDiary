@@ -1,13 +1,16 @@
 
+import { styleForPaper } from '../../constants/StyleTokens';
+
 @Component
 export struct AppLoadingPanel {
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   build() {
     Column({ space: 16 }) {
       Stack({ alignContent: Alignment.Center }) {
         LoadingProgress()
           .width(30)
           .height(30)
-          .color($r('app.color.accent_vermilion'))
+          .color(styleForPaper(this.paperId).light.accent)
 
         Row()
           .width(4)
@@ -32,6 +35,7 @@ export struct AppLoadingPanel {
 export struct AppErrorPanel {
   @Prop title: string = '暂时未能展开今天';
   @Prop message: string = '';
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   onRetry: () => void = () => {
   };
 
@@ -47,7 +51,7 @@ export struct AppErrorPanel {
         Row()
           .width(6)
           .height(6)
-          .backgroundColor($r('app.color.accent_vermilion'))
+          .backgroundColor(styleForPaper(this.paperId).light.accent)
           .borderRadius(2)
       }
 

@@ -1,5 +1,6 @@
 import { InspirationLine } from './InspirationLine';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
+import { styleForPaper } from '../../constants/StyleTokens';
 import { fontFamilyForId } from '../../constants/FontCatalog';
 import { AppLogger } from '../../utils/AppLogger';
 
@@ -70,7 +71,7 @@ export struct TodayEditor {
           .placeholderColor($r('app.color.text_primary'))
           .placeholderFont({ size: 28, weight: FontWeight.Lighter })
           .textAlign(TextAlign.Center)
-          .caretColor($r('app.color.accent_vermilion'))
+          .caretColor(styleForPaper(this.paperId).light.accent)
           .backgroundColor(Color.Transparent)
           .border({ width: 0 })
           .accessibilityText('今日正文，一至四个字')
@@ -103,7 +104,7 @@ export struct TodayEditor {
           .placeholderColor($r('app.color.text_primary'))
           .placeholderFont({ size: 15, family: 'oneword_wenkai, serif' })
           .textAlign(TextAlign.Center)
-          .caretColor($r('app.color.accent_vermilion'))
+          .caretColor(styleForPaper(this.paperId).light.accent)
           .backgroundColor(Color.Transparent)
           .border({ width: 0 })
           .padding({ left: 0, right: 0, top: 6 })
@@ -146,7 +147,7 @@ export struct TodayEditor {
           Button('移除')
             .height($r('app.float.touch_target_min'))
             .fontSize(13)
-            .fontColor($r('app.color.accent_vermilion'))
+            .fontColor(styleForPaper(this.paperId).light.accent)
             .backgroundColor(Color.Transparent)
             .enabled(!this.isPickingBackground)
             .accessibilityText('移除今日背景')
@@ -157,7 +158,7 @@ export struct TodayEditor {
           LoadingProgress()
             .width(22)
             .height(22)
-            .color($r('app.color.accent_vermilion'))
+            .color(styleForPaper(this.paperId).light.accent)
         }
       }
       .width('100%')

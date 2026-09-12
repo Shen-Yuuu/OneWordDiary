@@ -274,7 +274,7 @@ export struct SharePreviewPage {
                 if (this.viewModel.errorMessage.length > 0) {
                   Text(this.viewModel.errorMessage)
                     .fontSize(13)
-                    .fontColor($r('app.color.accent_vermilion'))
+                    .fontColor(styleForPaper(this.paperId).light.accent)
                     .textAlign(TextAlign.Center)
                 }
 
@@ -288,7 +288,7 @@ export struct SharePreviewPage {
                   Button('背景读取失败，点此重试')
                     .height(40)
                     .fontSize(13)
-                    .fontColor($r('app.color.accent_vermilion'))
+                    .fontColor(styleForPaper(this.paperId).light.accent)
                     .backgroundColor(Color.Transparent)
                     .onClick(() => this.retryBackground())
                 }

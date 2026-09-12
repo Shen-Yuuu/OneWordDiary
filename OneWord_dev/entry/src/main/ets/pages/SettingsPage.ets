@@ -69,7 +69,7 @@ export struct SettingsPage {
       },
       secondaryButton: {
         value: '继续',
-        fontColor: $r('app.color.accent_vermilion'),
+        fontColor: styleForPaper(this.paperId).light.accent,
         action: () => this.showFinalClearConfirmation()
       }
     });
@@ -407,7 +407,7 @@ export struct SettingsPage {
                   Text(this.viewModel.errorMessage)
                     .width('100%')
                     .fontSize(14)
-                    .fontColor($r('app.color.accent_vermilion'))
+                    .fontColor(styleForPaper(this.paperId).light.accent)
                     .padding({ top: 6, bottom: 24 })
                 } else {
                   Row().height(36)
@@ -437,7 +437,7 @@ export struct SettingsPage {
             LoadingProgress()
               .width(30)
               .height(30)
-              .color($r('app.color.accent_vermilion'))
+              .color(styleForPaper(this.paperId).light.accent)
             Text('正在清空…')
               .fontSize(15)
               .fontColor($r('app.color.text_secondary'))

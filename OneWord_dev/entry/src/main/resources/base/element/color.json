@@ -21,10 +21,6 @@
       "value": "#635E55"
     },
     {
-      "name": "accent_vermilion",
-      "value": "#914638"
-    },
-    {
       "name": "divider_subtle",
       "value": "#E8E1DE"
     },
@@ -71,46 +67,6 @@
     {
       "name": "card_overlay",
       "value": "#66FFFFFF"
-    },
-    {
-      "name": "scroll_text_warm",
-      "value": "#282622"
-    },
-    {
-      "name": "scroll_text_plain",
-      "value": "#242424"
-    },
-    {
-      "name": "scroll_secondary_warm",
-      "value": "#5F5B55"
-    },
-    {
-      "name": "scroll_secondary_plain",
-      "value": "#5F5B55"
-    },
-    {
-      "name": "scroll_faint_warm",
-      "value": "#5F5B55"
-    },
-    {
-      "name": "scroll_faint_plain",
-      "value": "#5F5B55"
-    },
-    {
-      "name": "scroll_line_warm",
-      "value": "#D8C7C0"
-    },
-    {
-      "name": "scroll_line_plain",
-      "value": "#CFCFCA"
-    },
-    {
-      "name": "scroll_accent_warm",
-      "value": "#A65C4D"
-    },
-    {
-      "name": "scroll_accent_plain",
-      "value": "#626260"
     }
   ]
 }

@@ -124,7 +124,7 @@ export struct ScrollPage {
                 Row()
                   .width(6)
                   .height(6)
-                  .backgroundColor($r('app.color.accent_vermilion'))
+                  .backgroundColor(styleForPaper(this.paperId).light.accent)
                   .borderRadius(2)
               }
 

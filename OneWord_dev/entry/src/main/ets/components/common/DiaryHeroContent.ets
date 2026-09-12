@@ -1,7 +1,7 @@
 import { curves } from '@kit.ArkUI';
 import { FallingChar, splitChars } from './FallingChar';
 import { InkSeal } from './InkSeal';
-import { FontFamilies } from '../../constants/StyleTokens';
+import { FontFamilies, styleForPaper } from '../../constants/StyleTokens';
 import { fontFamilyForId } from '../../constants/FontCatalog';
 import { RecordType } from '../../model/DailyRecord';
 
@@ -15,6 +15,7 @@ export struct DiaryHeroContent {
   @Prop note: string = '';
   @Prop fontId: string = 'system_serif_dev';
   @Prop accessibilityPrefix: string = '日记正文';
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private washPlayed: boolean = false;
   @State private washGone: boolean = false;
   private washTimer: number = -1;
@@ -73,7 +74,7 @@ export struct DiaryHeroContent {
         .width(300)
         .height(300)
         .borderRadius(150)
-        .backgroundColor('#1C1814')
+        .backgroundColor(styleForPaper(this.paperId).light.textPrimary)
         .scale({ x: this.washPlayed ? 1.25 : 0.06, y: this.washPlayed ? 1.25 : 0.06 })
         .opacity(this.washPlayed ? 0 : 0.9)
     }
@@ -123,7 +124,7 @@ export struct DiaryHeroContent {
         Row()
           .width(8)
           .height(8)
-          .backgroundColor($r('app.color.accent_vermilion'))
+          .backgroundColor(styleForPaper(this.paperId).light.accent)
           .borderRadius(2)
       }
 

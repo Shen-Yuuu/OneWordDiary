@@ -1,8 +1,11 @@
+import { styleForPaper } from '../../constants/StyleTokens';
+
 @Component
 export struct ScrollFooter {
   @Prop isLoading: boolean = false;
   @Prop errorMessage: string = '';
   @Prop hasMore: boolean = true;
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   onRetry: () => void = () => {
   };
 
@@ -16,7 +19,7 @@ export struct ScrollFooter {
         LoadingProgress()
           .width(24)
           .height(24)
-          .color($r('app.color.accent_vermilion'))
+          .color(styleForPaper(this.paperId).light.accent)
 
         Text('长卷仍在展开…')
           .fontSize(13)

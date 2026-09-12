@@ -41,7 +41,7 @@ export struct BackupPage {
       },
       secondaryButton: {
         value: '选择保存位置',
-        fontColor: $r('app.color.accent_vermilion'),
+        fontColor: styleForPaper(this.paperId).light.accent,
         action: () => this.chooseExportLocation()
       }
     });
@@ -99,7 +99,7 @@ export struct BackupPage {
       },
       secondaryButton: {
         value: '确认导入',
-        fontColor: $r('app.color.accent_vermilion'),
+        fontColor: styleForPaper(this.paperId).light.accent,
         action: () => this.viewModel.confirmImport()
       },
       cancel: () => this.viewModel.cancelImportReview()
@@ -247,7 +247,7 @@ export struct BackupPage {
             LoadingProgress()
               .width(30)
               .height(30)
-              .color($r('app.color.accent_vermilion'))
+              .color(styleForPaper(this.paperId).light.accent)
             Text(this.viewModel.uiState === BackupUiState.EXPORTING ? '正在导出…' :
               this.viewModel.uiState === BackupUiState.IMPORTING ? '正在导入…' : '正在检查文件…')
               .fontSize(15)

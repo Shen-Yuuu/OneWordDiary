@@ -9,7 +9,7 @@ struct ScrollAxisNode {
   @Prop recordType: RecordType = RecordType.WORD;
   @Prop isMissing: boolean = false;
   @Prop nodeHeight: number = ScrollLayoutMetrics.RECORD_HEIGHT;
-  @Prop lineColor: ResourceColor = $r('app.color.scroll_line_warm');
+  @Prop lineColor: ResourceColor = $r('app.color.divider_subtle');
 
   build() {
     Column() {

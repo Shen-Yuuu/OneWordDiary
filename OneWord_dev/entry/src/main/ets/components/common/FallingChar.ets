@@ -1,4 +1,5 @@
 import { curves } from '@kit.ArkUI';
+import { styleForPaper } from '../../constants/StyleTokens';
 
 /**
  * 按码点拆分字符串（代理对安全），用于逐字渲染。
@@ -18,7 +19,7 @@ export function splitChars(value: string): string[] {
 
 /**
  * 单个文字的“落字”入场：从下方 26vp 浮起、由虚到实、微微收拢。
- * 延迟由父组件按字序错峰编排。
+ * 延迟由父组件按字序错峰编排。墨色跟随当前主题。
  */
 @Component
 export struct FallingChar {
@@ -26,6 +27,7 @@ export struct FallingChar {
   @Prop charSize: number = 136;
   @Prop fontFamily: string = 'oneword_wenkai, serif';
   @Prop delay: number = 0;
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private dropped: boolean = false;
   private dropTimer: number = -1;
 
@@ -48,7 +50,7 @@ export struct FallingChar {
       .fontSize(this.charSize)
       .fontFamily(this.fontFamily)
       .fontWeight(FontWeight.Normal)
-      .fontColor($r('app.color.text_primary'))
+      .fontColor(styleForPaper(this.paperId).light.textPrimary)
       .minFontScale(1)
       .maxFontScale(1)
       .opacity(this.dropped ? 1 : 0)

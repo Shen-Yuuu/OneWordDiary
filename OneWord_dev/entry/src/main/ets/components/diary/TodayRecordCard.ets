@@ -2,6 +2,7 @@ import { DiaryHeroContent } from '../common/DiaryHeroContent';
 import { DiaryIconButton } from '../common/DiaryIconButton';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
 import { RecordType } from '../../model/DailyRecord';
+import { styleForPaper } from '../../constants/StyleTokens';
 
 @Component
 export struct TodayRecordCard {
@@ -15,6 +16,7 @@ export struct TodayRecordCard {
   @Prop revisionDeadline: string = '';
   @Prop finalLabel: string = '';
   @Prop recordCount: number = 0;
+  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   onRevise: () => void = () => {
   };
   onShare: () => void = () => {
@@ -69,7 +71,7 @@ export struct TodayRecordCard {
         Column({ space: 10 }) {
           Text(this.finalLabel)
             .fontSize(13)
-            .fontColor($r('app.color.accent_vermilion'))
+            .fontColor(styleForPaper(this.paperId).light.accent)
             .letterSpacing(1)
             .accessibilityLevel('yes')
 

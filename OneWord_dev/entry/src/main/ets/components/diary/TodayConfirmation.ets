@@ -4,6 +4,7 @@ import { DiaryBackground } from '../common/DiaryBackground';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
 import { DiaryWordDisplay } from '../common/DiaryWordDisplay';
 import { PaperBackdrop } from '../common/PaperBackdrop';
+import { styleForPaper } from '../../constants/StyleTokens';
 import { RecordType } from '../../model/DailyRecord';
 import { fontFamilyForId } from '../../constants/FontCatalog';
 
@@ -70,7 +71,7 @@ export struct TodayConfirmation {
               Row()
                 .width(7)
                 .height(7)
-                .backgroundColor($r('app.color.accent_vermilion'))
+                .backgroundColor(styleForPaper(this.paperId).light.accent)
                 .borderRadius(2)
             }
 
@@ -89,7 +90,7 @@ export struct TodayConfirmation {
             if (this.note.length > 0) {
               Text('确认留白后，已填写的备注不会保存')
                 .fontSize(13)
-                .fontColor($r('app.color.accent_vermilion'))
+                .fontColor(styleForPaper(this.paperId).light.accent)
                 .textAlign(TextAlign.Center)
                 .accessibilityLevel('yes')
             }
@@ -122,7 +123,7 @@ export struct TodayConfirmation {
           if (this.isRevision) {
             Text('本次确认后永久定稿')
               .fontSize(14)
-              .fontColor($r('app.color.accent_vermilion'))
+              .fontColor(styleForPaper(this.paperId).light.accent)
               .accessibilityLevel('yes')
           }
 
@@ -143,7 +144,7 @@ export struct TodayConfirmation {
           LoadingProgress()
             .width(26)
             .height(26)
-            .color($r('app.color.accent_vermilion'))
+            .color(styleForPaper(this.paperId).light.accent)
             .margin({ bottom: 8 })
 
           Text(this.isRevision ? '正在定稿…' : '正在收入长卷…')
