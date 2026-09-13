@@ -189,7 +189,6 @@ export struct ScrollPage {
             .edgeEffect(EdgeEffect.Spring)
             .onReachEnd(() => this.viewModel.loadMore())
             .overlay(this.edgeFade(true), { align: Alignment.Top })
-            .overlay(this.edgeFade(false), { align: Alignment.Bottom })
           }
         }
         .width('100%')

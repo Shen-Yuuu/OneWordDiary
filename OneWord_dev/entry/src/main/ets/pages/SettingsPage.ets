@@ -407,6 +407,7 @@ export struct SettingsPage {
                 }
               }
               .width('100%')
+              .constraintSize({ minHeight: '100%' })
               .alignItems(HorizontalAlign.Start)
             }
             .layoutWeight(1)
