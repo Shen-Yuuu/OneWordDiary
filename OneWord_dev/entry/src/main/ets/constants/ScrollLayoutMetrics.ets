@@ -1,7 +1,7 @@
 export class ScrollLayoutMetrics {
   static readonly MONTH_HEADER_HEIGHT: number = 48;
   static readonly RECORD_HEIGHT: number = 104;
-  static readonly RECORD_WITH_NOTE_HEIGHT: number = 128;
+  static readonly RECORD_WITH_NOTE_HEIGHT: number = 112;
   static readonly MISSING_HEIGHT: number = 56;
   static readonly SHARE_TOP_SPACING: number = 8;
   static readonly SHARE_FOOTER_HEIGHT: number = 72;

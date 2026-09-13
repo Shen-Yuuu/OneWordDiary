@@ -123,9 +123,8 @@ export struct ScrollRecordNode {
   private noteContent(textAlign: TextAlign) {
     Text(this.visibleNote())
       .width(104)
-      .height(28)
       .fontSize(10)
-      .lineHeight(14)
+      .lineHeight(13)
       .fontFamily(this.recordFontFamily())
       .fontColor(this.secondaryColor())
       .maxLines(2)
