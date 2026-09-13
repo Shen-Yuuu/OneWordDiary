@@ -9,3 +9,7 @@
 *.pem
 *.key
 /.hvigor/
+
+# JVM/IDE 运行日志
+*.log
+!docs/**/*.log
