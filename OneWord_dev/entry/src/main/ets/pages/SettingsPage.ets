@@ -336,6 +336,9 @@ export struct SettingsPage {
 
             Scroll() {
               Column() {
+                this.collapsibleHeader('风格', this.currentStyleLabel(), this.styleExpanded, (): void => {
+                  this.styleExpanded = !this.styleExpanded;
+                })
                 if (this.styleExpanded) {
                   Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
                     ForEach(allStylePresets(), (style: StyleTokens) => {
@@ -352,6 +355,9 @@ export struct SettingsPage {
 
                 Divider().color($r('app.color.divider_subtle'))
 
+                this.collapsibleHeader('字体', this.currentFontLabel(), this.fontExpanded, (): void => {
+                  this.fontExpanded = !this.fontExpanded;
+                })
                 if (this.fontExpanded) {
                   Grid() {
                     ForEach(allFontOptions(), (option: FontOption) => {
