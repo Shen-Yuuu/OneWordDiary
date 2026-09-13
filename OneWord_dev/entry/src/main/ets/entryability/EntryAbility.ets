@@ -121,6 +121,8 @@ export default class EntryAbility extends UIAbility {
         isNavigationBarLightIcon: false,
         navigationBarContentColor: '#1F1F1F'
       });
+      // 隐藏底部手势指示条：系统不再绘制其对比渐变遮罩（上滑回主屏的手势不受影响）
+      await mainWindow.setSpecificSystemBarEnabled('navigationIndicator', false);
       AppLogger.info('window.immersive_ready');
     } catch (error) {
       const businessError = error as BusinessError;
