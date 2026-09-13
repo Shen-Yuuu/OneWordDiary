@@ -136,7 +136,7 @@ export struct ScrollRecordNode {
 
   @Builder
   private wordContent() {
-    Column({ space: 4 }) {
+    Column({ space: 2 }) {
       Text(`${this.item.dayLabel}  ${this.item.weekdayLabel}`)
         .fontSize(11)
         .fontFamily('oneword_wenkai, serif')
@@ -154,14 +154,14 @@ export struct ScrollRecordNode {
         .maxFontScale(1)
         .maxLines(1)
 
-      if (this.shouldShowNote()) {
-        this.noteContent(this.item.side === ScrollItemSide.LEFT ? TextAlign.End : TextAlign.Start)
-      }
-
       Row()
         .width(32)
         .height(1)
         .backgroundColor(this.lineColor())
+
+      if (this.shouldShowNote()) {
+        this.noteContent(this.item.side === ScrollItemSide.LEFT ? TextAlign.End : TextAlign.Start)
+      }
     }
     .layoutWeight(1)
     .height(this.nodeHeight())

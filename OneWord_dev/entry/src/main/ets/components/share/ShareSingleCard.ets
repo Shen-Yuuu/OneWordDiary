@@ -163,7 +163,7 @@ export struct ShareSingleCard {
           .letterSpacing(0.6)
           .textAlign(TextAlign.Center)
           .maxLines(2)
-          .margin({ top: 2, bottom: 6 })
+          .margin({ top: -4, bottom: 4 })
       }
 
       Row({ space: 9 }) {
@@ -190,7 +190,7 @@ export struct ShareSingleCard {
           .minFontScale(1)
           .maxFontScale(1)
       }
-      .margin({ bottom: 32 })
+      .margin({ bottom: 42 })
       .alignItems(VerticalAlign.Center)
       }
       .width(286)
