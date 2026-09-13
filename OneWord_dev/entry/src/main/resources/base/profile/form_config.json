@@ -5,6 +5,7 @@
       "displayName": "$string:WordCard_displayName",
       "description": "$string:WordCard_desc",
       "src": "./ets/widget/pages/WordCardCard.ets",
+      "uiSyntax": "arkts",
       "window": {
         "designWidth": 600,
         "autoDesignWidth": true
