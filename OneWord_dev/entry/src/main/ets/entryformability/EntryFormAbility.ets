@@ -23,12 +23,13 @@ export default class EntryFormAbility extends FormExtensionAbility {
       pushWidgetToForm(this.context, formId);
     }, 200);
     return formBindingData.createFormBindingData({
-      content: '',
-      date: '',
-      paperColor: WARM_PAPER,
-      inkColor: WARM_INK,
-      accentColor: WARM_ACCENT,
-      fontFamily: WARM_FAMILY
+      'imgSrc': '',
+      'content': '',
+      'date': '',
+      'paperColor': WARM_PAPER,
+      'inkColor': WARM_INK,
+      'accentColor': WARM_ACCENT,
+      'fontFamily': WARM_FAMILY
     });
   }
 

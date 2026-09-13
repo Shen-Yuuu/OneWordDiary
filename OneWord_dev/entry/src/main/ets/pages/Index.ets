@@ -3,6 +3,7 @@ import { photoAccessHelper } from '@kit.MediaLibraryKit';
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { DiaryBackground } from '../components/common/DiaryBackground';
+import { WidgetSnapshotCard } from '../components/common/WidgetSnapshotCard';
 import { PrivacyConsentGate } from '../components/privacy/PrivacyConsentGate';
 import { TodayConfirmation } from '../components/diary/TodayConfirmation';
 import { TodayEditor } from '../components/diary/TodayEditor';
@@ -318,6 +319,8 @@ struct Index {
           imageUri: this.viewModel.backgroundImageUri,
           paperId: this.paperId
         })
+        WidgetSnapshotCard()
+          .position({ x: -600, y: -600 })
 
         if (this.viewModel.uiState === TodayUiState.APP_INITIALIZING) {
           AppLoadingPanel()

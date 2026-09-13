@@ -1,0 +1,387 @@
+> hvigor [32mFinished :entry:default@PreBuild... after 188 ms [39m
+> hvigor [32mFinished :entry:default@CreateModuleInfo... after 2 ms [39m
+> hvigor [32mUP-TO-DATE :entry:default@GenerateMetadata...  [39m
+> hvigor [32mFinished :entry:default@ConfigureCmake... after 1 ms [39m
+> hvigor [32mFinished :entry:default@MergeProfile... after 9 ms [39m
+> hvigor [32mFinished :entry:default@CreateBuildProfile... after 5 ms [39m
+> hvigor [32mFinished :entry:default@PreCheckSyscap... after 1 ms [39m
+> hvigor [32mUP-TO-DATE :entry:default@GeneratePkgContextInfo...  [39m
+> hvigor [32mFinished :entry:default@ProcessIntegratedHsp... after 2 ms [39m
+> hvigor [32mFinished :entry:default@BuildNativeWithCmake... after 1 ms [39m
+> hvigor [32mUP-TO-DATE :entry:default@MakePackInfo...  [39m
+> hvigor [32mFinished :entry:default@SyscapTransform... after 17 ms [39m
+> hvigor [32mFinished :entry:default@ProcessProfile... after 221 ms [39m
+> hvigor [32mUP-TO-DATE :entry:default@ProcessRouterMap...  [39m
+> hvigor [32mUP-TO-DATE :entry:default@ProcessShareConfig...  [39m
+> hvigor [32mFinished :entry:default@ProcessStartupConfig... after 3 ms [39m
+> hvigor [32mFinished :entry:default@BuildNativeWithNinja... after 2 ms [39m
+> hvigor [32mFinished :entry:default@ProcessResource... after 9 ms [39m
+> hvigor [32mUP-TO-DATE :entry:default@GenerateLoaderJson...  [39m
+> hvigor [32mUP-TO-DATE :entry:default@ProcessLibs...  [39m
+> hvigor [33mWARN: Warning: the media of 'paper_grain_dev.svg' does not have a base resource.
+[39m
+> hvigor [32mFinished :entry:default@CompileResource... after 1 s 60 ms [39m
+> hvigor [32mUP-TO-DATE :entry:default@DoNativeStrip...  [39m
+> hvigor [32mFinished :entry:default@BuildJS... after 6 ms [39m
+> hvigor [32mUP-TO-DATE :entry:default@CacheNativeLibs...  [39m
+> hvigor [33mWARN: [33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/DiaryDatabase.ets:14:25
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/DiaryDatabase.ets:44:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:40:25
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:45:30
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:46:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:47:32
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:48:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:49:31
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:50:35
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:51:44
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:55:53
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:95:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:96:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:103:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:104:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:111:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:112:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:113:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:114:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:115:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:116:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:120:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:121:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:125:25
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:130:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:131:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:135:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/SettingsRepository.ets:136:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:16:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:18:12
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:23:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:33:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:36:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:39:18
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:43:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:53:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:56:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:59:18
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:63:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:68:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:76:31
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:81:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:83:14
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:83:41
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:83:59
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:85:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:91:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:95:5
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:101:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:128:26
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:129:23
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:130:28
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:131:36
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:133:18
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:133:38
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:134:16
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:134:62
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:135:13
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:135:56
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:137:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:137:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:138:15
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:138:35
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:139:16
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:139:36
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:140:26
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:141:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:142:20
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:142:38
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:143:32
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:144:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:145:27
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:146:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:147:18
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:147:66
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:148:21
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:148:39
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:149:22
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/repository/RdbDiaryRepository.ets:149:40
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/ReminderScheduler.ets:25:21
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackupFileGateway.ets:20:12
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackupFileGateway.ets:24:12
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackupFileGateway.ets:28:12
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackupFileGateway.ets:32:12
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackupFileGateway.ets:36:5
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:142:10
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:145:5
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:204:10
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:207:5
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:245:17
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:325:12
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:335:10
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:335:49
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:341:18
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:344:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:349:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:361:18
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:364:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/service/BackgroundImageService.ets:369:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/entryability/EntryAbility.ets:19:5
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:39:10
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:58:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:59:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:83:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:84:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:91:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:92:9
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:181:42
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:187:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:194:11
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:199:5
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:214:29
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:225:13
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/utils/WidgetSync.ets:228:5
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/pages/BackupPage.ets:66:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/pages/BackupPage.ets:88:7
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[33mWARN: [33m[33mArkTS:WARN File: E:/desktop/Code/harmony/OneWordDiary/OneWord_dev/entry/src/main/ets/pages/BackupPage.ets:110:5
+ Function may throw exceptions. Special handling is required.
+[39m[39m
+[39m
+> hvigor [32mFinished :entry:default@CompileArkTS... after 10 s 922 ms [39m
+> hvigor [32mFinished :entry:default@GeneratePkgModuleJson... after 4 ms [39m
+> hvigor [32mFinished :entry:default@ProcessCompiledResources... after 1 ms [39m
+> hvigor [32mFinished :entry:default@PackageHap... after 138 ms [39m
+> hvigor [32mFinished :entry:default@PackingCheck... after 10 ms [39m
+> hvigor [32mFinished :entry:default@SignHap... after 3 s 90 ms [39m
+> hvigor [32mFinished :entry:default@CollectDebugSymbol... after 5 ms [39m
+> hvigor [32mFinished :entry:assembleHap... after 1 ms [39m
+> hvigor [32mBUILD SUCCESSFUL in 23 s 306 ms [39m

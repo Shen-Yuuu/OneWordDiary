@@ -3,6 +3,7 @@ let storage = new LocalStorage();
 @Entry(storage)
 @Component
 struct WordCardCard {
+  @LocalStorageProp('imgSrc') imgSrc: string = '';
   @LocalStorageProp('content') content: string = '';
   @LocalStorageProp('date') date: string = '';
   @LocalStorageProp('paperColor') paperColor: string = '#FDF8F7';
@@ -24,49 +25,62 @@ struct WordCardCard {
   }
 
   build() {
-    Stack({ alignContent: Alignment.TopEnd }) {
-      Column() {
-        Text(this.date)
-          .fontSize(12)
-          .fontColor(this.inkColor)
-          .opacity(0.6)
-          .letterSpacing(1)
+    Stack() {
+      if (this.imgSrc.length > 0) {
+        // 位图卡片：App 内以真字体渲染的同款快照，通过 memory:// 协议注入
+        Image('memory://' + this.imgSrc)
+          .width('100%')
+          .height('100%')
+          .objectFit(ImageFit.Fill)
+      } else {
+        Stack({ alignContent: Alignment.TopEnd }) {
+          Column() {
+            Blank()
 
-        Blank()
+            if (this.content.length > 0) {
+              Text(this.content)
+                .fontSize(this.charFontSize())
+                .fontWeight(FontWeight.Medium)
+                .fontColor(this.inkColor)
+                .textAlign(TextAlign.Center)
+                .maxLines(1)
+            } else {
+              Text('一字')
+                .fontSize(40)
+                .fontWeight(FontWeight.Lighter)
+                .fontColor(this.inkColor)
+                .opacity(0.4)
+            }
 
-        if (this.content.length > 0) {
-          Text(this.content)
-            .fontSize(this.charFontSize())
-            .fontWeight(FontWeight.Medium)
-            .fontColor(this.inkColor)
-            .textAlign(TextAlign.Center)
-            .maxLines(1)
-        } else {
-          Text('一字')
-            .fontSize(40)
-            .fontWeight(FontWeight.Lighter)
-            .fontColor(this.inkColor)
-            .opacity(0.4)
+            Blank()
+
+            Text(this.date)
+              .fontSize(12)
+              .fontColor(this.inkColor)
+              .opacity(0.6)
+              .letterSpacing(1)
+          }
+          .width('100%')
+          .height('100%')
+          .justifyContent(FlexAlign.Center)
+          .alignItems(HorizontalAlign.Center)
+          .padding({ top: 18, bottom: 10 })
+
+          Column() {
+            Text('已')
+              .fontSize(10)
+              .fontColor('#FFFFFF')
+              .backgroundColor(this.accentColor)
+              .width(20)
+              .height(20)
+              .textAlign(TextAlign.Center)
+              .borderRadius(2)
+          }
+          .margin({ top: 16, right: 16 })
         }
-
-        Blank()
+        .width('100%')
+        .height('100%')
       }
-      .width('100%')
-      .height('100%')
-      .justifyContent(FlexAlign.Center)
-      .alignItems(HorizontalAlign.Center)
-
-      Column() {
-        Text('已')
-          .fontSize(10)
-          .fontColor('#FFFFFF')
-          .backgroundColor(this.accentColor)
-          .width(20)
-          .height(20)
-          .textAlign(TextAlign.Center)
-          .borderRadius(2)
-      }
-      .margin(8)
     }
     .width('100%')
     .height('100%')
