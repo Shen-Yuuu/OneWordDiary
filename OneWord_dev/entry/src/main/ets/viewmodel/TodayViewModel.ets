@@ -5,11 +5,13 @@ import { DailyRecord, DiaryEntryInput, RecordType, RevisionStatus } from '../mod
 import { DiaryError, DiaryErrorCode } from '../model/DiaryError';
 import { TodayUiState } from '../model/TodayUiState';
 import { SettingsRepository } from '../repository/SettingsRepository';
+import { AppServiceContainer } from '../service/AppServiceContainer';
 import { CompletionFeedback } from '../service/CompletionFeedback';
 import { DiaryService } from '../service/DiaryService';
 import { DiaryTextRules } from '../service/DiaryTextRules';
 import { Clock } from '../utils/Clock';
 import { AppLogger } from '../utils/AppLogger';
+import { WidgetSync } from '../utils/WidgetSync';
 import { LocalTimeResolver } from '../utils/LocalTimeResolver';
 
 @Observed
@@ -171,6 +173,11 @@ export class TodayViewModel {
       this.record = record;
       this.syncRecordPresentation(record);
       this.recordCount = recordCount;
+      try {
+        await WidgetSync.syncWidgetFromRecord(AppServiceContainer.getAbilityContext(), record);
+      } catch (error) {
+        AppLogger.warn('widget.sync_failed_after_load');
+      }
       if (shouldPreserveDraft) {
         this.uiState = previousState;
       } else {
@@ -352,6 +359,11 @@ export class TodayViewModel {
     }
     this.record = saved;
     this.syncRecordPresentation(saved);
+    try {
+      await WidgetSync.syncWidgetFromRecord(AppServiceContainer.getAbilityContext(), saved);
+    } catch (error) {
+      AppLogger.warn('widget.sync_failed_after_commit');
+    }
     if (previousBackgroundImageId !== null && previousBackgroundImageId !== committedBackgroundImageId) {
       this.safeRemoveBackground(previousBackgroundImageId);
     }

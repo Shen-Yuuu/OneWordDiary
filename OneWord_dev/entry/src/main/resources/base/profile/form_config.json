@@ -1,0 +1,23 @@
+{
+  "forms": [
+    {
+      "name": "WordCard",
+      "displayName": "$string:WordCard_displayName",
+      "description": "$string:WordCard_desc",
+      "src": "./ets/widget/pages/WordCardCard.ets",
+      "window": {
+        "designWidth": 600,
+        "autoDesignWidth": true
+      },
+      "colorMode": "auto",
+      "isDefault": true,
+      "updateEnabled": true,
+      "scheduledUpdateTime": "00:10",
+      "defaultDimension": "2*2",
+      "supportDimensions": ["2*2"],
+      "formConfigAbility": "ability://EntryAbility",
+      "dataStoreEnabled": true,
+      "transparencyEnabled": true
+    }
+  ]
+}

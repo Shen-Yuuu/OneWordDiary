@@ -23,6 +23,14 @@
     {
       "name": "baseline_ready",
       "value": "把今天留给自己"
+    },
+    {
+      "name": "WordCard_displayName",
+      "value": "今日一字"
+    },
+    {
+      "name": "WordCard_desc",
+      "value": "今天的那个字"
     }
   ]
 }
