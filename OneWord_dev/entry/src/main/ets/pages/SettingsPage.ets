@@ -125,13 +125,13 @@ export struct SettingsPage {
         Text(value)
           .fontSize(15)
           .fontColor($r('app.color.text_secondary'))
+          .margin({ right: 12 })
       }
 
       Text('›')
         .fontSize(24)
         .fontColor($r('app.color.text_tertiary'))
         .rotate({ angle: expanded ? 90 : 0 })
-        .animation({ duration: 250, curve: Curve.EaseOut })
     }
     .width('100%')
     .height(58)

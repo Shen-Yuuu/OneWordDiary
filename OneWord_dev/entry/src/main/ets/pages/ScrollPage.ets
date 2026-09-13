@@ -45,22 +45,6 @@ export struct ScrollPage {
     }
   }
 
-  @Builder
-  private edgeFade(top: boolean) {
-    Row()
-      .width('100%')
-      .height(26)
-      .linearGradient({
-        angle: top ? 90 : 270,
-        // 注意：8 位 hex 在 ArkUI 中是 #AARRGGBB（透明度在前），用 rgba() 规避歧义
-        colors: [
-          [styleForPaper(this.paperId).light.background, 0],
-          [Color.Transparent, 1]
-        ]
-      })
-      .hitTestBehavior(HitTestMode.None)
-  }
-
   build() {
     NavDestination() {
       Stack() {
@@ -188,7 +172,6 @@ export struct ScrollPage {
             .scrollBar(BarState.Off)
             .edgeEffect(EdgeEffect.Spring)
             .onReachEnd(() => this.viewModel.loadMore())
-            .overlay(this.edgeFade(true), { align: Alignment.Top })
           }
         }
         .width('100%')
