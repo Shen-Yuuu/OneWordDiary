@@ -17,7 +17,6 @@ export struct TodayRecordCard {
   @Prop finalLabel: string = '';
   @Prop recordCount: number = 0;
   @Prop paperId: string = 'warm_paper_dev';
-  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   onRevise: () => void = () => {
   };
   onShare: () => void = () => {
