@@ -137,7 +137,7 @@ export struct DiaryHeroContent {
   }
 
   build() {
-    Column({ space: 10 }) {
+    Column({ space: 6 }) {
       Stack({ alignContent: Alignment.Center }) {
         this.inkWash()
 
@@ -153,12 +153,12 @@ export struct DiaryHeroContent {
           InkSeal({ delay: this.sealDelay() })
         }
         .width(260)
-        .height(300)
-        .padding({ top: 52 })
+        .height(270)
+        .padding({ top: 46 })
         .alignItems(VerticalAlign.Top)
       }
       .width(286)
-      .height(300)
+      .height(270)
 
       if (this.recordType === RecordType.WORD) {
         Text('「 见字如面 」')

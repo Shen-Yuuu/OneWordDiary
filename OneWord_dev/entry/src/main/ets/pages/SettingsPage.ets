@@ -128,10 +128,9 @@ export struct SettingsPage {
           .margin({ right: 12 })
       }
 
-      Text('›')
-        .fontSize(24)
+      Text(expanded ? '⌄' : '›')
+        .fontSize(20)
         .fontColor($r('app.color.text_tertiary'))
-        .rotate({ angle: expanded ? 90 : 0 })
     }
     .width('100%')
     .height(58)
