@@ -1,4 +1,5 @@
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
+import { CollapsibleHeader } from '../components/settings/CollapsibleHeader';
 import { DiaryIconButton } from '../components/common/DiaryIconButton';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { allStylePresets, StylePresetId, StyleTokens, styleForPaper } from '../constants/StyleTokens';
@@ -112,38 +113,6 @@ export struct SettingsPage {
       .padding({ top: 16, bottom: 10 })
   }
 
-  @Builder
-  private collapsibleHeader(title: string, value: string, expanded: boolean, onToggle: () => void) {
-    Row() {
-      Text(title)
-        .fontSize(17)
-        .fontColor($r('app.color.text_primary'))
-
-      Blank()
-
-      if (value.length > 0) {
-        Text(value)
-          .fontSize(15)
-          .fontColor($r('app.color.text_secondary'))
-          .margin({ right: 12 })
-      }
-
-      Text(expanded ? '⌄' : '›')
-        .fontSize(20)
-        .fontColor($r('app.color.text_tertiary'))
-    }
-    .width('100%')
-    .height(58)
-    .justifyContent(FlexAlign.SpaceBetween)
-    .alignItems(VerticalAlign.Center)
-    .onClick(() => {
-      this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
-        onToggle();
-      });
-    })
-    .accessibilityText(`${title}，${expanded ? '已展开' : '已收起'}，点按${expanded ? '收起' : '展开'}`)
-  }
-
   private currentStyleLabel(): string {
     return this.styleLabel(this.viewModel.stylePresetId);
   }
@@ -155,6 +124,18 @@ export struct SettingsPage {
       }
     }
     return '';
+  }
+
+  private toggleStyleSection(): void {
+    this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+      this.styleExpanded = !this.styleExpanded;
+    });
+  }
+
+  private toggleFontSection(): void {
+    this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+      this.fontExpanded = !this.fontExpanded;
+    });
   }
 
   @Builder
@@ -335,8 +316,11 @@ export struct SettingsPage {
 
             Scroll() {
               Column() {
-                this.collapsibleHeader('风格', this.currentStyleLabel(), this.styleExpanded, (): void => {
-                  this.styleExpanded = !this.styleExpanded;
+                CollapsibleHeader({
+                  title: '风格',
+                  value: this.currentStyleLabel(),
+                  expanded: this.styleExpanded,
+                  onToggle: (): void => this.toggleStyleSection()
                 })
                 if (this.styleExpanded) {
                   Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
@@ -354,8 +338,11 @@ export struct SettingsPage {
 
                 Divider().color($r('app.color.divider_subtle'))
 
-                this.collapsibleHeader('字体', this.currentFontLabel(), this.fontExpanded, (): void => {
-                  this.fontExpanded = !this.fontExpanded;
+                CollapsibleHeader({
+                  title: '字体',
+                  value: this.currentFontLabel(),
+                  expanded: this.fontExpanded,
+                  onToggle: (): void => this.toggleFontSection()
                 })
                 if (this.fontExpanded) {
                   Grid() {
