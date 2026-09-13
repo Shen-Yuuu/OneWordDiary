@@ -10,3 +10,9 @@
 /.clang-tidy
 **/.test
 /.appanalyzer
+# 构建产物与依赖
+**/build/
+**/oh_modules/
+**/.cxx/
+**/.preview/
+*.hap
