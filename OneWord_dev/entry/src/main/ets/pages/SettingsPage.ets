@@ -28,9 +28,7 @@ export struct SettingsPage {
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private contentShown: boolean = false;
   @State private styleExpanded: boolean = false;
-  @State private styleBodyHeight: number = 0;
   @State private fontExpanded: boolean = false;
-  @State private fontBodyHeight: number = 0;
   private revealTimer: number = -1;
 
   aboutToAppear(): void {
@@ -118,31 +116,33 @@ export struct SettingsPage {
   private collapsibleHeader(title: string, value: string, expanded: boolean, onToggle: () => void) {
     Row() {
       Text(title)
-        .fontSize(13)
-        .fontWeight(FontWeight.Medium)
-        .fontColor($r('app.color.text_tertiary'))
-        .letterSpacing(1.6)
+        .fontSize(17)
+        .fontColor($r('app.color.text_primary'))
 
       Blank()
 
       if (value.length > 0) {
         Text(value)
-          .fontSize(12)
-          .fontColor($r('app.color.text_tertiary'))
-          .margin({ right: 10 })
+          .fontSize(15)
+          .fontColor($r('app.color.text_secondary'))
       }
 
       Text('›')
-        .fontSize(20)
+        .fontSize(24)
         .fontColor($r('app.color.text_tertiary'))
         .rotate({ angle: expanded ? 90 : 0 })
         .animation({ duration: 250, curve: Curve.EaseOut })
     }
     .width('100%')
-    .height(36)
-    .padding({ top: 10 })
-    .onClick(() => onToggle())
-    .accessibilityText(`${title}，${expanded ? '已展开' : '已收起'}，点击${expanded ? '收起' : '展开'}`)
+    .height(58)
+    .justifyContent(FlexAlign.SpaceBetween)
+    .alignItems(VerticalAlign.Center)
+    .onClick(() => {
+      this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+        onToggle();
+      });
+    })
+    .accessibilityText(`${title}，${expanded ? '已展开' : '已收起'}，点按${expanded ? '收起' : '展开'}`)
   }
 
   private currentStyleLabel(): string {
@@ -336,35 +336,23 @@ export struct SettingsPage {
 
             Scroll() {
               Column() {
-                this.collapsibleHeader('风格', this.currentStyleLabel(), this.styleExpanded, (): void => {
-                  this.styleExpanded = !this.styleExpanded;
-                })
-                Column() {
-                  Column() {
-                    Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
-                      ForEach(allStylePresets(), (style: StyleTokens) => {
-                        this.styleCard(style, this.styleLabel(style.id), this.styleSample(style.id))
-                      }, (style: StyleTokens): string => style.id)
-                    }
-                    .width('100%')
-                    .padding({ bottom: 12 })
+                if (this.styleExpanded) {
+                  Flex({ wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start }) {
+                    ForEach(allStylePresets(), (style: StyleTokens) => {
+                      this.styleCard(style, this.styleLabel(style.id), this.styleSample(style.id))
+                    }, (style: StyleTokens): string => style.id)
                   }
-                  .onAreaChange((_oldArea: Area, newArea: Area) => {
-                    this.styleBodyHeight = Number(newArea.height);
-                  })
+                  .width('100%')
+                  .padding({ top: 4, bottom: 12 })
+                  .transition(TransitionEffect.asymmetric(
+                    TransitionEffect.opacity(0).combine(TransitionEffect.translate({ y: -8 })),
+                    TransitionEffect.opacity(0)
+                  ).animation({ duration: 280, curve: Curve.EaseOut }))
                 }
-                .width('100%')
-                .height(this.styleExpanded ? this.styleBodyHeight : 0)
-                .opacity(this.styleExpanded ? 1 : 0)
-                .clip(true)
-                .animation({ duration: 300, curve: Curve.EaseOut })
 
                 Divider().color($r('app.color.divider_subtle'))
 
-                this.collapsibleHeader('字体', this.currentFontLabel(), this.fontExpanded, (): void => {
-                  this.fontExpanded = !this.fontExpanded;
-                })
-                Column() {
+                if (this.fontExpanded) {
                   Grid() {
                     ForEach(allFontOptions(), (option: FontOption) => {
                       GridItem() {
@@ -377,13 +365,12 @@ export struct SettingsPage {
                   .columnsTemplate('1fr 1fr')
                   .columnsGap(10)
                   .rowsGap(8)
-                  .padding({ bottom: 12 })
+                  .padding({ top: 4, bottom: 12 })
+                  .transition(TransitionEffect.asymmetric(
+                    TransitionEffect.opacity(0).combine(TransitionEffect.translate({ y: -8 })),
+                    TransitionEffect.opacity(0)
+                  ).animation({ duration: 280, curve: Curve.EaseOut }))
                 }
-                .width('100%')
-                .height(this.fontExpanded ? this.fontBodyHeight : 0)
-                .opacity(this.fontExpanded ? 1 : 0)
-                .clip(true)
-                .animation({ duration: 300, curve: Curve.EaseOut })
 
                 Divider().color($r('app.color.divider_subtle'))
 
