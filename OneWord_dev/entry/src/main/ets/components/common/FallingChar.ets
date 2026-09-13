@@ -26,8 +26,8 @@ export struct FallingChar {
   @Prop char: string = '';
   @Prop charSize: number = 136;
   @Prop fontFamily: string = 'oneword_wenkai, serif';
+  @Prop paperId: string = 'warm_paper_dev';
   @Prop delay: number = 0;
-  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private dropped: boolean = false;
   private dropTimer: number = -1;
 

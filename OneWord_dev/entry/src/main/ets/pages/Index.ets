@@ -391,6 +391,7 @@ struct Index {
                 contentCount: this.viewModel.recordDisplayContentCount,
                 note: this.viewModel.recordDisplayNote,
                 fontId: this.viewModel.recordFontId,
+                paperId: this.viewModel.recordPaperId,
                 canRevise: this.viewModel.uiState === TodayUiState.TODAY_RECORDED_WORD_EDITABLE ||
                   this.viewModel.uiState === TodayUiState.TODAY_RECORDED_BLANK_EDITABLE,
                 revisionDeadline: this.viewModel.revisionDeadlineLabel,

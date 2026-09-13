@@ -16,6 +16,7 @@ export struct TodayRecordCard {
   @Prop revisionDeadline: string = '';
   @Prop finalLabel: string = '';
   @Prop recordCount: number = 0;
+  @Prop paperId: string = 'warm_paper_dev';
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   onRevise: () => void = () => {
   };
@@ -32,6 +33,7 @@ export struct TodayRecordCard {
         contentCount: this.contentCount,
         note: this.note,
         fontId: this.fontId,
+        paperId: this.paperId,
         accessibilityPrefix: '今日正文'
       })
 

@@ -8,7 +8,7 @@ import { styleForPaper } from '../../constants/StyleTokens';
 @Component
 export struct InkSeal {
   @Prop delay: number = 0;
-  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
+  @Prop paperId: string = 'warm_paper_dev';
   @State private stamped: boolean = false;
   @State private breathing: boolean = false;
   private stampTimer: number = -1;

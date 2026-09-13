@@ -13,8 +13,8 @@ export struct DiaryHeroContent {
   @Prop contentCount: number = 0;
   @Prop note: string = '';
   @Prop fontId: string = 'system_serif_dev';
+  @Prop paperId: string = 'warm_paper_dev';
   @Prop accessibilityPrefix: string = '日记正文';
-  @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private washPlayed: boolean = false;
   @State private washGone: boolean = false;
   private washTimer: number = -1;
@@ -88,6 +88,7 @@ export struct DiaryHeroContent {
             char: char,
             charSize: this.heroCharSize(),
             fontFamily: this.recordFontFamily(),
+            paperId: this.paperId,
             delay: 60 + index * CHAR_STAGGER_MS
           })
         })
@@ -101,6 +102,7 @@ export struct DiaryHeroContent {
             char: char,
             charSize: this.heroCharSize(),
             fontFamily: this.recordFontFamily(),
+            paperId: this.paperId,
             delay: 60 + index * CHAR_STAGGER_MS
           })
         })
@@ -150,7 +152,7 @@ export struct DiaryHeroContent {
         Row() {
           Blank()
 
-          InkSeal({ delay: this.sealDelay() })
+          InkSeal({ delay: this.sealDelay(), paperId: this.paperId })
         }
         .width(260)
         .height(270)

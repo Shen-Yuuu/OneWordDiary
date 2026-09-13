@@ -31,6 +31,7 @@ export struct DetailRecordContent {
           contentCount: this.contentCount,
           note: this.note,
           fontId: this.fontId,
+          paperId: this.paperId,
           accessibilityPrefix: '日记正文'
         })
       }
