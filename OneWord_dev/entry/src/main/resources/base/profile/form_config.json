@@ -15,9 +15,7 @@
       "scheduledUpdateTime": "00:10",
       "defaultDimension": "2*2",
       "supportDimensions": ["2*2"],
-      "formConfigAbility": "ability://EntryAbility",
-      "dataStoreEnabled": true,
-      "transparencyEnabled": true
+      "formConfigAbility": "ability://EntryAbility"
     }
   ]
 }
