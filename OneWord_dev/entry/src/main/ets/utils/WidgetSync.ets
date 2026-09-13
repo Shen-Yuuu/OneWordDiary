@@ -32,19 +32,19 @@ export function defaultWidgetPayload(): WidgetCardPayload {
 }
 
 async function getStore(context: common.Context): Promise<preferences.Preferences> {
-  return context.getApplicationContext().getPreferences({ name: PREFS_NAME });
+  return preferences.getPreferences(context, { name: PREFS_NAME });
 }
 
 export async function readWidgetPayload(context: common.Context): Promise<WidgetCardPayload> {
-  const store = await getStore(context);
-  const raw: string = (await store.get(KEY_WIDGET_PAYLOAD, '')) as string;
-  if (raw.length === 0) {
-    return defaultWidgetPayload();
-  }
   try {
+    const store = await getStore(context);
+    const raw: string = (await store.get(KEY_WIDGET_PAYLOAD, '')) as string;
+    if (raw.length === 0) {
+      return defaultWidgetPayload();
+    }
     return JSON.parse(raw) as WidgetCardPayload;
   } catch (error) {
-    hilog.warn(0, TAG, `readWidgetPayload parse failed: ${(error as Error).message}`);
+    hilog.warn(0, TAG, `readWidgetPayload failed: ${(error as Error).message}`);
     return defaultWidgetPayload();
   }
 }
@@ -56,12 +56,17 @@ export async function saveWidgetPayload(context: common.Context, payload: Widget
 }
 
 export async function readWidgetFormIds(context: common.Context): Promise<string[]> {
-  const store = await getStore(context);
-  const raw: string = (await store.get(KEY_WIDGET_FORM_IDS, '')) as string;
-  if (raw.length === 0) {
+  try {
+    const store = await getStore(context);
+    const raw: string = (await store.get(KEY_WIDGET_FORM_IDS, '')) as string;
+    if (raw.length === 0) {
+      return [];
+    }
+    return raw.split(',');
+  } catch (error) {
+    hilog.warn(0, TAG, `readWidgetFormIds failed: ${(error as Error).message}`);
     return [];
   }
-  return raw.split(',');
 }
 
 export async function addWidgetFormId(context: common.Context, formId: string): Promise<void> {
@@ -84,11 +89,18 @@ export async function removeWidgetFormId(context: common.Context, formId: string
 }
 
 export function widgetBindingData(payload: WidgetCardPayload): formBindingData.FormBindingData {
-  return formBindingData.createFormBindingData(payload);
+  return formBindingData.createFormBindingData({
+    content: payload.content,
+    date: payload.date,
+    paperColor: payload.paperColor,
+    inkColor: payload.inkColor,
+    accentColor: payload.accentColor,
+    fontFamily: payload.fontFamily
+  });
 }
 
-export async function pushWidgetToForm(context: common.Context, formId: string,
-  payload: WidgetCardPayload): Promise<void> {
+export async function pushWidgetToForm(context: common.Context, formId: string): Promise<void> {
+  const payload = await readWidgetPayload(context);
   try {
     await formProvider.updateForm(formId, widgetBindingData(payload));
   } catch (error) {
@@ -99,14 +111,8 @@ export async function pushWidgetToForm(context: common.Context, formId: string,
 export async function pushWidgetToAll(context: common.Context, payload: WidgetCardPayload): Promise<void> {
   const ids = await readWidgetFormIds(context);
   for (const id of ids) {
-    await pushWidgetToForm(context, id, payload);
+    await pushWidgetToForm(context, id);
   }
-}
-
-function todayLabel(): string {
-  const now = new Date();
-  const pad = (v: number): string => v < 10 ? `0${v}` : `${v}`;
-  return `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())}`;
 }
 
 /**
@@ -126,6 +132,6 @@ export async function syncWidgetFromRecord(context: common.Context, record: Dail
     accentColor: styleForPaper(record.paperId).light.accent,
     fontFamily: fontFamilyForId(record.fontId)
   };
-  await savePayload(context, payload);
+  await saveWidgetPayload(context, payload);
   await pushWidgetToAll(context, payload);
 }

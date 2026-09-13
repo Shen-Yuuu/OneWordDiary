@@ -11,7 +11,7 @@ import { DiaryService } from '../service/DiaryService';
 import { DiaryTextRules } from '../service/DiaryTextRules';
 import { Clock } from '../utils/Clock';
 import { AppLogger } from '../utils/AppLogger';
-import { WidgetSync } from '../utils/WidgetSync';
+import { syncWidgetFromRecord } from '../utils/WidgetSync';
 import { LocalTimeResolver } from '../utils/LocalTimeResolver';
 
 @Observed
@@ -174,7 +174,7 @@ export class TodayViewModel {
       this.syncRecordPresentation(record);
       this.recordCount = recordCount;
       try {
-        await WidgetSync.syncWidgetFromRecord(AppServiceContainer.getAbilityContext(), record);
+        await syncWidgetFromRecord(AppServiceContainer.getAbilityContext(), record);
       } catch (error) {
         AppLogger.warn('widget.sync_failed_after_load');
       }
@@ -360,7 +360,7 @@ export class TodayViewModel {
     this.record = saved;
     this.syncRecordPresentation(saved);
     try {
-      await WidgetSync.syncWidgetFromRecord(AppServiceContainer.getAbilityContext(), saved);
+      await syncWidgetFromRecord(AppServiceContainer.getAbilityContext(), saved);
     } catch (error) {
       AppLogger.warn('widget.sync_failed_after_commit');
     }
