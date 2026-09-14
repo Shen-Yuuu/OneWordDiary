@@ -13,3 +13,7 @@
 # JVM/IDE 运行日志
 *.log
 !docs/**/*.log
+
+# hvigor 构建日志（之前已多次误入库）
+OneWord_dev/build_out*.txt
+**/hs_err*.log
