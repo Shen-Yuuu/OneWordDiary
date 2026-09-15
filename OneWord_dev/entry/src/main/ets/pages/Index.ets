@@ -4,7 +4,6 @@ import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPa
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
 import { DiaryBackground } from '../components/common/DiaryBackground';
 import { WidgetSnapshotCard } from '../components/common/WidgetSnapshotCard';
-import { PrivacyConsentGate } from '../components/privacy/PrivacyConsentGate';
 import { TodayConfirmation } from '../components/diary/TodayConfirmation';
 import { TodayEditor } from '../components/diary/TodayEditor';
 import { TodayHeader } from '../components/diary/TodayHeader';
@@ -21,7 +20,7 @@ import {
   ShareRouteParam
 } from '../model/AppRoute';
 import { DiaryShareMode } from '../model/ShareModel';
-import { PRIVACY_POLICY_URL, PRIVACY_POLICY_VERSION } from '../model/PrivacyPolicy';
+import { PRIVACY_POLICY_URL } from '../model/PrivacyPolicy';
 import { TodayUiState } from '../model/TodayUiState';
 import { BackupPage } from './BackupPage';
 import { DetailPage } from './DetailPage';
@@ -37,7 +36,6 @@ import { AppLogger } from '../utils/AppLogger';
 
 import { SystemLocalTimeResolver } from '../utils/LocalTimeResolver';
 import { TodayViewModel } from '../viewmodel/TodayViewModel';
-import { PrivacyConsentViewModel } from '../viewmodel/PrivacyConsentViewModel';
 
 @Entry
 @Component
@@ -57,11 +55,6 @@ struct Index {
     new SystemCompletionFeedback(),
     AppServiceContainer.getBackgroundImageService()
   );
-  @State private privacyConsentViewModel: PrivacyConsentViewModel = new PrivacyConsentViewModel(
-    AppServiceContainer.getSettingsRepository(),
-    PRIVACY_POLICY_VERSION
-  );
-
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private pickerResumePending: boolean = false;
   @State private pickerError: string = '';
@@ -70,7 +63,6 @@ struct Index {
     this.isPageActive = true;
     this.scheduleMidnightRefresh();
     this.viewModel.load();
-    this.privacyConsentViewModel.load();
   }
 
   onPageShow(): void {
@@ -246,18 +238,6 @@ struct Index {
     }
   }
 
-  private async declinePrivacyPolicy(): Promise<void> {
-    const abilityContext = this.getUIContext().getHostContext() as common.UIAbilityContext;
-    if (abilityContext === undefined) {
-      AppLogger.error('privacy_policy.exit_failed context_unavailable');
-      return;
-    }
-    try {
-      await abilityContext.terminateSelf();
-    } catch (error) {
-      AppLogger.error('privacy_policy.exit_failed');
-    }
-  }
   @Builder
   private routeBuilder(name: string, param: Object) {
     if (name === AppRouteName.SCROLL) {
@@ -304,16 +284,6 @@ struct Index {
   build() {
     Navigation(this.navPathStack) {
       Stack() {
-        if (this.privacyConsentViewModel.needsConsent) {
-          PrivacyConsentGate({
-            isLoading: this.privacyConsentViewModel.isLoading,
-            isSaving: this.privacyConsentViewModel.isSaving,
-            errorMessage: this.privacyConsentViewModel.errorMessage,
-            onViewFullPolicy: () => this.openOfficialPrivacyPolicy(),
-            onDeclineAndExit: () => this.declinePrivacyPolicy(),
-            onAcceptAndContinue: () => this.privacyConsentViewModel.accept()
-          })
-        } else {
         PaperBackdrop({ paperId: this.paperId })
         DiaryBackground({
           imageUri: this.viewModel.backgroundImageUri,
@@ -420,7 +390,6 @@ struct Index {
 
         }
       }
-        }
       .width('100%')
       .height('100%')
       .backgroundColor(styleForPaper(this.paperId).light.background)
