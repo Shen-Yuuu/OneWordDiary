@@ -85,5 +85,13 @@ struct WordCardCard {
     .width('100%')
     .height('100%')
     .backgroundColor(this.paperColor)
+    .onClick(() => {
+      // 点击卡片拉起 App 主页
+      postCardAction(this, {
+        'action': 'router',
+        'abilityName': 'EntryAbility',
+        'params': { 'from': 'widget' }
+      });
+    })
   }
 }
