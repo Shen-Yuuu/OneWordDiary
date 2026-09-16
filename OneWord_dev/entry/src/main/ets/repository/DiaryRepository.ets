@@ -94,6 +94,7 @@ export class InMemoryDiaryRepository implements DiaryRepository {
       fontId: record.fontId,
       paperId: record.paperId,
       backgroundImageId: record.backgroundImageId === undefined ? null : record.backgroundImageId,
+      backgroundOpacity: record.backgroundOpacity === undefined ? 0.1 : record.backgroundOpacity,
       submittedAt: record.submittedAt,
       submittedTimezoneOffset: record.submittedTimezoneOffset,
       revisionDeadlineAt: record.revisionDeadlineAt,

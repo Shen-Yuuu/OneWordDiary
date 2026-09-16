@@ -187,6 +187,7 @@ export struct SharePreviewPage {
         paperId: this.viewModel.activePaperId,
         showNote: this.showNote,
         backgroundImageUri: this.backgroundImageUri,
+        backgroundOpacity: this.viewModel.singleData.backgroundOpacity,
         showBackgroundImage: !this.backgroundLoadFailed,
         backgroundReloadKey: this.backgroundReloadKey,
         onBackgroundReady: (imageUri: string, reloadKey: number) =>

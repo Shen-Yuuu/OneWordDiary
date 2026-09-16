@@ -115,6 +115,7 @@ export class RdbDiaryRepository implements DiaryRepository {
       font_id: record.fontId,
       paper_id: record.paperId,
       background_image_id: record.backgroundImageId === undefined ? null : record.backgroundImageId,
+      background_opacity: record.backgroundOpacity === undefined ? 0.1 : record.backgroundOpacity,
       submitted_at: record.submittedAt,
       submitted_tz_offset: record.submittedTimezoneOffset,
       revision_deadline_at: record.revisionDeadlineAt,
@@ -139,6 +140,8 @@ export class RdbDiaryRepository implements DiaryRepository {
       paperId: resultSet.getString(resultSet.getColumnIndex(DatabaseConstants.COLUMN_PAPER_ID)),
       backgroundImageId: resultSet.isColumnNull(backgroundImageIdIndex) ? null :
         resultSet.getString(backgroundImageIdIndex),
+      backgroundOpacity: resultSet.getDouble(
+        resultSet.getColumnIndex(DatabaseConstants.COLUMN_BACKGROUND_OPACITY)),
       submittedAt: resultSet.getLong(resultSet.getColumnIndex(DatabaseConstants.COLUMN_SUBMITTED_AT)),
       submittedTimezoneOffset: resultSet.getLong(
         resultSet.getColumnIndex(DatabaseConstants.COLUMN_SUBMITTED_TIMEZONE_OFFSET)),

@@ -19,6 +19,7 @@ export interface ShareSingleData {
   fontId: string;
   paperId: string;
   backgroundImageId?: string | null;
+  backgroundOpacity: number;
 }
 
 export interface ShareDayItem {

@@ -194,6 +194,19 @@ export default function todayViewModelTest(): void {
       expect(fixture.viewModel.recordFontId).assertEqual(FontPresetId.DYMON_HANDWRITING);
     });
 
+    it('capturesBackgroundOpacityWhenSubmitting', 0, async () => {
+      const fixture = new ViewModelFixture();
+      await fixture.settingsRepository.saveBackgroundOpacity(0.46);
+      await fixture.viewModel.load();
+      fixture.viewModel.setContent('光');
+      fixture.viewModel.showWordConfirmation();
+      await fixture.viewModel.confirmPending();
+
+      const saved = await fixture.repository.findByDate('2026-08-18');
+      expect(saved !== null && saved.backgroundOpacity === 0.46).assertTrue();
+      expect(fixture.viewModel.displayedBackgroundOpacity).assertEqual(0.46);
+    });
+
     it('refreshesFontWithoutDiscardingTheCurrentDraft', 0, async () => {
       const fixture = new ViewModelFixture();
       await fixture.viewModel.load();

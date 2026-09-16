@@ -55,7 +55,8 @@ export struct DetailPage {
         PaperBackdrop({ paperId: this.displayedPaperId() })
         DiaryBackground({
           imageUri: this.backgroundImageUri(),
-          paperId: this.displayedPaperId()
+          paperId: this.displayedPaperId(),
+          imageOpacity: this.viewModel.backgroundOpacity
         })
 
         Column() {

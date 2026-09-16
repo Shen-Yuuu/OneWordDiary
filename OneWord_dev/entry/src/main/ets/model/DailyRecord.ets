@@ -11,6 +11,7 @@ export interface DailyRecord {
   fontId: string;
   paperId: string;
   backgroundImageId?: string | null;
+  backgroundOpacity?: number;
   submittedAt: number;
   submittedTimezoneOffset: number;
   revisionDeadlineAt: number;
@@ -26,6 +27,7 @@ export interface DiaryEntryInput {
   fontId: string;
   paperId: string;
   backgroundImageId?: string | null;
+  backgroundOpacity?: number;
 }
 
 export interface NormalizedDiaryEntry {
@@ -35,6 +37,7 @@ export interface NormalizedDiaryEntry {
   fontId: string;
   paperId: string;
   backgroundImageId?: string | null;
+  backgroundOpacity?: number;
 }
 
 export enum RevisionStatus {

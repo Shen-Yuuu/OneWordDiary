@@ -11,6 +11,7 @@ import {
 } from '../model/DailyRecord';
 import { DiaryError, DiaryErrorCode } from '../model/DiaryError';
 import { GraphemeCounter } from '../utils/GraphemeCounter';
+import { normalizedBackgroundOpacity } from '../model/Settings';
 
 export class DiaryTextRules {
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
@@ -29,7 +30,9 @@ export class DiaryTextRules {
         note: null,
         fontId: input.fontId,
         paperId: input.paperId,
-        backgroundImageId: this.normalizeBackgroundImageId(input.backgroundImageId)
+        backgroundImageId: this.normalizeBackgroundImageId(input.backgroundImageId),
+        backgroundOpacity: normalizedBackgroundOpacity(input.backgroundOpacity === undefined ? 0.1 :
+          input.backgroundOpacity)
       };
     }
 
@@ -41,7 +44,9 @@ export class DiaryTextRules {
       note: normalizedNote,
       fontId: input.fontId,
       paperId: input.paperId,
-      backgroundImageId: this.normalizeBackgroundImageId(input.backgroundImageId)
+      backgroundImageId: this.normalizeBackgroundImageId(input.backgroundImageId),
+      backgroundOpacity: normalizedBackgroundOpacity(input.backgroundOpacity === undefined ? 0.1 :
+        input.backgroundOpacity)
     };
   }
 

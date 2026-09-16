@@ -31,6 +31,7 @@ export class TodayViewModel {
   weekday: string = '';
   stylePresetId: StylePresetId = StylePresetId.PAPER_INK;
   fontPresetId: FontPresetId = FontPresetId.DEFAULT;
+  backgroundOpacity: number = 0.1;
   isRevisionDraft: boolean = false;
   inspirationIndex: number = 0;
   recordDisplayType: RecordType = RecordType.WORD;
@@ -101,6 +102,13 @@ export class TodayViewModel {
     return this.backgroundImageStore.resolveUri(imageId);
   }
 
+  get displayedBackgroundOpacity(): number {
+    if (this.hasDraftContext() || this.record === null) {
+      return this.backgroundOpacity;
+    }
+    return this.record.backgroundOpacity === undefined ? 0.1 : this.record.backgroundOpacity;
+  }
+
   get isBusy(): boolean {
     return this.uiState === TodayUiState.TODAY_SUBMITTING ||
       this.uiState === TodayUiState.TODAY_REVISION_SAVING;
@@ -166,6 +174,7 @@ export class TodayViewModel {
       this.weekday = this.formatWeekday(new Date(timestamp).getDay());
       this.stylePresetId = settings.stylePresetId;
       this.fontPresetId = settings.fontPresetId;
+      this.backgroundOpacity = settings.backgroundOpacity;
       AppStorage.setOrCreate('currentPaperId', paperIdForStyle(settings.stylePresetId));
       AppStorage.setOrCreate('currentFontId', settings.fontPresetId);
       AppStorage.setOrCreate('backgroundOpacity', settings.backgroundOpacity);
@@ -221,6 +230,11 @@ export class TodayViewModel {
     this.fontPresetId = fontPresetId;
     AppStorage.setOrCreate('currentFontId', fontPresetId);
     AppLogger.info(`font.today_apply previous=${previous} id=${fontPresetId} family=${fontFamilyForId(fontPresetId)}`);
+  }
+
+  applyBackgroundOpacityPreference(backgroundOpacity: number): void {
+    this.backgroundOpacity = backgroundOpacity;
+    AppStorage.setOrCreate('backgroundOpacity', backgroundOpacity);
   }
 
   nextInspiration(): void {
@@ -488,7 +502,8 @@ export class TodayViewModel {
       note: type === RecordType.BLANK || this.draftNote.trim().length === 0 ? null : this.draftNote,
       fontId: this.fontPresetId,
       paperId: style.paperId,
-      backgroundImageId: this.draftBackgroundImageId
+      backgroundImageId: this.draftBackgroundImageId,
+      backgroundOpacity: this.backgroundOpacity
     };
   }
 

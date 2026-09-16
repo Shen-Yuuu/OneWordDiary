@@ -17,6 +17,7 @@ export struct ShareSingleCard {
   @Prop fontId: string = 'system_serif_dev';
   @Prop paperId: string = 'warm_paper_dev';
   @Prop backgroundImageUri: string = '';
+  @Prop backgroundOpacity: number = 0.1;
   @Prop showBackgroundImage: boolean = true;
   @Prop backgroundReloadKey: number = 0;
   onBackgroundReady: (imageUri: string, reloadKey: number) => void =
@@ -62,6 +63,7 @@ export struct ShareSingleCard {
         DiaryBackground({
           imageUri: this.backgroundImageUri,
           paperId: this.paperId,
+          imageOpacity: this.backgroundOpacity,
           reloadKey: this.backgroundReloadKey,
           onReady: (imageUri: string, reloadKey: number) => this.onBackgroundReady(imageUri, reloadKey),
           onFailed: (imageUri: string, reloadKey: number) => this.onBackgroundFailed(imageUri, reloadKey)

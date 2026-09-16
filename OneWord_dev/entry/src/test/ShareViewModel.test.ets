@@ -138,10 +138,12 @@ export default function shareViewModelTest(): void {
     it('usesHistoricalStyleForSingleShareAndCurrentStyleForSevenDays', 0, async () => {
       const fixture = new ShareFixture();
       await fixture.settingsRepository.saveStylePresetId(StylePresetId.ROSE_PINK);
-      await fixture.repository.insert(createShareRecord(
+      const historical = createShareRecord(
         '2026-01-01', RecordType.WORD, '静', '这是今天留下的一句备注',
         'system_sans_dev', 'plain_ash_dev', 'bg-share.jpg'
-      ));
+      );
+      historical.backgroundOpacity = 0.32;
+      await fixture.repository.insert(historical);
 
       await fixture.viewModel.load(DiaryShareMode.SINGLE, '2026-01-01');
 
@@ -157,6 +159,8 @@ export default function shareViewModelTest(): void {
         fixture.viewModel.singleData.paperId === 'plain_ash_dev').assertTrue();
       expect(fixture.viewModel.singleData !== null &&
         fixture.viewModel.singleData.backgroundImageId === 'bg-share.jpg').assertTrue();
+      expect(fixture.viewModel.singleData !== null &&
+        fixture.viewModel.singleData.backgroundOpacity === 0.32).assertTrue();
 
       fixture.viewModel.selectMode(DiaryShareMode.SEVEN_DAYS);
       expect(fixture.viewModel.activePaperId).assertEqual('rose_pink_dev');

@@ -224,6 +224,10 @@ struct Index {
     this.viewModel.applyFontPreference(fontPresetId);
   }
 
+  private applySelectedBackgroundOpacity(backgroundOpacity: number): void {
+    this.viewModel.applyBackgroundOpacityPreference(backgroundOpacity);
+  }
+
 
   private async openOfficialPrivacyPolicy(): Promise<void> {
     const abilityContext = this.getUIContext().getHostContext() as common.UIAbilityContext;
@@ -269,7 +273,9 @@ struct Index {
         onOpenPrivacy: (paperId: string) => this.openPrivacy(paperId),
         onOpenBackup: (paperId: string) => this.openBackup(paperId),
         onClearComplete: () => this.finishClear(),
-        onFontChanged: (fontPresetId: FontPresetId) => this.applySelectedFont(fontPresetId)
+        onFontChanged: (fontPresetId: FontPresetId) => this.applySelectedFont(fontPresetId),
+        onBackgroundOpacityChanged: (backgroundOpacity: number) =>
+          this.applySelectedBackgroundOpacity(backgroundOpacity)
       })
     } else if (name === AppRouteName.BACKUP && param instanceof BackupRouteParam) {
       BackupPage({
@@ -293,7 +299,8 @@ struct Index {
         PaperBackdrop({ paperId: this.paperId })
         DiaryBackground({
           imageUri: this.viewModel.backgroundImageUri,
-          paperId: this.paperId
+          paperId: this.paperId,
+          imageOpacity: this.viewModel.displayedBackgroundOpacity
         })
         WidgetSnapshotCard()
           .position({ x: -600, y: -600 })

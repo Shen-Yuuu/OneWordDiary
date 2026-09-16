@@ -1,6 +1,6 @@
 export class DatabaseConstants {
   static readonly DATABASE_NAME: string = 'oneword.db';
-  static readonly DATABASE_VERSION: number = 2;
+  static readonly DATABASE_VERSION: number = 3;
   static readonly TABLE_DAILY_RECORD: string = 'daily_record';
 
   static readonly COLUMN_LOCAL_DATE: string = 'local_date';
@@ -10,6 +10,7 @@ export class DatabaseConstants {
   static readonly COLUMN_FONT_ID: string = 'font_id';
   static readonly COLUMN_PAPER_ID: string = 'paper_id';
   static readonly COLUMN_BACKGROUND_IMAGE_ID: string = 'background_image_id';
+  static readonly COLUMN_BACKGROUND_OPACITY: string = 'background_opacity';
   static readonly COLUMN_SUBMITTED_AT: string = 'submitted_at';
   static readonly COLUMN_SUBMITTED_TIMEZONE_OFFSET: string = 'submitted_tz_offset';
   static readonly COLUMN_REVISION_DEADLINE_AT: string = 'revision_deadline_at';
@@ -26,6 +27,7 @@ export class DatabaseConstants {
     'font_id TEXT NOT NULL, ' +
     'paper_id TEXT NOT NULL, ' +
     'background_image_id TEXT, ' +
+    'background_opacity REAL NOT NULL DEFAULT 0.1, ' +
     'submitted_at INTEGER NOT NULL, ' +
     'submitted_tz_offset INTEGER NOT NULL, ' +
     'revision_deadline_at INTEGER NOT NULL, ' +
@@ -39,4 +41,7 @@ export class DatabaseConstants {
 
   static readonly ADD_BACKGROUND_IMAGE_ID_COLUMN: string =
     'ALTER TABLE daily_record ADD COLUMN background_image_id TEXT';
+
+  static readonly ADD_BACKGROUND_OPACITY_COLUMN: string =
+    'ALTER TABLE daily_record ADD COLUMN background_opacity REAL NOT NULL DEFAULT 0.1';
 }

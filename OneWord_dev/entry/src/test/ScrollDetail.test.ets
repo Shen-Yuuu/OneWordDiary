@@ -189,6 +189,12 @@ export default function scrollDetailTest(): void {
         createRecord('2026-08-18', RecordType.WORD, '微风正好', '风停在窗边',
           'system_serif_dev', 'pine_mist_dev', 'bg-detail.jpg')
       ]);
+      const historical = await repository.findByDate('2026-08-18');
+      if (historical !== null) {
+        historical.backgroundOpacity = 0.28;
+        await repository.clearAll();
+        await seed(repository, [createRecord('2026-08-17', RecordType.BLANK, null), historical]);
+      }
       const viewModel = new DetailViewModel(createService(repository), new DiaryDateFormatter());
 
       await viewModel.load('2026-08-18');
@@ -200,6 +206,7 @@ export default function scrollDetailTest(): void {
       expect(viewModel.paperId).assertEqual('pine_mist_dev');
       expect(viewModel.record !== null && viewModel.record.note === '风停在窗边').assertTrue();
       expect(viewModel.backgroundImageId).assertEqual('bg-detail.jpg');
+      expect(viewModel.backgroundOpacity).assertEqual(0.28);
       expect(viewModel.dateLabel).assertEqual('8月18日 星期二');
 
       await viewModel.load('2026-08-17');

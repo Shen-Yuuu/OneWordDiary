@@ -25,6 +25,8 @@ export struct SettingsPage {
   };
   onFontChanged: (fontPresetId: FontPresetId) => void = () => {
   };
+  onBackgroundOpacityChanged: (backgroundOpacity: number) => void = () => {
+  };
 
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
   @State private contentShown: boolean = false;
@@ -257,9 +259,15 @@ export struct SettingsPage {
 
   private handleBackgroundOpacityChange(value: number, mode: SliderChangeMode): void {
     this.viewModel.previewBackgroundOpacity(value / 100);
+    this.onBackgroundOpacityChanged(this.viewModel.backgroundOpacity);
     if (mode === SliderChangeMode.End || mode === SliderChangeMode.Click) {
-      void this.viewModel.saveBackgroundOpacity(value / 100);
+      void this.persistBackgroundOpacity(value / 100);
     }
+  }
+
+  private async persistBackgroundOpacity(backgroundOpacity: number): Promise<void> {
+    await this.viewModel.saveBackgroundOpacity(backgroundOpacity);
+    this.onBackgroundOpacityChanged(this.viewModel.backgroundOpacity);
   }
 
   @Builder

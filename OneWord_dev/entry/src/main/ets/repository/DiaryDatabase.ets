@@ -36,6 +36,9 @@ export class DiaryDatabase {
       if (previousVersion >= 1 && previousVersion < 2) {
         await store.executeSql(DatabaseConstants.ADD_BACKGROUND_IMAGE_ID_COLUMN);
       }
+      if (previousVersion >= 1 && previousVersion < 3) {
+        await store.executeSql(DatabaseConstants.ADD_BACKGROUND_OPACITY_COLUMN);
+      }
       store.version = DatabaseConstants.DATABASE_VERSION;
       store.commit();
       transactionStarted = false;
