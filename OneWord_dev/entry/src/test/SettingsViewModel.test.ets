@@ -14,6 +14,7 @@ class MemorySettingsRepository implements SettingsRepository {
   settings: AppSettings = {
     stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
     fontPresetId: DEFAULT_APP_SETTINGS.fontPresetId,
+    backgroundOpacity: DEFAULT_APP_SETTINGS.backgroundOpacity,
     reminder: MemorySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder),
     privacyPolicyAcceptedVersion: ''
   };
@@ -24,6 +25,7 @@ class MemorySettingsRepository implements SettingsRepository {
     return {
       stylePresetId: this.settings.stylePresetId,
       fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
       reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
       privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
@@ -33,6 +35,7 @@ class MemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: stylePresetId,
       fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
       reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
       privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
@@ -42,6 +45,17 @@ class MemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
       fontPresetId: fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
+      reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
+      privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
+    };
+  }
+
+  async saveBackgroundOpacity(backgroundOpacity: number): Promise<void> {
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: backgroundOpacity,
       reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
       privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
@@ -51,6 +65,7 @@ class MemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
       fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
       reminder: MemorySettingsRepository.cloneReminder(reminder),
       privacyPolicyAcceptedVersion: this.settings.privacyPolicyAcceptedVersion
     };
@@ -61,6 +76,7 @@ class MemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
       fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
       reminder: MemorySettingsRepository.cloneReminder(this.settings.reminder),
       privacyPolicyAcceptedVersion: version
     };
@@ -77,6 +93,7 @@ class MemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
       fontPresetId: DEFAULT_APP_SETTINGS.fontPresetId,
+      backgroundOpacity: DEFAULT_APP_SETTINGS.backgroundOpacity,
       reminder: MemorySettingsRepository.cloneReminder(DEFAULT_APP_SETTINGS.reminder),
       privacyPolicyAcceptedVersion: ''
     };
@@ -208,6 +225,27 @@ export default function settingsViewModelTest(): void {
       expect(fixture.settingsRepository.settings.stylePresetId).assertEqual(StylePresetId.ROSE_PINK);
     });
 
+    it('previewsAndPersistsBackgroundOpacity', 0, async () => {
+      const fixture = new SettingsFixture();
+      await fixture.viewModel.load();
+      fixture.viewModel.previewBackgroundOpacity(0.37);
+      expect(fixture.viewModel.backgroundOpacity).assertEqual(0.37);
+      expect(fixture.settingsRepository.settings.backgroundOpacity).assertEqual(0.1);
+      expect(await fixture.viewModel.saveBackgroundOpacity(0.37)).assertTrue();
+      expect(fixture.settingsRepository.settings.backgroundOpacity).assertEqual(0.37);
+    });
+
+    it('clampsBackgroundOpacityToSupportedRange', 0, async () => {
+      const fixture = new SettingsFixture();
+      await fixture.viewModel.load();
+      expect(await fixture.viewModel.saveBackgroundOpacity(1.5)).assertTrue();
+      expect(fixture.viewModel.backgroundOpacity).assertEqual(1);
+      expect(fixture.settingsRepository.settings.backgroundOpacity).assertEqual(1);
+      expect(await fixture.viewModel.saveBackgroundOpacity(-0.2)).assertTrue();
+      expect(fixture.viewModel.backgroundOpacity).assertEqual(0);
+      expect(fixture.settingsRepository.settings.backgroundOpacity).assertEqual(0);
+    });
+
     it('requestsPermissionOnlyWhenEnablingAndPublishesDailyReminder', 0, async () => {
       const fixture = new SettingsFixture();
       await fixture.viewModel.load();
@@ -263,6 +301,7 @@ export default function settingsViewModelTest(): void {
       expect(await fixture.diaryRepository.countAll()).assertEqual(0);
       expect(fixture.settingsRepository.settings.stylePresetId).assertEqual(StylePresetId.PAPER_INK);
       expect(fixture.settingsRepository.settings.fontPresetId).assertEqual(FontPresetId.DEFAULT);
+      expect(fixture.settingsRepository.settings.backgroundOpacity).assertEqual(0.1);
       expect(fixture.settingsRepository.settings.reminder.enabled).assertFalse();
       expect(fixture.scheduler.cancelAllCount).assertEqual(1);
       expect(fixture.settingsRepository.resetPending).assertFalse();

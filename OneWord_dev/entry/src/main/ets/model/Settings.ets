@@ -12,8 +12,18 @@ export interface ReminderSettings {
 export interface AppSettings {
   stylePresetId: StylePresetId;
   fontPresetId: FontPresetId;
+  backgroundOpacity: number;
   reminder: ReminderSettings;
   privacyPolicyAcceptedVersion: string;
+}
+
+export const DEFAULT_BACKGROUND_OPACITY: number = 0.10;
+
+export function normalizedBackgroundOpacity(value: number): number {
+  if (!Number.isFinite(value)) {
+    return DEFAULT_BACKGROUND_OPACITY;
+  }
+  return Math.max(0, Math.min(1, Math.round(value * 100) / 100));
 }
 
 export const DEFAULT_REMINDER_SETTINGS: ReminderSettings = {
@@ -27,6 +37,7 @@ export const DEFAULT_REMINDER_SETTINGS: ReminderSettings = {
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   stylePresetId: StylePresetId.PAPER_INK,
   fontPresetId: FontPresetId.DEFAULT,
+  backgroundOpacity: DEFAULT_BACKGROUND_OPACITY,
   reminder: DEFAULT_REMINDER_SETTINGS,
   privacyPolicyAcceptedVersion: ''
 };

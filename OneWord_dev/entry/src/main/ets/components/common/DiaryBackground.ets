@@ -15,6 +15,7 @@ export struct DiaryBackground {
   @Prop @Watch('onImageUriChanged') imageUri: string = '';
   @Prop paperId: string = 'warm_paper_dev';
   @Prop reloadKey: number = 0;
+  @StorageProp('backgroundOpacity') backgroundOpacity: number = PHOTO_IMAGE_OPACITY;
   @State private isLoaded: boolean = false;
   onReady: (imageUri: string, reloadKey: number) => void =
     (imageUri: string, reloadKey: number) => {
@@ -51,7 +52,7 @@ export struct DiaryBackground {
             .width('100%')
             .height('100%')
             .objectFit(ImageFit.Cover)
-            .opacity(PHOTO_IMAGE_OPACITY)
+            .opacity(this.backgroundOpacity)
             .onComplete((event) => {
               if (event !== undefined && event.loadingStatus === 1) {
                 this.handleReady(source);

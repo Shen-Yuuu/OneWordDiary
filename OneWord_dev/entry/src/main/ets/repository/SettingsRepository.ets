@@ -5,11 +5,17 @@ import {
   fontPresetIdFromValue,
   isSelectableFontPreset
 } from '../constants/FontCatalog';
-import { AppSettings, DEFAULT_APP_SETTINGS, ReminderSettings } from '../model/Settings';
+import {
+  AppSettings,
+  DEFAULT_APP_SETTINGS,
+  normalizedBackgroundOpacity,
+  ReminderSettings
+} from '../model/Settings';
 
 const SETTINGS_FILE: string = 'oneword_settings';
 const KEY_STYLE_PRESET_ID: string = 'style_preset_id';
 const KEY_FONT_PRESET_ID: string = 'font_preset_id';
+const KEY_BACKGROUND_OPACITY: string = 'background_opacity';
 const KEY_REMINDER_ENABLED: string = 'reminder_enabled';
 const KEY_REMINDER_HOUR: string = 'reminder_hour';
 const KEY_REMINDER_MINUTE: string = 'reminder_minute';
@@ -22,6 +28,7 @@ export interface SettingsRepository {
   load(): Promise<AppSettings>;
   saveStylePresetId(stylePresetId: StylePresetId): Promise<void>;
   saveFontPresetId(fontPresetId: FontPresetId): Promise<void>;
+  saveBackgroundOpacity(backgroundOpacity: number): Promise<void>;
   saveReminder(reminder: ReminderSettings): Promise<void>;
   savePrivacyPolicyAcceptedVersion(version: string): Promise<void>;
   isResetPending(): Promise<boolean>;
@@ -44,6 +51,10 @@ export class PreferencesSettingsRepository implements SettingsRepository {
   async load(): Promise<AppSettings> {
     const styleValue = await this.store.get(KEY_STYLE_PRESET_ID, DEFAULT_APP_SETTINGS.stylePresetId);
     const fontValue = await this.store.get(KEY_FONT_PRESET_ID, DEFAULT_APP_SETTINGS.fontPresetId);
+    const backgroundOpacityValue = await this.store.get(
+      KEY_BACKGROUND_OPACITY,
+      DEFAULT_APP_SETTINGS.backgroundOpacity
+    );
     const enabledValue = await this.store.get(KEY_REMINDER_ENABLED, DEFAULT_APP_SETTINGS.reminder.enabled);
     const hourValue = await this.store.get(KEY_REMINDER_HOUR, DEFAULT_APP_SETTINGS.reminder.hour);
     const minuteValue = await this.store.get(KEY_REMINDER_MINUTE, DEFAULT_APP_SETTINGS.reminder.minute);
@@ -61,6 +72,8 @@ export class PreferencesSettingsRepository implements SettingsRepository {
       this.toStylePresetId(styleValue) : DEFAULT_APP_SETTINGS.stylePresetId;
     const fontPresetId: FontPresetId = typeof fontValue === 'string' && isSelectableFontPreset(fontValue) ?
       fontPresetIdFromValue(fontValue) : DEFAULT_APP_SETTINGS.fontPresetId;
+    const backgroundOpacity = typeof backgroundOpacityValue === 'number' ?
+      normalizedBackgroundOpacity(backgroundOpacityValue) : DEFAULT_APP_SETTINGS.backgroundOpacity;
     const enabled = typeof enabledValue === 'boolean' ? enabledValue : DEFAULT_APP_SETTINGS.reminder.enabled;
     const hour = typeof hourValue === 'number' && hourValue >= 0 && hourValue <= 23 ?
       hourValue : DEFAULT_APP_SETTINGS.reminder.hour;
@@ -76,6 +89,7 @@ export class PreferencesSettingsRepository implements SettingsRepository {
     const settings: AppSettings = {
       stylePresetId: stylePresetId,
       fontPresetId: fontPresetId,
+      backgroundOpacity: backgroundOpacity,
       reminder: {
         enabled: enabled,
         hour: hour,
@@ -101,6 +115,12 @@ export class PreferencesSettingsRepository implements SettingsRepository {
       throw new Error('unsupported font preset');
     }
     await this.store.put(KEY_FONT_PRESET_ID, fontPresetId);
+    await this.store.flush();
+  }
+
+  async saveBackgroundOpacity(backgroundOpacity: number): Promise<void> {
+    const normalized = normalizedBackgroundOpacity(backgroundOpacity);
+    await this.store.put(KEY_BACKGROUND_OPACITY, normalized);
     await this.store.flush();
   }
 

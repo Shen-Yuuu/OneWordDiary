@@ -26,6 +26,7 @@ class ShareMemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: stylePresetId,
       fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
       reminder: this.settings.reminder,
       privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
@@ -35,6 +36,17 @@ class ShareMemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
       fontPresetId: fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
+      reminder: this.settings.reminder,
+      privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
+    };
+  }
+
+  async saveBackgroundOpacity(backgroundOpacity: number): Promise<void> {
+    this.settings = {
+      stylePresetId: this.settings.stylePresetId,
+      fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: backgroundOpacity,
       reminder: this.settings.reminder,
       privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
@@ -44,6 +56,7 @@ class ShareMemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
       fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
       reminder: reminder,
       privacyPolicyAcceptedVersion: this.privacyPolicyAcceptedVersion
     };
@@ -55,6 +68,7 @@ class ShareMemorySettingsRepository implements SettingsRepository {
     this.settings = {
       stylePresetId: this.settings.stylePresetId,
       fontPresetId: this.settings.fontPresetId,
+      backgroundOpacity: this.settings.backgroundOpacity,
       reminder: this.settings.reminder,
       privacyPolicyAcceptedVersion: version
     };

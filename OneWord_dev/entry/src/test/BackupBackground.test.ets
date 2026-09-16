@@ -19,6 +19,7 @@ class BackgroundResetSettingsRepository implements SettingsRepository {
     return {
       stylePresetId: DEFAULT_APP_SETTINGS.stylePresetId,
       fontPresetId: DEFAULT_APP_SETTINGS.fontPresetId,
+      backgroundOpacity: DEFAULT_APP_SETTINGS.backgroundOpacity,
       reminder: DEFAULT_APP_SETTINGS.reminder,
       privacyPolicyAcceptedVersion: ''
     };
@@ -28,6 +29,9 @@ class BackgroundResetSettingsRepository implements SettingsRepository {
   }
 
   async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
+  }
+
+  async saveBackgroundOpacity(backgroundOpacity: number): Promise<void> {
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {

@@ -251,6 +251,56 @@ export struct SettingsPage {
     }
   }
 
+  private backgroundOpacityPercent(): number {
+    return Math.round(this.viewModel.backgroundOpacity * 100);
+  }
+
+  private handleBackgroundOpacityChange(value: number, mode: SliderChangeMode): void {
+    this.viewModel.previewBackgroundOpacity(value / 100);
+    if (mode === SliderChangeMode.End || mode === SliderChangeMode.Click) {
+      void this.viewModel.saveBackgroundOpacity(value / 100);
+    }
+  }
+
+  @Builder
+  private backgroundOpacitySetting() {
+    Column({ space: 4 }) {
+      Row() {
+        Text('背景透明度')
+          .fontSize(17)
+          .fontColor($r('app.color.text_primary'))
+
+        Text(`${this.backgroundOpacityPercent()}%`)
+          .fontSize(14)
+          .fontColor($r('app.color.text_secondary'))
+      }
+      .width('100%')
+      .justifyContent(FlexAlign.SpaceBetween)
+      .alignItems(VerticalAlign.Center)
+
+      Slider({
+        value: this.backgroundOpacityPercent(),
+        min: 0,
+        max: 100,
+        step: 1,
+        style: SliderStyle.OutSet
+      })
+        .width('100%')
+        .height(32)
+        .trackThickness(2)
+        .blockSize({ width: 14, height: 14 })
+        .trackColor($r('app.color.outline_soft'))
+        .selectedColor(styleForPaper(this.paperId).light.accent)
+        .blockColor($r('app.color.surface_primary'))
+        .onChange((value: number, mode: SliderChangeMode) => {
+          this.handleBackgroundOpacityChange(value, mode);
+        })
+        .accessibilityText(`背景透明度，当前${this.backgroundOpacityPercent()}%`)
+    }
+    .width('100%')
+    .padding({ top: 14, bottom: 12 })
+  }
+
   @Builder
   private navigationRow(title: string, value: string, onTap: () => void) {
     Row() {
@@ -363,6 +413,10 @@ export struct SettingsPage {
                     TransitionEffect.opacity(0)
                   ).animation({ duration: 280, curve: Curve.EaseOut }))
                 }
+
+                Divider().color($r('app.color.divider_subtle'))
+
+                this.backgroundOpacitySetting()
 
                 Divider().color($r('app.color.divider_subtle'))
 

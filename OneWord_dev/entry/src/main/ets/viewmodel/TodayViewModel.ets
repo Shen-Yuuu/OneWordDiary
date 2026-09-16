@@ -168,6 +168,7 @@ export class TodayViewModel {
       this.fontPresetId = settings.fontPresetId;
       AppStorage.setOrCreate('currentPaperId', paperIdForStyle(settings.stylePresetId));
       AppStorage.setOrCreate('currentFontId', settings.fontPresetId);
+      AppStorage.setOrCreate('backgroundOpacity', settings.backgroundOpacity);
       AppLogger.info(`style.today_load preset=${settings.stylePresetId}`);
       AppLogger.info(`font.today_load id=${settings.fontPresetId} family=${fontFamilyForId(settings.fontPresetId)} preserveDraft=${shouldPreserveDraft}`);
       this.record = record;

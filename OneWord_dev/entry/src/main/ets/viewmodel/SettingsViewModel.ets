@@ -1,7 +1,12 @@
 import { paperIdForStyle, StylePresetId } from '../constants/StyleTokens';
 import { FontPresetId, fontFamilyForId } from '../constants/FontCatalog';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { DEFAULT_APP_SETTINGS, ReminderSettings } from '../model/Settings';
+import {
+  DEFAULT_APP_SETTINGS,
+  DEFAULT_BACKGROUND_OPACITY,
+  normalizedBackgroundOpacity,
+  ReminderSettings
+} from '../model/Settings';
 import { SettingsUiState } from '../model/SettingsUiState';
 import { SettingsRepository } from '../repository/SettingsRepository';
 import { AppResetService } from '../service/AppResetService';
@@ -15,12 +20,14 @@ export class SettingsViewModel {
   uiState: SettingsUiState = SettingsUiState.LOADING;
   stylePresetId: StylePresetId = StylePresetId.PAPER_INK;
   fontPresetId: FontPresetId = FontPresetId.DEFAULT;
+  backgroundOpacity: number = DEFAULT_BACKGROUND_OPACITY;
   reminder: ReminderSettings = SettingsViewModel.cloneReminder(DEFAULT_APP_SETTINGS.reminder);
   errorMessage: string = '';
 
   private readonly settingsRepository: SettingsRepository;
   private readonly reminderScheduler: ReminderScheduler;
   private readonly resetService: AppResetService;
+  private persistedBackgroundOpacity: number = DEFAULT_BACKGROUND_OPACITY;
 
   constructor(
     settingsRepository: SettingsRepository,
@@ -65,8 +72,11 @@ export class SettingsViewModel {
       const settings = await this.settingsRepository.load();
       this.stylePresetId = settings.stylePresetId;
       this.fontPresetId = settings.fontPresetId;
+      this.backgroundOpacity = settings.backgroundOpacity;
+      this.persistedBackgroundOpacity = settings.backgroundOpacity;
       this.syncPaperStorage(settings.stylePresetId);
       this.syncFontStorage(settings.fontPresetId);
+      this.syncBackgroundOpacityStorage(settings.backgroundOpacity);
       AppLogger.info(`style.settings_load preset=${settings.stylePresetId}`);
       AppLogger.info(`font.settings_load id=${settings.fontPresetId} family=${fontFamilyForId(settings.fontPresetId)}`);
       this.reminder = SettingsViewModel.cloneReminder(settings.reminder);
@@ -132,6 +142,41 @@ export class SettingsViewModel {
 
   private syncFontStorage(fontPresetId: FontPresetId): void {
     AppStorage.setOrCreate('currentFontId', fontPresetId);
+  }
+
+  previewBackgroundOpacity(backgroundOpacity: number): void {
+    const normalized = normalizedBackgroundOpacity(backgroundOpacity);
+    this.backgroundOpacity = normalized;
+    this.syncBackgroundOpacityStorage(normalized);
+  }
+
+  async saveBackgroundOpacity(backgroundOpacity: number): Promise<boolean> {
+    if (this.isBusy) {
+      return false;
+    }
+    const normalized = normalizedBackgroundOpacity(backgroundOpacity);
+    this.previewBackgroundOpacity(normalized);
+    if (normalized === this.persistedBackgroundOpacity) {
+      return true;
+    }
+    try {
+      await this.settingsRepository.saveBackgroundOpacity(normalized);
+      this.persistedBackgroundOpacity = normalized;
+      this.uiState = SettingsUiState.READY;
+      this.errorMessage = '';
+      AppLogger.info(`background.opacity_save value=${normalized} save=ok`);
+      return true;
+    } catch (error) {
+      this.previewBackgroundOpacity(this.persistedBackgroundOpacity);
+      this.uiState = SettingsUiState.SAVE_ERROR;
+      this.errorMessage = '背景透明度未能保存，请重试';
+      AppLogger.error(`background.opacity_save value=${normalized} save=fail`);
+      return false;
+    }
+  }
+
+  private syncBackgroundOpacityStorage(backgroundOpacity: number): void {
+    AppStorage.setOrCreate('backgroundOpacity', normalizedBackgroundOpacity(backgroundOpacity));
   }
 
   async enableReminder(): Promise<void> {
@@ -290,8 +335,11 @@ export class SettingsViewModel {
       await this.resetService.clearAll();
       this.stylePresetId = StylePresetId.PAPER_INK;
       this.fontPresetId = FontPresetId.DEFAULT;
+      this.backgroundOpacity = DEFAULT_BACKGROUND_OPACITY;
+      this.persistedBackgroundOpacity = DEFAULT_BACKGROUND_OPACITY;
       this.syncPaperStorage(this.stylePresetId);
       this.syncFontStorage(this.fontPresetId);
+      this.syncBackgroundOpacityStorage(this.backgroundOpacity);
       this.reminder = SettingsViewModel.cloneReminder(DEFAULT_APP_SETTINGS.reminder);
       this.uiState = SettingsUiState.READY;
       return true;

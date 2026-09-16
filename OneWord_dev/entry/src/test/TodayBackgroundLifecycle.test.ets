@@ -28,6 +28,9 @@ class MemorySettingsRepository implements SettingsRepository {
   async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
   }
 
+  async saveBackgroundOpacity(backgroundOpacity: number): Promise<void> {
+  }
+
   async saveReminder(reminder: ReminderSettings): Promise<void> {
   }
 

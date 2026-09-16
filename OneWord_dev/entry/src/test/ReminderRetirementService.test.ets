@@ -10,6 +10,7 @@ class RetirementSettingsRepository implements SettingsRepository {
   settings: AppSettings = {
     stylePresetId: StylePresetId.PAPER_INK,
     fontPresetId: FontPresetId.DEFAULT,
+    backgroundOpacity: 0.1,
     reminder: {
       enabled: true,
       hour: 22,
@@ -30,6 +31,10 @@ class RetirementSettingsRepository implements SettingsRepository {
 
   async saveFontPresetId(fontPresetId: FontPresetId): Promise<void> {
     this.settings.fontPresetId = fontPresetId;
+  }
+
+  async saveBackgroundOpacity(backgroundOpacity: number): Promise<void> {
+    this.settings.backgroundOpacity = backgroundOpacity;
   }
 
   async saveReminder(reminder: ReminderSettings): Promise<void> {
