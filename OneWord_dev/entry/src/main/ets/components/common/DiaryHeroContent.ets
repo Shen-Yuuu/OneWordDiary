@@ -3,6 +3,7 @@ import { InkSeal } from './InkSeal';
 import { FontFamilies, styleForPaper } from '../../constants/StyleTokens';
 import { fontFamilyForId } from '../../constants/FontCatalog';
 import { RecordType } from '../../model/DailyRecord';
+import { DiaryNoteText } from './DiaryNoteText';
 
 const CHAR_STAGGER_MS: number = 80;
 
@@ -171,16 +172,17 @@ export struct DiaryHeroContent {
       }
 
       if (this.note.length > 0) {
-        Text(this.note)
-          .width(280)
-          .fontSize(20)
-          .lineHeight(22)
-          .fontFamily(this.recordFontFamily())
-          .fontColor($r('app.color.text_primary'))
-          .letterSpacing(0.6)
-          .textAlign(TextAlign.Center)
-          .maxLines(2)
-          .accessibilityText(`备注，${this.note}`)
+        DiaryNoteText({
+          text: this.note,
+          fontFamily: this.recordFontFamily(),
+          fontSize: 20,
+          lineHeight: 22,
+          fontColor: $r('app.color.text_primary'),
+          textWidth: 280,
+          maxLines: 2,
+          textAlign: TextAlign.Center,
+          letterSpacing: 0.6
+        })
       }
     }
     .width('100%')

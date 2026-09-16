@@ -5,6 +5,7 @@ import { DiaryDateFormatter } from '../../utils/DiaryDateFormatter';
 import { GraphemeCounter } from '../../utils/GraphemeCounter';
 import { styleForPaper } from '../../constants/StyleTokens';
 import { fontFamilyForId } from '../../constants/FontCatalog';
+import { DiaryNoteText } from '../common/DiaryNoteText';
 
 @Component
 export struct ShareSingleCard {
@@ -154,15 +155,17 @@ export struct ShareSingleCard {
       .animation({ duration: 240, curve: Curve.EaseOut })
 
       if (this.hasNote()) {
-        Text(this.note)
-          .width(248)
-          .fontSize(15)
-          .lineHeight(22)
-          .fontFamily(this.recordFontFamily())
-          .fontColor(this.textColor())
-          .letterSpacing(0.6)
-          .textAlign(TextAlign.Center)
-          .maxLines(2)
+        DiaryNoteText({
+          text: this.note,
+          fontFamily: this.recordFontFamily(),
+          fontSize: 15,
+          lineHeight: 22,
+          fontColor: this.textColor(),
+          textWidth: 248,
+          maxLines: 2,
+          textAlign: TextAlign.Center,
+          letterSpacing: 0.6
+        })
           .margin({ top: 0, bottom: 4 })
       }
 

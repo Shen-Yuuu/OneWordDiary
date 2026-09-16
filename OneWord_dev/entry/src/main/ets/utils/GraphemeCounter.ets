@@ -5,39 +5,60 @@
  */
 export class GraphemeCounter {
   count(value: string): number {
-    let count: number = 0;
+    return this.split(value).length;
+  }
+
+  split(value: string): string[] {
+    const graphemes: string[] = [];
+    let current: string = '';
     let index: number = 0;
     let joinsNext: boolean = false;
     let regionalIndicatorRun: number = 0;
 
     while (index < value.length) {
       const codePoint: number = value.codePointAt(index) ?? 0;
-      index += codePoint > 0xFFFF ? 2 : 1;
+      const codePointLength: number = codePoint > 0xFFFF ? 2 : 1;
+      const character: string = value.substring(index, index + codePointLength);
+      index += codePointLength;
 
       if (this.isExtend(codePoint)) {
+        current += character;
         continue;
       }
       if (codePoint === 0x200D) {
-        joinsNext = count > 0;
+        current += character;
+        joinsNext = current.length > 0;
         continue;
       }
       if (joinsNext) {
+        current += character;
         joinsNext = false;
         regionalIndicatorRun = 0;
         continue;
       }
       if (this.isRegionalIndicator(codePoint)) {
         if (regionalIndicatorRun % 2 === 0) {
-          count += 1;
+          this.pushCurrent(graphemes, current);
+          current = character;
+        } else {
+          current += character;
         }
         regionalIndicatorRun += 1;
         continue;
       }
 
+      this.pushCurrent(graphemes, current);
+      current = character;
       regionalIndicatorRun = 0;
-      count += 1;
     }
-    return count;
+    this.pushCurrent(graphemes, current);
+    return graphemes;
+  }
+
+  private pushCurrent(graphemes: string[], current: string): void {
+    if (current.length > 0) {
+      graphemes.push(current);
+    }
   }
 
   private isRegionalIndicator(codePoint: number): boolean {

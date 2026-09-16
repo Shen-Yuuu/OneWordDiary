@@ -2,6 +2,7 @@ import { RecordType } from '../../model/DailyRecord';
 import { ScrollDisplayItem, ScrollItemSide } from '../../model/ScrollDisplayItem';
 import { ScrollLayoutMetrics } from '../../constants/ScrollLayoutMetrics';
 import { styleForPaper } from '../../constants/StyleTokens';
+import { DiaryNoteText } from '../common/DiaryNoteText';
 import { fontFamilyForId } from '../../constants/FontCatalog';
 
 @Component
@@ -121,16 +122,16 @@ export struct ScrollRecordNode {
 
   @Builder
   private noteContent(textAlign: TextAlign) {
-    Text(this.visibleNote())
-      .width(104)
-      .fontSize(10)
-      .lineHeight(13)
-      .fontFamily(this.recordFontFamily())
-      .fontColor(this.secondaryColor())
-      .maxLines(2)
-      .textAlign(textAlign)
-      .minFontScale(1)
-      .maxFontScale(1)
+    DiaryNoteText({
+      text: this.visibleNote(),
+      fontFamily: this.recordFontFamily(),
+      fontSize: 10,
+      lineHeight: 13,
+      fontColor: this.secondaryColor(),
+      textWidth: 104,
+      maxLines: 2,
+      textAlign: textAlign
+    })
   }
 
   @Builder

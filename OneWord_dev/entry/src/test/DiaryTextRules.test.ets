@@ -1,6 +1,7 @@
 import { describe, expect, it } from '@ohos/hypium';
 import { RecordType } from '../main/ets/model/DailyRecord';
 import { DiaryTextRules } from '../main/ets/service/DiaryTextRules';
+import { GraphemeCounter } from '../main/ets/utils/GraphemeCounter';
 
 export default function diaryTextRulesTest(): void {
   describe('DiaryTextRules', () => {
@@ -13,6 +14,15 @@ export default function diaryTextRulesTest(): void {
       expect(rules.countGraphemes('🇨🇳')).assertEqual(1);
       expect(rules.countGraphemes('e\u0301')).assertEqual(1);
       expect(rules.countGraphemes('春夏秋冬')).assertEqual(4);
+    });
+
+    it('splitsEmojiSequencesWithoutBreakingVisibleCharacters', 0, () => {
+      const graphemes = new GraphemeCounter().split('静👍🏽👨‍👩‍👧‍👦🇨🇳e\u0301');
+      expect(graphemes.length).assertEqual(5);
+      expect(graphemes[1]).assertEqual('👍🏽');
+      expect(graphemes[2]).assertEqual('👨‍👩‍👧‍👦');
+      expect(graphemes[3]).assertEqual('🇨🇳');
+      expect(graphemes[4]).assertEqual('e\u0301');
     });
 
     it('normalizesWordAndBlankEntries', 0, () => {

@@ -18,6 +18,7 @@ import shareViewModelTest from './ShareViewModel.test';
 import timeBoundaryTest from './TimeBoundary.test';
 import themeCatalogTest from './ThemeCatalog.test';
 import todayViewModelTest from './TodayViewModel.test';
+import noteTextSegmenterTest from './NoteTextSegmenter.test';
 
 export default function testsuite(): void {
   baselineTest();
@@ -40,4 +41,5 @@ export default function testsuite(): void {
   diaryConcurrencyTest();
   diaryServiceTest();
   todayViewModelTest();
+  noteTextSegmenterTest();
 }

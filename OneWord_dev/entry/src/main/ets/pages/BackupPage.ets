@@ -15,6 +15,8 @@ export struct BackupPage {
   private revealTimer: number = -1;
   onBack: () => void = () => {
   };
+  onImportComplete: () => void = () => {
+  };
 
   aboutToAppear(): void {
     this.revealTimer = setTimeout(() => {
@@ -100,10 +102,16 @@ export struct BackupPage {
       secondaryButton: {
         value: '确认导入',
         fontColor: styleForPaper(this.paperId).light.accent,
-        action: () => this.viewModel.confirmImport()
+        action: () => this.confirmImport()
       },
       cancel: () => this.viewModel.cancelImportReview()
     });
+  }
+
+  private async confirmImport(): Promise<void> {
+    if (await this.viewModel.confirmImport()) {
+      this.onImportComplete();
+    }
   }
 
   private showPickerUnavailable(): void {

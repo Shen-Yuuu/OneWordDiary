@@ -210,6 +210,11 @@ struct Index {
     this.viewModel.load();
   }
 
+  private refreshAfterImport(): void {
+    AppLogger.info('backup.import_complete refresh_today');
+    this.viewModel.load();
+  }
+
   private closeDestination(): void {
     this.navPathStack.pop();
   }
@@ -269,7 +274,8 @@ struct Index {
     } else if (name === AppRouteName.BACKUP && param instanceof BackupRouteParam) {
       BackupPage({
         paperId: param.paperId,
-        onBack: () => this.closeDestination()
+        onBack: () => this.closeDestination(),
+        onImportComplete: () => this.refreshAfterImport()
       })
     } else if (name === AppRouteName.PRIVACY && param instanceof PrivacyRouteParam) {
       PrivacyPage({

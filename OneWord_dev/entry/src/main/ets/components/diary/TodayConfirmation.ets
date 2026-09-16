@@ -7,6 +7,7 @@ import { PaperBackdrop } from '../common/PaperBackdrop';
 import { styleForPaper } from '../../constants/StyleTokens';
 import { RecordType } from '../../model/DailyRecord';
 import { fontFamilyForId } from '../../constants/FontCatalog';
+import { DiaryNoteText } from '../common/DiaryNoteText';
 
 @Component
 export struct TodayConfirmation {
@@ -109,13 +110,16 @@ export struct TodayConfirmation {
               .letterSpacing(3)
 
             if (this.note.length > 0) {
-              Text(this.note)
-                .fontSize(20)
-                .fontFamily(fontFamilyForId(this.fontId))
-                .fontColor($r('app.color.text_primary'))
-                .lineHeight(24)
-                .textAlign(TextAlign.Center)
-                .maxLines(3)
+              DiaryNoteText({
+                text: this.note,
+                fontFamily: fontFamilyForId(this.fontId),
+                fontSize: 20,
+                lineHeight: 24,
+                fontColor: $r('app.color.text_primary'),
+                textWidth: 280,
+                maxLines: 3,
+                textAlign: TextAlign.Center
+              })
                 .margin({ top: 6 })
             }
           }
