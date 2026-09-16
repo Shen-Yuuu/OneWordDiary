@@ -25,10 +25,8 @@ export function allFontOptions(): FontOption[] {
   return [
     { id: FontPresetId.DEFAULT, displayName: '默认字体', sample: '一字', fontFamily: DEFAULT_FAMILY },
     { id: FontPresetId.SMILEY_SANS, displayName: '得意黑楷体', sample: '一字', fontFamily: SMILEY_SANS_FAMILY },
-    { id: FontPresetId.DYMON_HANDWRITING, displayName: '呆萌手写体', sample: '一字', fontFamily: DYMON_HANDWRITING_FAMILY },
     { id: FontPresetId.SLIDE_YOURAN, displayName: '悠然小楷体', sample: '一字', fontFamily: SLIDE_YOURAN_FAMILY },
-    { id: FontPresetId.MINGCHAO, displayName: '汇文明朝体', sample: '一字', fontFamily: MINGCHAO_FAMILY },
-    { id: FontPresetId.YUNFENG_FEIYUN, displayName: '云峰飞云体', sample: '一字', fontFamily: YUNFENG_FEIYUN_FAMILY }
+    { id: FontPresetId.MINGCHAO, displayName: '汇文明朝体', sample: '一字', fontFamily: MINGCHAO_FAMILY }
   ];
 }
 
@@ -72,10 +70,8 @@ export function isSelectableFontPreset(value: string): boolean {
   switch (value) {
     case FontPresetId.DEFAULT:
     case FontPresetId.SMILEY_SANS:
-    case FontPresetId.DYMON_HANDWRITING:
     case FontPresetId.SLIDE_YOURAN:
     case FontPresetId.MINGCHAO:
-    case FontPresetId.YUNFENG_FEIYUN:
       return true;
     default:
       return false;
