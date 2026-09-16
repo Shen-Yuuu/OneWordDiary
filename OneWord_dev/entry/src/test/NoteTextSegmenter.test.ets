@@ -29,5 +29,14 @@ export default function noteTextSegmenterTest(): void {
       expect(segments[0].text).assertEqual('cafe\u0301');
       expect(segments[0].isEmoji).assertFalse();
     });
+
+    it('returnsOneLayoutUnitPerVisibleGrapheme', 0, () => {
+      const graphemes = segmenter.graphemes('唉😮‍💨');
+      expect(graphemes.length).assertEqual(2);
+      expect(graphemes[0].text).assertEqual('唉');
+      expect(graphemes[0].isEmoji).assertFalse();
+      expect(graphemes[1].text).assertEqual('😮‍💨');
+      expect(graphemes[1].isEmoji).assertTrue();
+    });
   });
 }

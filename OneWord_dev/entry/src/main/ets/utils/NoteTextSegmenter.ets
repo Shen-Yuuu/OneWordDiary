@@ -6,9 +6,9 @@ export interface NoteTextSegment {
 }
 
 /**
- * Keeps diary typography for ordinary text while isolating emoji from custom
- * font fallback metrics. Adjacent graphemes with the same font choice are
- * merged so ArkUI only creates a small number of spans.
+ * Splits note text without breaking composed characters such as emoji ZWJ
+ * sequences. Callers can either merge equal font runs or render every visible
+ * grapheme in an isolated layout box.
  */
 export class NoteTextSegmenter {
   private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
@@ -26,6 +26,12 @@ export class NoteTextSegmenter {
       }
     }
     return result;
+  }
+
+  graphemes(value: string): NoteTextSegment[] {
+    return this.graphemeCounter.split(value).map((grapheme: string): NoteTextSegment => {
+      return { text: grapheme, isEmoji: this.isEmojiGrapheme(grapheme) };
+    });
   }
 
   private isEmojiGrapheme(value: string): boolean {

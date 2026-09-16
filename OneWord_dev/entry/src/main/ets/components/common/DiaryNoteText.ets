@@ -13,24 +13,56 @@ export struct DiaryNoteText {
   @Prop letterSpacing: number = 0;
   private readonly segmenter: NoteTextSegmenter = new NoteTextSegmenter();
 
+  private flexAlignment(): FlexAlign {
+    if (this.textAlign === TextAlign.Start) {
+      return FlexAlign.Start;
+    }
+    if (this.textAlign === TextAlign.End) {
+      return FlexAlign.End;
+    }
+    return FlexAlign.Center;
+  }
+
+  private emojiSize(): number {
+    return Math.min(this.fontSize, this.lineHeight) * 0.82;
+  }
+
+  @Builder
+  private noteGrapheme(segment: NoteTextSegment) {
+    if (segment.isEmoji) {
+      Stack({ alignContent: Alignment.Center }) {
+        Text(segment.text)
+          .fontSize(this.emojiSize())
+          .fontFamily('sans-serif')
+          .lineHeight(this.lineHeight)
+          .minFontScale(1)
+          .maxFontScale(1)
+      }
+      .width(this.lineHeight)
+      .height(this.lineHeight)
+      .clip(true)
+    } else {
+      Text(segment.text)
+        .fontSize(this.fontSize)
+        .fontFamily(this.fontFamily)
+        .fontColor(this.fontColor)
+        .lineHeight(this.lineHeight)
+        .letterSpacing(this.letterSpacing)
+        .height(this.lineHeight)
+        .minFontScale(1)
+        .maxFontScale(1)
+    }
+  }
+
   build() {
-    Text() {
-      ForEach(this.segmenter.segment(this.text), (segment: NoteTextSegment, index: number) => {
-        Span(segment.text)
-          .fontSize(this.fontSize)
-          .fontFamily(segment.isEmoji ? 'HarmonyOS Sans' : this.fontFamily)
-          .fontColor(this.fontColor)
-          .letterSpacing(this.letterSpacing)
+    Flex({ wrap: FlexWrap.Wrap, justifyContent: this.flexAlignment(), alignItems: ItemAlign.Center }) {
+      ForEach(this.segmenter.graphemes(this.text), (segment: NoteTextSegment, index: number) => {
+        this.noteGrapheme(segment)
       }, (segment: NoteTextSegment, index: number): string => `${index}-${segment.isEmoji ? 'emoji' : 'text'}`)
     }
     .width(this.textWidth)
-    .fontSize(this.fontSize)
-    .lineHeight(this.lineHeight)
-    .fontColor(this.fontColor)
-    .textAlign(this.textAlign)
-    .maxLines(this.maxLines)
-    .minFontScale(1)
-    .maxFontScale(1)
+    .height(this.lineHeight * this.maxLines)
+    .clip(true)
     .accessibilityText(`备注，${this.text}`)
   }
 }
