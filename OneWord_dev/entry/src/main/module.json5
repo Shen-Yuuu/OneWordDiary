@@ -34,6 +34,19 @@
     ],
     "extensionAbilities": [
       {
+        "name": "BackupExtension",
+        "srcEntry": "./ets/backupability/BackupExtension.ets",
+        "description": "$string:BackupExtension_desc",
+        "type": "backup",
+        "exported": false,
+        "metadata": [
+          {
+            "name": "ohos.extension.backup",
+            "resource": "$profile:backup_config"
+          }
+        ]
+      },
+      {
         "name": "EntryFormAbility",
         "srcEntry": "./ets/entryformability/EntryFormAbility.ets",
         "label": "$string:WordCard_displayName",

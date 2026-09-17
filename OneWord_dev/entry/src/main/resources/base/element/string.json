@@ -31,6 +31,10 @@
     {
       "name": "WordCard_desc",
       "value": "今天的那个字"
+    },
+    {
+      "name": "BackupExtension_desc",
+      "value": "一字日记数据备份恢复"
     }
   ]
 }
