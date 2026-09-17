@@ -17,3 +17,6 @@
 # hvigor 构建日志（之前已多次误入库）
 OneWord_dev/build_out*.txt
 **/hs_err*.log
+
+# hvigor 构建缓存
+OneWord_dev/.cache/
