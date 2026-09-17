@@ -1,3 +1,5 @@
+import { GraphemeCounter } from '../../utils/GraphemeCounter';
+
 let storage = new LocalStorage();
 
 @Entry(storage)
@@ -9,9 +11,10 @@ struct WordCardCard {
   @LocalStorageProp('paperColor') paperColor: string = '#FDF8F7';
   @LocalStorageProp('inkColor') inkColor: string = '#282622';
   @LocalStorageProp('accentColor') accentColor: string = '#A65C4D';
+  private readonly graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
   charFontSize(): number {
-    const len = this.content.length;
+    const len = this.graphemeCounter.count(this.content);
     if (len <= 1) {
       return 56;
     }
