@@ -33,9 +33,11 @@ export class PrivacyRouteParam {
 
 export class DetailRouteParam {
   readonly localDate: string;
+  readonly sharedElementId: string;
 
-  constructor(localDate: string) {
+  constructor(localDate: string, sharedElementId: string = '') {
     this.localDate = localDate;
+    this.sharedElementId = sharedElementId;
   }
 }
 

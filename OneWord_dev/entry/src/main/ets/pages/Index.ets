@@ -1,4 +1,5 @@
 import { common, Want } from '@kit.AbilityKit';
+import { curves } from '@kit.ArkUI';
 import { photoAccessHelper } from '@kit.MediaLibraryKit';
 import { AppErrorPanel, AppLoadingPanel } from '../components/common/AppStatusPanel';
 import { PaperBackdrop } from '../components/common/PaperBackdrop';
@@ -163,11 +164,20 @@ struct Index {
     }, true);
   }
 
-  private openDetail(localDate: string): void {
-    this.navPathStack.pushPath({
-      name: AppRouteName.DETAIL,
-      param: new DetailRouteParam(localDate)
-    }, true);
+  private openDetail(localDate: string, sharedElementId: string): void {
+    if (sharedElementId.length > 0) {
+      this.getUIContext().animateTo({ curve: curves.interpolatingSpring(0, 1, 342, 38) }, () => {
+        this.navPathStack.pushPath({
+          name: AppRouteName.DETAIL,
+          param: new DetailRouteParam(localDate, sharedElementId)
+        }, false);
+      });
+    } else {
+      this.navPathStack.pushPath({
+        name: AppRouteName.DETAIL,
+        param: new DetailRouteParam(localDate)
+      }, true);
+    }
   }
 
   private openSingleShare(localDate: string): void {
@@ -219,6 +229,16 @@ struct Index {
     this.navPathStack.pop();
   }
 
+  private closeDetail(sharedElementId: string): void {
+    if (sharedElementId.length > 0) {
+      this.getUIContext().animateTo({ curve: curves.interpolatingSpring(0, 1, 342, 38) }, () => {
+        this.navPathStack.pop(false);
+      });
+    } else {
+      this.closeDestination();
+    }
+  }
+
   private applySelectedFont(fontPresetId: FontPresetId): void {
     AppLogger.info(`font.index_receive id=${fontPresetId}`);
     this.viewModel.applyFontPreference(fontPresetId);
@@ -252,13 +272,14 @@ struct Index {
     if (name === AppRouteName.SCROLL) {
       ScrollPage({
         onBack: () => this.closeDestination(),
-        onOpenDetail: (localDate: string) => this.openDetail(localDate),
+        onOpenDetail: (localDate: string, sharedElementId: string) => this.openDetail(localDate, sharedElementId),
         onShareSevenDays: () => this.openSevenDayShare()
       })
     } else if (name === AppRouteName.DETAIL && param instanceof DetailRouteParam) {
       DetailPage({
         localDate: param.localDate,
-        onBack: () => this.closeDestination(),
+        sharedElementId: param.sharedElementId,
+        onBack: () => this.closeDetail(param.sharedElementId),
         onShare: () => this.openSingleShare(param.localDate)
       })
     } else if (name === AppRouteName.SHARE && param instanceof ShareRouteParam) {

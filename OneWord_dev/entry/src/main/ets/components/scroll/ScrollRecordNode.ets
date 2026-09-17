@@ -52,8 +52,16 @@ export struct ScrollRecordNode {
     '', '', '', false, '', '', RecordType.BLANK, '', 0, '', '', ScrollItemSide.CENTER
   );
   @Prop isInteractive: boolean = true;
-  onOpen: (localDate: string) => void = (localDate: string) => {
-  };
+  onOpen: (localDate: string, sharedElementId: string) => void =
+    (localDate: string, sharedElementId: string) => {
+    };
+
+  sharedElementId(): string {
+    if (this.item.isMissing) {
+      return '';
+    }
+    return 'scroll_item_' + this.item.localDate;
+  }
 
   recordFontFamily(): string {
     return fontFamilyForId(this.item.fontId);
@@ -168,6 +176,7 @@ export struct ScrollRecordNode {
     .padding({ left: 12, right: 12, top: 4, bottom: 4 })
     .justifyContent(FlexAlign.Center)
     .alignItems(this.item.side === ScrollItemSide.LEFT ? HorizontalAlign.End : HorizontalAlign.Start)
+    .geometryTransition(this.sharedElementId(), { follow: true })
   }
 
   @Builder
@@ -189,6 +198,7 @@ export struct ScrollRecordNode {
     .height(this.nodeHeight())
     .padding({ left: 12, right: 12, top: 6, bottom: 6 })
     .alignItems(HorizontalAlign.End)
+    .geometryTransition(this.sharedElementId(), { follow: true })
   }
 
   @Builder
@@ -269,7 +279,7 @@ export struct ScrollRecordNode {
       .alignItems(VerticalAlign.Center)
       .onClick(() => {
         if (this.isInteractive && !this.item.isMissing) {
-          this.onOpen(this.item.localDate);
+          this.onOpen(this.item.localDate, this.sharedElementId());
         }
       })
       .accessibilityGroup(true)

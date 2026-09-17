@@ -23,8 +23,9 @@ export struct ScrollPage {
   private revealTimer: number = -1;
   onBack: () => void = () => {
   };
-  onOpenDetail: (localDate: string) => void = (localDate: string) => {
-  };
+  onOpenDetail: (localDate: string, sharedElementId: string) => void =
+    (localDate: string, sharedElementId: string) => {
+    };
   onShareSevenDays: () => void = () => {
   };
 
@@ -146,7 +147,8 @@ export struct ScrollPage {
                 ListItem() {
                   ScrollRecordNode({
                     item: item,
-                    onOpen: (localDate: string) => this.onOpenDetail(localDate)
+                    onOpen: (localDate: string, sharedElementId: string) =>
+                      this.onOpenDetail(localDate, sharedElementId)
                   })
                 }
                 .height(ScrollLayoutMetrics.totalHeight(

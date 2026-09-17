@@ -13,6 +13,7 @@ import { DetailViewModel } from '../viewmodel/DetailViewModel';
 @Component
 export struct DetailPage {
   @Prop localDate: string = '';
+  @Prop sharedElementId: string = '';
   @State private viewModel: DetailViewModel = new DetailViewModel(
     AppServiceContainer.getDiaryService(),
     new DiaryDateFormatter()
@@ -35,11 +36,15 @@ export struct DetailPage {
   }
 
   aboutToAppear(): void {
-    this.revealTimer = setTimeout(() => {
-      this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
-        this.contentShown = true;
-      });
-    }, 30);
+    if (this.sharedElementId.length > 0) {
+      this.contentShown = true;
+    } else {
+      this.revealTimer = setTimeout(() => {
+        this.getUIContext().animateTo({ duration: 300, curve: Curve.EaseOut }, () => {
+          this.contentShown = true;
+        });
+      }, 30);
+    }
     this.viewModel.load(this.localDate);
   }
 
@@ -147,6 +152,7 @@ export struct DetailPage {
               onShare: () => this.onShare()
             })
               .layoutWeight(1)
+              .geometryTransition(this.sharedElementId)
           }
         }
         .width('100%')
@@ -165,5 +171,6 @@ export struct DetailPage {
     }
     .hideTitleBar(true)
     .backgroundColor(styleForPaper(this.displayedPaperId()).light.background)
+    .transition(this.sharedElementId.length > 0 ? TransitionEffect.OPACITY : TransitionEffect.IDENTITY)
   }
 }
