@@ -69,7 +69,7 @@ export struct TodayEditor {
           .fontFamily(fontFamilyForId(this.fontId))
           .fontColor($r('app.color.text_primary'))
           .placeholderColor($r('app.color.text_primary'))
-          .placeholderFont({ size: 15, family: 'oneword_wenkai, serif' })
+          .placeholderFont({ size: 30, family: 'oneword_wenkai, serif' })
           .textAlign(TextAlign.Center)
           .caretColor(styleForPaper(this.paperId).light.accent)
           .backgroundColor(Color.Transparent)
