@@ -1,3 +1,5 @@
+import { hdsEffect } from '@kit.UIDesignKit';
+
 @Component
 export struct DiaryIconButton {
   @Prop icon: Resource = $r('app.media.ic_back');
@@ -25,6 +27,9 @@ export struct DiaryIconButton {
     .scale({ x: this.pressed ? 0.92 : 1, y: this.pressed ? 0.92 : 1 })
     .opacity(this.pressed ? 0.7 : 1)
     .animation({ duration: 120, curve: Curve.EaseOut })
+    .visualEffect(new hdsEffect.HdsEffectBuilder()
+      .pressShadow(this.pressed ? hdsEffect.PressShadowType.BLEND_WHITE : hdsEffect.PressShadowType.NONE)
+      .buildEffect())
     .onTouch((event: TouchEvent) => {
       if (event.type === TouchType.Down) {
         this.pressed = true;

@@ -3,6 +3,7 @@ import { window } from '@kit.ArkUI';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { FontFamilies, paperIdForStyle } from '../constants/StyleTokens';
 import { AppServiceContainer } from '../service/AppServiceContainer';
+import { InkDropSound } from '../service/InkDropSound';
 import { AppLogger } from '../utils/AppLogger';
 import { ThemeChrome } from '../utils/ThemeChrome';
 
@@ -19,6 +20,7 @@ export default class EntryAbility extends UIAbility {
     this.context.getApplicationContext()
       .setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT);
     AppLogger.info('ability.created');
+    InkDropSound.preload(this.context);
   }
 
   onDestroy(): void {

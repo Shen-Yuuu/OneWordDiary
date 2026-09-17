@@ -1,3 +1,5 @@
+import { hdsEffect } from '@kit.UIDesignKit';
+
 @Component
 export struct DiaryPrimaryButton {
   @Prop label: string = '';
@@ -21,6 +23,9 @@ export struct DiaryPrimaryButton {
     .enabled(true)
     .scale({ x: this.pressed ? 0.96 : 1, y: this.pressed ? 0.96 : 1 })
     .animation({ duration: 160, curve: Curve.EaseOut })
+    .visualEffect(new hdsEffect.HdsEffectBuilder()
+      .pressShadow(this.pressed ? hdsEffect.PressShadowType.BLEND_GRADIENT : hdsEffect.PressShadowType.NONE)
+      .buildEffect())
     .onTouch((event: TouchEvent) => {
       if (event.type === TouchType.Down) {
         this.pressed = true;

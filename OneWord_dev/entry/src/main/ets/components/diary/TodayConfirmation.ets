@@ -1,4 +1,5 @@
 import { HapticFeedback } from '../../utils/HapticFeedback';
+import { InkDropSound } from '../../service/InkDropSound';
 import { DiaryIconButton } from '../common/DiaryIconButton';
 import { DiaryBackground } from '../common/DiaryBackground';
 import { DiaryPrimaryButton } from '../common/DiaryPrimaryButton';
@@ -164,6 +165,7 @@ export struct TodayConfirmation {
           isEnabled: !this.isBusy,
           onTap: () => {
             HapticFeedback.inkDrop();
+            InkDropSound.play();
             this.onConfirm();
           }
         })
