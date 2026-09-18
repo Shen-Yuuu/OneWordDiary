@@ -21,6 +21,11 @@ export default class EntryAbility extends UIAbility {
       .setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT);
     AppLogger.info('ability.created');
     InkDropSound.preload(this.context);
+    // 技能（Skill）拉起可能不创建窗口（onWindowStageCreate 不执行），
+    // 服务初始化必须在这里保证启动；单飞保护见 AppServiceContainer.initialize。
+    AppServiceContainer.initialize(this.context)
+      .then(() => AppLogger.info('app_services.initialized'))
+      .catch(() => AppLogger.error('app_services.initialize_failed'));
   }
 
   onDestroy(): void {
@@ -92,7 +97,6 @@ export default class EntryAbility extends UIAbility {
   private async initializeAndLoad(windowStage: window.WindowStage): Promise<void> {
     try {
       await AppServiceContainer.initialize(this.context);
-      AppLogger.info('app_services.initialized');
     } catch (error) {
       AppLogger.error('app_services.initialize_failed');
       return;

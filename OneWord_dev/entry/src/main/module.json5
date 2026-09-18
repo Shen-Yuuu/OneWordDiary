@@ -10,6 +10,16 @@
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
+    "skillProfiles": [
+      {
+        "name": "oneword-diary",
+        "abilityName": "EntryAbility",
+        "srcEntries": [
+          "../../skills/oneword-diary/scripts/DiarySkill.ets"
+        ],
+        "version": "1.0.0"
+      }
+    ],
     "abilities": [
       {
         "name": "EntryAbility",

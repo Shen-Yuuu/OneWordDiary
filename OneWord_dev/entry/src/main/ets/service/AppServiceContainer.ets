@@ -24,8 +24,26 @@ export class AppServiceContainer {
   private static resetService: AppResetService | null = null;
   private static backupService: BackupService | null = null;
   private static backgroundImageService: BackgroundImageService | null = null;
+  private static initPromise: Promise<void> | null = null;
 
-  static async initialize(context: common.UIAbilityContext): Promise<void> {
+  static initialize(context: common.UIAbilityContext): Promise<void> {
+    // 单飞保护：EntryAbility onCreate 与技能脚本等调用方可能并发触发初始化，
+    // 数据库/偏好存储只允许打开一次；失败时清空以便下次重试。
+    if (AppServiceContainer.initPromise === null) {
+      const promise = AppServiceContainer.doInitialize(context);
+      AppServiceContainer.initPromise = promise;
+      promise.catch(() => {
+        AppServiceContainer.initPromise = null;
+      });
+    }
+    return AppServiceContainer.initPromise;
+  }
+
+  static isReady(): boolean {
+    return AppServiceContainer.diaryService !== null && AppServiceContainer.settingsRepository !== null;
+  }
+
+  private static async doInitialize(context: common.UIAbilityContext): Promise<void> {
     AppServiceContainer.abilityContext = context;
     const store = await DiaryDatabase.open(context);
     const repository: DiaryRepository = new RdbDiaryRepository(store);
