@@ -1,20 +1,16 @@
 import { curves } from '@kit.ArkUI';
 import { styleForPaper } from '../../constants/StyleTokens';
+import { GraphemeCounter } from '../../utils/GraphemeCounter';
+
+const graphemeCounter: GraphemeCounter = new GraphemeCounter();
 
 /**
- * 按码点拆分字符串（代理对安全），用于逐字渲染。
- * 组合符号/emoji 修饰等复杂字素不在此处理——落字动画按可见字位错峰即可。
+ * 按字素簇拆分字符串，用于逐字渲染。
+ * 组合符号、变体选择符、emoji 修饰符、旗帜与 ZWJ 序列（如 😮‍💨）保持在同一簇内，
+ * 避免多码点 emoji 被拆成独立 Text 后失去连字。
  */
 export function splitChars(value: string): string[] {
-  const chars: string[] = [];
-  let index: number = 0;
-  while (index < value.length) {
-    const codePoint: number = value.codePointAt(index) ?? 0;
-    const size: number = codePoint > 0xFFFF ? 2 : 1;
-    chars.push(value.substring(index, index + size));
-    index += size;
-  }
-  return chars;
+  return graphemeCounter.split(value);
 }
 
 /**
