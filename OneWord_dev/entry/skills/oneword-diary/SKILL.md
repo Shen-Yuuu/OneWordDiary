@@ -78,10 +78,13 @@ exec-cli(command: ohos-arkTSScript --skillName 'oneword-diary' --scriptPath 'scr
         "theme": "rose_pink",
         "themeName": "瑰粉",
         "font": "oneword_kai",
-        "fontName": "小楷（默认字体）"
+        "fontName": "小楷（默认字体）",
+        "settingsSaved": true
     }
 }
 ```
+
+日记写入成功后才会保存本次指定的主题或字体为后续默认设置。若日记已写入但默认设置保存失败，仍返回 `success`，`settingsSaved` 为 `false`；当日记录仍保留本次指定的样式。不要据此重试记录，以免收到“今天已有记录”。
 
 ```
 // 2. 入参非法（内容为空、超过四个字、主题或字体不支持等）
@@ -132,7 +135,8 @@ exec-cli(command: ohos-arkTSScript --skillName 'oneword-diary' --scriptPath 'scr
         "theme":     { "type": "string" },
         "themeName": { "type": "string" },
         "font":      { "type": "string" },
-        "fontName":  { "type": "string" }
+        "fontName":  { "type": "string" },
+        "settingsSaved": { "type": "boolean" }
       }
     },
     "errCode": {

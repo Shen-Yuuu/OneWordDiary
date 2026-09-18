@@ -57,6 +57,8 @@ struct Index {
     AppServiceContainer.getBackgroundImageService()
   );
   @StorageProp('currentPaperId') paperId: string = 'warm_paper_dev';
+  @StorageProp('diarySkillRecordRevision') @Watch('onSkillRecordChanged') skillRecordRevision: number = 0;
+  @StorageProp('diarySkillStyleRevision') @Watch('onSkillStyleChanged') skillStyleRevision: number = 0;
   @State private pickerResumePending: boolean = false;
   @State private pickerError: string = '';
 
@@ -218,6 +220,27 @@ struct Index {
   private finishClear(): void {
     this.navPathStack.clear();
     this.viewModel.load();
+  }
+
+  private onSkillRecordChanged(): void {
+    this.refreshAfterSkill(false);
+  }
+
+  private onSkillStyleChanged(): void {
+    this.refreshAfterSkill(true);
+  }
+
+  private refreshAfterSkill(preserveDraft: boolean, attempt: number = 0): void {
+    if (!this.isPageActive) {
+      return;
+    }
+    if (this.viewModel.isBusy) {
+      if (attempt < 20) {
+        setTimeout(() => this.refreshAfterSkill(preserveDraft, attempt + 1), 100);
+      }
+      return;
+    }
+    this.viewModel.load(preserveDraft);
   }
 
   private refreshAfterImport(): void {

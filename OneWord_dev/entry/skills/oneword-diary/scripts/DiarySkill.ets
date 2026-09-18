@@ -10,12 +10,15 @@ import {
 import {
   StylePresetId,
   isSupportedStylePreset,
+  paperIdForStyle,
   styleForPreset,
   stylePresetIdFromValue
 } from '../../../src/main/ets/constants/StyleTokens';
 import { AppServiceContainer } from '../../../src/main/ets/service/AppServiceContainer';
+import { SettingsRepository } from '../../../src/main/ets/repository/SettingsRepository';
 import { AppLogger } from '../../../src/main/ets/utils/AppLogger';
 import { syncWidgetFromRecord } from '../../../src/main/ets/utils/WidgetSync';
+import { ThemeChrome } from '../../../src/main/ets/utils/ThemeChrome';
 
 const SKILL_TAG: string = 'skill.diary';
 const READY_POLL_INTERVAL_MS: number = 100;
@@ -169,13 +172,6 @@ export default class DiarySkill {
       const current = await settingsRepository.load();
       const stylePresetId: StylePresetId = themeId !== null ? themeId : current.stylePresetId;
       const fontPresetId: FontPresetId = fontId !== null ? fontId : current.fontPresetId;
-      if (themeId !== null) {
-        await settingsRepository.saveStylePresetId(themeId);
-      }
-      if (fontId !== null) {
-        await settingsRepository.saveFontPresetId(fontId);
-      }
-
       const style = styleForPreset(stylePresetId);
       const input: DiaryEntryInput = {
         recordType: RecordType.WORD,
@@ -187,7 +183,9 @@ export default class DiarySkill {
         backgroundOpacity: 0.1
       };
       const saved: DailyRecord = await AppServiceContainer.getDiaryService().submit(input);
+      const settingsSaved = await this.saveRequestedStyle(settingsRepository, themeId, fontId);
       await this.syncWidgetQuietly(saved);
+      this.notifyRecordChanged();
 
       const data: Record<string, Object> = {
         'date': saved.localDate,
@@ -196,7 +194,8 @@ export default class DiarySkill {
         'theme': stylePresetId,
         'themeName': themeNameFor(stylePresetId),
         'font': fontPresetId,
-        'fontName': fontNameFor(fontPresetId)
+        'fontName': fontNameFor(fontPresetId),
+        'settingsSaved': settingsSaved
       };
       const payload: Record<string, Object> = {
         'type': 'result',
@@ -265,10 +264,13 @@ export default class DiarySkill {
       const current = await settingsRepository.load();
       if (themeId !== null) {
         await settingsRepository.saveStylePresetId(themeId);
+        this.syncPaperQuietly(themeId);
       }
       if (fontId !== null) {
         await settingsRepository.saveFontPresetId(fontId);
+        this.syncFontQuietly(fontId);
       }
+      this.notifyStyleChanged();
 
       const data: Record<string, Object> = {
         'theme': themeId !== null ? themeId : current.stylePresetId,
@@ -286,6 +288,13 @@ export default class DiarySkill {
     } catch (error) {
       const err = error as BusinessError;
       AppLogger.error(`${SKILL_TAG} style_failed code=${err.code}`);
+      try {
+        const persisted = await AppServiceContainer.getSettingsRepository().load();
+        this.syncAppearance(persisted.stylePresetId, persisted.fontPresetId);
+        this.notifyStyleChanged();
+      } catch (refreshError) {
+        AppLogger.warn(`${SKILL_TAG} style_refresh_failed`);
+      }
       await this.reportFailure(
         info,
         'ERR_INTERNAL',
@@ -305,6 +314,72 @@ export default class DiarySkill {
       });
     }
     return AppServiceContainer.isReady();
+  }
+
+  private async saveRequestedStyle(settingsRepository: SettingsRepository,
+    themeId: StylePresetId | null, fontId: FontPresetId | null): Promise<boolean> {
+    let saved = true;
+    if (themeId !== null) {
+      try {
+        await settingsRepository.saveStylePresetId(themeId);
+      } catch (error) {
+        saved = false;
+        AppLogger.warn(`${SKILL_TAG} theme_default_save_failed`);
+      }
+      if (saved) {
+        this.syncPaperQuietly(themeId);
+      }
+    }
+    if (fontId !== null) {
+      try {
+        await settingsRepository.saveFontPresetId(fontId);
+        this.syncFontQuietly(fontId);
+      } catch (error) {
+        saved = false;
+        AppLogger.warn(`${SKILL_TAG} font_default_save_failed`);
+      }
+    }
+    return saved;
+  }
+
+  private syncAppearance(themeId: StylePresetId, fontId: FontPresetId): void {
+    this.syncPaperQuietly(themeId);
+    this.syncFontQuietly(fontId);
+  }
+
+  private syncPaperQuietly(themeId: StylePresetId): void {
+    try {
+      AppStorage.setOrCreate('currentPaperId', paperIdForStyle(themeId));
+      ThemeChrome.apply(AppServiceContainer.getAbilityContext(), paperIdForStyle(themeId));
+    } catch (error) {
+      AppLogger.warn(`${SKILL_TAG} paper_visual_sync_failed`);
+    }
+  }
+
+  private syncFontQuietly(fontId: FontPresetId): void {
+    try {
+      AppStorage.setOrCreate('currentFontId', fontId);
+    } catch (error) {
+      AppLogger.warn(`${SKILL_TAG} font_visual_sync_failed`);
+    }
+  }
+
+  private notifyRecordChanged(): void {
+    try {
+      AppStorage.setOrCreate<number>('diarySkillRecordRevision',
+        (AppStorage.get<number>('diarySkillRecordRevision') ?? 0) + 1);
+    } catch (error) {
+      AppLogger.warn(`${SKILL_TAG} record_refresh_failed`);
+    }
+  }
+
+  private notifyStyleChanged(): void {
+    try {
+      AppStorage.setOrCreate<number>('diarySkillStyleRevision',
+        (AppStorage.get<number>('diarySkillStyleRevision') ?? 0) + 1);
+    } catch (error) {
+      AppLogger.warn(`${SKILL_TAG} style_refresh_failed`);
+    }
   }
 
   private async syncWidgetQuietly(record: DailyRecord): Promise<void> {
